@@ -1,0 +1,28 @@
+module Riff
+  class RequestChain
+    HANDLERS = [
+      RequestHandlers::Authentication,
+      RequestHandlers::Authorization,
+      RequestHandlers::CheckParams,
+      RequestHandlers::Action,
+    ]
+
+    def initialize(context)
+      @context = context
+    end
+
+    def call
+      bind_handlers.handle(@context)
+    end
+
+    private
+
+    def bind_handlers
+      next_handler = nil
+      HANDLERS.reverse.each do |handler_class|
+        next_handler = handler_class.new(next_handler)
+      end
+      next_handler
+    end
+  end
+end
