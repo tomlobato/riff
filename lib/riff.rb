@@ -2,7 +2,6 @@
 
 require_relative "riff/version"
 
-require_relative 'riff/request_chain'
 require_relative 'riff/request_handlers/base'
 require_relative 'riff/request_handlers/authentication'
 require_relative 'riff/request_handlers/authorization'
@@ -17,6 +16,8 @@ require_relative 'riff/default_actions/show'
 
 require_relative 'riff/request_context'
 require_relative 'riff/request_processor'
+require_relative 'riff/request_chain'
+require_relative 'riff/settings'
 require_relative 'riff/util'
 
 require_relative 'riff/version'

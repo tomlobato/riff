@@ -12,7 +12,7 @@ module Riff
     end
 
     def call
-      bind_handlers.handle(@context)
+      bind_handlers.handle
     end
 
     private
@@ -20,7 +20,7 @@ module Riff
     def bind_handlers
       next_handler = nil
       HANDLERS.reverse.each do |handler_class|
-        next_handler = handler_class.new(next_handler)
+        next_handler = handler_class.new(next_handler, @context)
       end
       next_handler
     end

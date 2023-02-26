@@ -3,19 +3,21 @@ module Riff
     class List < Base
       def initialize(context)
         super
-        @scope_class = Util.const_get("Actions::#{@context.model_name}::ListScope")
+        @scope_class = Util.const_get(scope_class_name)
       end
 
       def call
-        model_klass.where(scope || {})
+        model_klass.where(scope || {}).map(&:values)
       end
 
       private
 
       def scope
-        return unless defined?(@scope_class)
+        @scope_class.new(@context).call if defined?(@scope_class)
+      end
 
-        @scope_class.new(@context).call
+      def scope_class_name
+        "Actions::#{@context.model_name}::ListScope"
       end
     end
   end

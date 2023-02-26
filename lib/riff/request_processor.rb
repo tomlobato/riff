@@ -10,7 +10,8 @@ module Riff
 
     def call
       validate_path!
-      RequestChain.new(context).call
+      result = RequestChain.new(context).call
+      Oj.dump(result)
     end
 
     private
