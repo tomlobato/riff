@@ -22,6 +22,9 @@ module Riff
     class OutOfBoundsPathNodes < Error422
     end
 
+    class InvalidParams < Error422
+    end
+
     # 404
     class ResourceNotFound < Error404
     end

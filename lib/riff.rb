@@ -31,4 +31,9 @@ require_relative 'riff/base_action_settings'
 require_relative 'riff/handle_error'
 
 module Riff
+  def self.process(request, response)
+    Riff::RequestProcessor
+      .new(request, response)
+      .call
+  end
 end

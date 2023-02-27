@@ -27,14 +27,13 @@ module Riff
     end
 
     def body
-      raw = @result.body
-      case raw
+      case @result.body
       when String
-        raw
+        @result.body
       when NilClass
         ''
       when Array, Hash
-        Oj.dump(raw)
+        Oj.dump(@result.body)
       else
         raise(Riff::Exceptions::InvalidResponseBody)
       end

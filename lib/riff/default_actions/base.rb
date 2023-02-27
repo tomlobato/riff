@@ -3,6 +3,7 @@ module Riff
     class Base
       def initialize(context)
         @context = context
+        setup
       end
 
       def call
@@ -21,6 +22,10 @@ module Riff
 
       def record_not_found
         Riff::Exceptions::ResourceNotFound.new("unable to find #{@context.resource} with id '#{@context.id}'")
+      end
+
+      def setup
+        # may implement
       end
     end
   end

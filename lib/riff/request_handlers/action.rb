@@ -1,9 +1,6 @@
 module Riff
   module RequestHandlers
     class Action < Base
-      extend Forwardable
-      def_delegators :@context, :model_name, :action_class_name, :action
-
       private
 
       def run
