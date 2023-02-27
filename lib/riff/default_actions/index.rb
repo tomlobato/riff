@@ -14,7 +14,7 @@ module Riff
       private
 
       def scope
-        @scope_class.new(@context).call if defined?(@scope_class)
+        @scope_class.new(@context).call if @scope_class
       end
 
       def scope_class_name

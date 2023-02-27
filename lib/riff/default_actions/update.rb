@@ -3,7 +3,7 @@ module Riff
     class Update < Base
       def call
         record.update(@context.params)
-        Result.new
+        Result.new(record.values)
       end
     end
   end

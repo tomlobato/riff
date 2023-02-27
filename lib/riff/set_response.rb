@@ -27,13 +27,12 @@ module Riff
     end
 
     def body
-      prepare_body(@result.body) if @result.body
-    end
-
-    def prepare_body(raw)
+      raw = @result.body
       case raw
-      when String, Nil
+      when String
         raw
+      when NilClass
+        ''
       when Array, Hash
         Oj.dump(raw)
       else

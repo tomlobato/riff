@@ -16,10 +16,11 @@ module Riff
       end
 
       def record
-        r = model_klass[@context.id]
-        raise(Riff::Exceptions::ResourceNotFound) unless r
+        model_klass[@context.id] || raise(record_not_found)
+      end
 
-        r
+      def record_not_found
+        Riff::Exceptions::ResourceNotFound.new("unable to find #{@context.resource} with id '#{@context.id}'")
       end
     end
   end

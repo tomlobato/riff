@@ -18,7 +18,7 @@ module Riff
     end
 
     def self.error_desc(error)
-      "#{error.class}: #{error.message}\n#{error.backtrace.to_a.join("\n")}"
+      "#{error.class}: #{error.message}"#\n#{error.backtrace.to_a.join("\n")}"
     end
   end
 end

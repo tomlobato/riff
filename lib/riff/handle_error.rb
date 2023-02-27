@@ -17,7 +17,7 @@ module Riff
     end
 
     def desc
-      {error: @error.message}
+      {error: "#{@error.class}: #{@error.message}"}
     end
 
     def status
