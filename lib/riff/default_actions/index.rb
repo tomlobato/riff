@@ -1,13 +1,14 @@
 module Riff
   module DefaultActions
-    class List < Base
+    class Index < Base
       def initialize(context)
         super
         @scope_class = Util.const_get(scope_class_name)
       end
 
       def call
-        model_klass.where(scope || {}).map(&:values)
+        body = model_klass.where(scope || {}).map(&:values)
+        Result.new(body)
       end
 
       private
@@ -17,7 +18,7 @@ module Riff
       end
 
       def scope_class_name
-        "Actions::#{@context.model_name}::ListScope"
+        "Actions::#{@context.model_name}::IndexScope"
       end
     end
   end

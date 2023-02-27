@@ -2,7 +2,8 @@ module Riff
   module DefaultActions
     class Show < Base
       def call
-        model_klass[@context.id]&.values
+        body = record&.values
+        Result.new(body)
       end
     end
   end

@@ -14,6 +14,13 @@ module Riff
       def model_klass
         @context.model_name.constantize
       end
+
+      def record
+        r = model_klass[@context.id]
+        raise(Riff::Exceptions::ResourceNotFound) unless r
+
+        r
+      end
     end
   end
 end

@@ -1,29 +1,36 @@
 module Riff
   module RequestHandlers
     class Action < Base
+      extend Forwardable
+      def_delegators :@context, :model_name, :action_class_name, :action
+
       private
 
       def run
-        @action_class_name = find_action_class_name
         action_class.new(@context).call
       end
 
       private
 
       def action_class
-        Util.const_get(custom_action) || Util.const_get(default_action)
-      end
+        raise(Riff::Exceptions::ActionNotFound) unless enabled?
 
-      def find_action_class_name
-        @context.action.classify
+        Util.const_get(custom_action, anchor: true) || Util.const_get(default_action) || raise(Riff::Exceptions::ActionNotFound)
       end
 
       def custom_action
-        "::Actions::#{@context.model_name}::#{@action_class_name}"
+        [:Actions, model_name, action_class_name]
       end
 
       def default_action
-        "Riff::DefaultActions::#{@action_class_name}"
+        [:Riff, :DefaultActions, action_class_name]
+      end
+
+      def enabled?
+        return true if @context.is_custom_method
+
+        settings = Util.const_get(:Actions, model_name, :ActionSettings, anchor: true)&.new
+        !settings || settings.send("#{action}?")
       end
     end
   end

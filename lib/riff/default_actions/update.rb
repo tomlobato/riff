@@ -2,11 +2,8 @@ module Riff
   module DefaultActions
     class Update < Base
       def call
-        object.update(@context.params)
-      end
-
-      def object
-        model_klass[@context.id]
+        record.update(@context.params)
+        Result.new
       end
     end
   end
