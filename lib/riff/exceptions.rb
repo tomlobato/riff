@@ -16,6 +16,17 @@ module Riff
       WEB_STATUS = 500
     end
 
+    # 400
+    class AuthenticationFailure < RiffError
+      ERR_MSG = 'Authentication failure'
+      WEB_STATUS = 401
+    end
+
+    class AuthorizationFailure < RiffError
+      ERR_MSG = 'Authorization failure'
+      WEB_STATUS = 403
+    end
+
     # 422
     class InvalidPathNodes < Error422
       ERR_MSG = 'Invalid path nodes'
@@ -37,6 +48,10 @@ module Riff
     class SequelInvalidParams < Error422
       ERR_MSG = 'Invalid parameters'
       JSON = true
+    end
+
+    class InvalidEmailOrPassword < Error422
+      ERR_MSG = 'Invalid email or password'
     end
 
     # 404

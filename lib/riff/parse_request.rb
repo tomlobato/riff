@@ -5,10 +5,8 @@ module Riff
       @request_method = request.request_method
       @params = request.params
       @headers = request.headers
-      @node1, @node2, @node3 = @path_nodes = path_nodes
-      @id, @custom_method = parse_id_and_custom_method
-      @resource = @node1.singularize
-      @action = find_action
+      @url = request.url
+      setup
     end
 
     def call
@@ -24,10 +22,18 @@ module Riff
         headers: @headers,
         request_method: @request_method,
         path: @path,
+        url: @url,
       )
     end
 
     private
+
+    def setup
+      @node1, @node2, @node3 = @path_nodes = path_nodes
+      @id, @custom_method = parse_id_and_custom_method
+      @resource = @node1.singularize
+      @action = find_action
+    end
 
     def find_action
       @custom_method || action_map[@request_method.upcase] || raise(action_not_found)

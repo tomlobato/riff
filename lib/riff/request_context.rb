@@ -10,7 +10,8 @@ module Riff
                 :headers, 
                 :user, 
                 :request_method,
-                :path
+                :path,
+                :url
 
     def initialize(vars)
       vars.each { |k, v| instance_variable_set("@#{k}", v) }

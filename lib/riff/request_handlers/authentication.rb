@@ -10,7 +10,15 @@ module Riff
       end
 
       def authenticate
-        AuthenticateUser.new(@context.headers).call
+        ::Riff::Authentication::TokenValidator.new(authorization_token, purpose).call
+      end
+
+      def purpose
+        @context.url.include?('refresh_token') ? :refresh_token : :access_token
+      end
+
+      def authorization_token
+        @context.headers['Authorization']
       end
     end
   end

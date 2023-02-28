@@ -17,13 +17,17 @@ module Riff
     end
 
     def desc
-      {error: @error.class::ERR_MSG}.merge(extra_desc.to_h)
+      {error: desc_error}.merge(extra_desc.to_h)
+    end
+
+    def desc_error
+      @is_web_error ? @error.class::ERR_MSG : 'Error executing requested operation'
     end
 
     def extra_desc
       return unless @error.message.present?
 
-      if @error.class::JSON
+      if @is_web_error && @error.class::JSON
         {messages: Oj.load(@error.message)}
       else
         {details: @error.message}
