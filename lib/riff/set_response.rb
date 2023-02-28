@@ -9,7 +9,7 @@ module Riff
       content_type
       headers
       status
-      body
+      body(@result.body)
     end
     
     private
@@ -26,16 +26,16 @@ module Riff
       @response.status = @result.status if @result.status
     end
 
-    def body
-      case @result.body
+    def body(raw)
+      case raw
       when String
-        @result.body
+        raw
       when NilClass
         ''
       when Array, Hash
-        Oj.dump(@result.body)
+        Oj.dump(raw)
       else
-        raise(Riff::Exceptions::InvalidResponseBody)
+        raise(Riff::Exceptions::InvalidResponseBody.new("Unhandled body class '#{raw.class}'"))
       end
     end
   end

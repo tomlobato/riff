@@ -4,18 +4,13 @@ module Riff
       private
 
       def run
-        @context.set(:logged_user, user)
+        user = authenticate
+        @context.set(:user, user) if user
         nil
       end
 
-      def user_class
-        Settings.instance.get(:user_class)
-      end
-
-      def user
-        u = user_class.new
-        u.company_id = 1
-        u
+      def authenticate
+        AuthenticateUser.new(@context.headers).call
       end
     end
   end

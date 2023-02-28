@@ -4,6 +4,7 @@ module Riff
       @path = request.path
       @request_method = request.request_method
       @params = request.params
+      @headers = request.headers
       @node1, @node2, @node3 = @path_nodes = path_nodes
       @id, @custom_method = parse_id_and_custom_method
       @resource = @node1.singularize
@@ -20,22 +21,28 @@ module Riff
         action: @action,
         action_class_name: @action.classify,
         is_custom_method: !!@custom_method,
+        headers: @headers,
+        request_method: @request_method,
+        path: @path,
       )
     end
 
     private
 
     def find_action
-      return @custom_method if @custom_method
+      @custom_method || action_map[@request_method.upcase] || raise(action_not_found)
+    end
 
-      action_map =
-        if @id
-          {'GET' => 'show', 'DELETE' => 'delete', 'PATCH' => 'update'}
-        else
-          {'GET' => 'index', 'POST' => 'create'}
-        end
-        
-      action_map[@request_method.upcase] || raise(Riff::Exceptions::ActionNotFound)
+    def action_not_found
+      Riff::Exceptions::ActionNotFound.create(path, request_method)
+    end
+
+    def action_map
+      if @id
+        {'GET' => 'show', 'DELETE' => 'delete', 'PATCH' => 'update'}
+      else
+        {'GET' => 'index', 'POST' => 'create'}
+      end
     end
 
     def path_nodes

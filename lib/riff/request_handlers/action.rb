@@ -10,11 +10,15 @@ module Riff
       private
 
       def action_class
-        raise(Riff::Exceptions::ActionNotFound) unless enabled?
+        raise(action_not_found) unless enabled?
 
-        Util.const_get(custom_action, anchor: true) || Util.const_get(default_action) || raise(Riff::Exceptions::ActionNotFound)
+        Util.const_get(custom_action, anchor: true) || Util.const_get(default_action) || raise(action_not_found)
       end
 
+      def action_not_found
+        Riff::Exceptions::ActionNotFound.create(path, request_method)
+      end
+  
       def custom_action
         [:Actions, model_name, action_class_name]
       end

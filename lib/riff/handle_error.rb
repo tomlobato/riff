@@ -2,11 +2,11 @@ module Riff
   class HandleError
     def initialize(error)
       @error = error
-      @is_web = Util.is_web_exception?(error)
+      @is_web_error = Util.is_web_exception?(error)
     end
 
     def call
-      print_error unless @is_web
+      print_error unless @is_web_error
       [desc, status]
     end
     
@@ -17,11 +17,21 @@ module Riff
     end
 
     def desc
-      {error: "#{@error.class}: #{@error.message}"}
+      {error: @error.class::ERR_MSG}.merge(extra_desc.to_h)
     end
 
+    def extra_desc
+      return unless @error.message.present?
+
+      if @error.class::JSON
+        {messages: Oj.load(@error.message)}
+      else
+        {details: @error.message}
+      end
+    end
+    
     def status
-      @is_web ? @error.class::WEB_STATUS : 500
+      @is_web_error ? @error.class::WEB_STATUS : 500
     end
   end
 end

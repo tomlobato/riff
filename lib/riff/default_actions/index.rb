@@ -8,12 +8,9 @@ module Riff
 
       private
 
-      def setup
-        @scope_class = Util.const_get(scope_class_name)
-      end
-
       def scope
-        @scope_class.new(@context).call if @scope_class
+        scope_class = Util.const_get(scope_class_name)
+        scope_class.new(@context).call if scope_class
       end
 
       def scope_class_name

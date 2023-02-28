@@ -1,39 +1,60 @@
 module Riff
   module Exceptions
-    class Error422 < StandardError
+    class RiffError < StandardError
+      JSON = false
+    end
+
+    class Error422 < RiffError
       WEB_STATUS = 422
     end
 
-    class Error404 < StandardError
+    class Error404 < RiffError
       WEB_STATUS = 404
     end
 
-    class Error500 < StandardError
+    class Error500 < RiffError
       WEB_STATUS = 500
     end
 
     # 422
     class InvalidPathNodes < Error422
+      ERR_MSG = 'Invalid path nodes'
     end
 
     class InvalidRequestPath < Error422
+      ERR_MSG = 'Invalid request path'
     end
 
     class OutOfBoundsPathNodes < Error422
+      ERR_MSG = 'Out of bounds path nodes'
     end
 
     class InvalidParams < Error422
+      ERR_MSG = 'Invalid parameters'
+      JSON = true
+    end
+
+    class SequelInvalidParams < Error422
+      ERR_MSG = 'Invalid parameters'
+      JSON = true
     end
 
     # 404
     class ResourceNotFound < Error404
+      ERR_MSG = 'Resource not found'
     end
 
     class ActionNotFound < Error404
+      ERR_MSG = 'Action not found'
+
+      def self.create(path, request_method)
+        new("path='#{path}' verb='#{request_method}'")
+      end
     end
 
     # 500
     class InvalidResponseBody < Error500
+      ERR_MSG = 'Invalid response body'
     end
   end
 end

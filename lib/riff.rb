@@ -29,6 +29,7 @@ require_relative 'riff/parse_request'
 require_relative 'riff/result'
 require_relative 'riff/base_action_settings'
 require_relative 'riff/handle_error'
+require_relative 'riff/authenticate_user'
 
 module Riff
   def self.process(request, response)
