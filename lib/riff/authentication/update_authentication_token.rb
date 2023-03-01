@@ -16,12 +16,8 @@ module Riff
       def generate
         loop do
           t = SecureRandom.hex(40)
-          break t unless user_class.where(authentication_token: t).any?
+          break t unless @user.class.where(authentication_token: t).any?
         end
-      end
-
-      def user_class
-        @user_class ||= Riff::Settings.instance.get(:user_class)
       end
     end
   end

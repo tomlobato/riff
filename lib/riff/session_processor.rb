@@ -15,10 +15,11 @@ module Riff
     def sign_in_out
       case @type
       when 'sign_in'
-        sign_in
+        Session::Open.new(@request.params).call
       when 'sign_out'
-        sign_out
-        Result.new
+        Session::Close.new(@request.headers).call
+      when 'refresh'
+        Session::Refresh.new(@request.headers).call
       else
         raise(invalid_request_path)
       end
@@ -29,14 +30,6 @@ module Riff
 
     def invalid_request_path
       Exceptions::InvalidRequestPath.new("'#{@type}' is not a valid session action")
-    end
-
-    def sign_in
-      OpenSession.new(@request.params).call
-    end
-
-    def sign_out
-      CloseSession.new(@request.headers).call
     end
   end
 end

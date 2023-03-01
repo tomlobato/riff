@@ -22,6 +22,11 @@ module Riff
       WEB_STATUS = 401
     end
 
+    class InvalidEmailOrPassword < RiffError
+      ERR_MSG = 'Invalid email or password'
+      WEB_STATUS = 401
+    end
+
     class AuthorizationFailure < RiffError
       ERR_MSG = 'Authorization failure'
       WEB_STATUS = 403
@@ -48,10 +53,6 @@ module Riff
     class SequelInvalidParams < Error422
       ERR_MSG = 'Invalid parameters'
       JSON = true
-    end
-
-    class InvalidEmailOrPassword < Error422
-      ERR_MSG = 'Invalid email or password'
     end
 
     # 404

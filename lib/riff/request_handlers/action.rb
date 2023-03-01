@@ -30,8 +30,12 @@ module Riff
       def enabled?
         return true if @context.is_custom_method
 
-        settings = Util.const_get(:Actions, model_name, :ActionSettings, anchor: true)&.new
+        settings = Util.const_get(settings_class_path, anchor: true)&.new
         !settings || settings.send("#{action}?")
+      end
+
+      def settings_class_path
+        [:Actions, model_name, :ActionSettings]
       end
     end
   end

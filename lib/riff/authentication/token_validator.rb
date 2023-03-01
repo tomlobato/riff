@@ -4,7 +4,7 @@ module Riff
   module Authentication
     class TokenValidator
       def initialize(authorization_token, purpose)
-        @message = MessageSigner.decode(message: authorization_token, purpose: purpose)
+        @message = decode(authorization_token, purpose)
       end
 
       def call
@@ -14,6 +14,10 @@ module Riff
       end
 
       private
+
+      def decode(authorization_token, purpose)
+        MessageSigner.decode(message: authorization_token, purpose: purpose)
+      end
 
       def valid?
         @message && current_user && current_user.authentication_token == @message[:authentication_token]
