@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Riff
   module Request
     class SessionProcessor
@@ -14,19 +16,23 @@ module Riff
       private
 
       def sign_in_out
+        call_session
+      rescue StandardError => e
+        desc, status = HandleError.new(e).call
+        Result.new(desc, status: status)
+      end
+
+      def call_session
         case @type
-        when 'sign_in'
+        when "sign_in"
           Session::Open.new(@request.params).call
-        when 'sign_out'
+        when "sign_out"
           Session::Close.new(@request.headers).call
-        when 'refresh'
+        when "refresh"
           Session::Refresh.new(@request.headers).call
         else
           raise(invalid_request_path)
         end
-      rescue StandardError => e
-        desc, status = HandleError.new(e).call
-        Result.new(desc, status: status)
       end
 
       def invalid_request_path

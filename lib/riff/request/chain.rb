@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Riff
   module Request
     class Chain
@@ -5,8 +7,8 @@ module Riff
         RequestHandlers::Authentication,
         RequestHandlers::Authorization,
         RequestHandlers::CheckParams,
-        RequestHandlers::Action,
-      ]
+        RequestHandlers::Action
+      ].freeze
 
       def initialize(context)
         @context = context

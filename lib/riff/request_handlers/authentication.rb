@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Riff
   module RequestHandlers
     class Authentication < Base
@@ -14,11 +16,11 @@ module Riff
       end
 
       def purpose
-        @context.url.include?('refresh_token') ? :refresh_token : :access_token
+        @context.url.include?("refresh_token") ? :refresh_token : :access_token
       end
 
       def authorization_token
-        @context.headers['Authorization']
+        @context.headers["Authorization"]
       end
     end
   end

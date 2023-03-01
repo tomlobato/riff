@@ -1,15 +1,17 @@
+# frozen_string_literal: true
+
 module Riff
   module Request
     class Context
-      attr_reader :resource, 
-                  :id, 
-                  :action, 
-                  :params, 
-                  :model_name, 
-                  :action_class_name, 
-                  :is_custom_method, 
-                  :headers, 
-                  :user, 
+      attr_reader :resource,
+                  :id,
+                  :action,
+                  :params,
+                  :model_name,
+                  :action_class_name,
+                  :is_custom_method,
+                  :headers,
+                  :user,
                   :request_method,
                   :path,
                   :url

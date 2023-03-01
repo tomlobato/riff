@@ -1,6 +1,16 @@
+# frozen_string_literal: true
+
 module Riff
   class Conf
     include Singleton
+
+    def self.set(key, val)
+      instance.set(key, val)
+    end
+
+    def self.get(key)
+      instance.get(key)
+    end
 
     def initialize
       @store = {}
@@ -12,14 +22,6 @@ module Riff
 
     def get(key)
       @store[key]
-    end
-
-    def self.set(key, val)
-      instance.set(key, val)
-    end
-
-    def self.get(key)
-      instance.get(key)
     end
   end
 end

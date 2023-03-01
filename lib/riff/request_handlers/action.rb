@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Riff
   module RequestHandlers
     class Action < Base
@@ -6,8 +8,6 @@ module Riff
       def run
         action_class.new(@context).call
       end
-
-      private
 
       def action_class
         raise(action_not_found) unless enabled?
@@ -18,7 +18,7 @@ module Riff
       def action_not_found
         Riff::Exceptions::ActionNotFound.create(path, request_method)
       end
-  
+
       def custom_action
         [:Actions, model_name, action_class_name]
       end
@@ -31,7 +31,7 @@ module Riff
         return true if @context.is_custom_method
 
         settings = Util.const_get(settings_class_path, anchor: true)&.new
-        !settings || settings.send("#{action}?")
+        !settings || settings.__send__("#{action}?")
       end
 
       def settings_class_path

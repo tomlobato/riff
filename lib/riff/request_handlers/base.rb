@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Riff
   module RequestHandlers
     class Base
@@ -17,11 +19,11 @@ module Riff
       private
 
       def handle_next
-        @next_handler.handle if @next_handler
+        @next_handler&.handle
       end
 
       def run
-        raise('must implement!')      
+        raise(Exceptions::NotImplemented)
       end
 
       def setup

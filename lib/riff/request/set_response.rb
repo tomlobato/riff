@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Riff
   module Request
     class SetResponse
@@ -12,15 +14,15 @@ module Riff
         status
         body(@result.body)
       end
-      
+
       private
-      
+
       def content_type
-        @response['Content-Type'] = @result.content_type if @result.content_type
+        @response["Content-Type"] = @result.content_type if @result.content_type
       end
-      
+
       def headers
-        @result.headers.each { |k, v| @response[k] = v } if @result.headers
+        @result.headers&.each { |k, v| @response[k] = v }
       end
 
       def status
@@ -32,11 +34,11 @@ module Riff
         when String
           raw
         when NilClass
-          ''
+          ""
         when Array, Hash
           Oj.dump(raw)
         else
-          raise(Riff::Exceptions::InvalidResponseBody.new("Unhandled body class '#{raw.class}'"))
+          raise(Riff::Exceptions::InvalidResponseBody, "Unhandled body class '#{raw.class}'")
         end
       end
     end

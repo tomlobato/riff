@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Riff
   module Request
     class Parse
@@ -12,22 +14,31 @@ module Riff
 
       def call
         validate_path!
-        Context.new(
-          resource: @resource,
-          id: @id,
-          params: @params,
-          model_name: @resource.classify,
-          action: @action,
-          action_class_name: @action.classify,
-          is_custom_method: !!@custom_method,
-          headers: @headers,
-          request_method: @request_method,
-          path: @path,
-          url: @url,
-        )
+        Context.new(basic_context_atts.merge(extra_context_atts))
       end
 
       private
+
+      def basic_context_atts
+        {
+          request_method: @request_method,
+          headers: @headers,
+          params: @params,
+          path: @path,
+          url: @url
+        }
+      end
+
+      def extra_context_atts
+        {
+          resource: @resource,
+          id: @id,
+          model_name: @resource.classify,
+          action: @action,
+          action_class_name: @action.classify,
+          is_custom_method: !@custom_method.nil?
+        }
+      end
 
       def setup
         @node1, @node2, @node3 = @path_nodes = path_nodes
@@ -37,7 +48,7 @@ module Riff
       end
 
       def find_action
-        @custom_method || action_map[@request_method.upcase] || raise(action_not_found)
+        @custom_method || action_map[@request_method.upcase.to_sym] || raise(action_not_found)
       end
 
       def action_not_found
@@ -46,16 +57,14 @@ module Riff
 
       def action_map
         if @id
-          {'GET' => 'show', 'DELETE' => 'delete', 'PATCH' => 'update'}
+          { GET: "show", DELETE: "delete", PATCH: "update" }
         else
-          {'GET' => 'index', 'POST' => 'create'}
+          { GET: "index", POST: "create" }
         end
       end
 
       def path_nodes
-        @path
-          .split('/')
-          .reject(&:blank?)[1..-1]      
+        @path.split("/").reject(&:blank?)[1..]
       end
 
       def validate_path!
@@ -63,7 +72,7 @@ module Riff
       end
 
       def parse_id_and_custom_method
-        if Util.is_id?(@node2)
+        if Util.id?(@node2)
           [@node2, @node3]
         else
           raise(Riff::Exceptions::InvalidRequestPath) if @node3.present?

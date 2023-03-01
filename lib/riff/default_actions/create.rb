@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Riff
   module DefaultActions
     class Create < Base
@@ -5,7 +7,7 @@ module Riff
         record = model_klass.create(@context.params)
         Request::Result.new(record.values)
       rescue Sequel::ValidationFailed => e
-        raise(Exceptions::SequelInvalidParams.new(e.message.to_json))
+        raise(Exceptions::SequelInvalidParams, e.message.to_json)
       end
     end
   end

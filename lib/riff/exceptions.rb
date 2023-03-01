@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Riff
   module Exceptions
     class RiffError < StandardError
@@ -18,50 +20,50 @@ module Riff
 
     # 400
     class AuthenticationFailure < RiffError
-      ERR_MSG = 'Authentication failure'
+      ERR_MSG = "Authentication failure"
       WEB_STATUS = 401
     end
 
     class InvalidEmailOrPassword < RiffError
-      ERR_MSG = 'Invalid email or password'
+      ERR_MSG = "Invalid email or password"
       WEB_STATUS = 401
     end
 
     class AuthorizationFailure < RiffError
-      ERR_MSG = 'Authorization failure'
+      ERR_MSG = "Authorization failure"
       WEB_STATUS = 403
     end
 
     # 422
     class InvalidPathNodes < Error422
-      ERR_MSG = 'Invalid path nodes'
+      ERR_MSG = "Invalid path nodes"
     end
 
     class InvalidRequestPath < Error422
-      ERR_MSG = 'Invalid request path'
+      ERR_MSG = "Invalid request path"
     end
 
     class OutOfBoundsPathNodes < Error422
-      ERR_MSG = 'Out of bounds path nodes'
+      ERR_MSG = "Out of bounds path nodes"
     end
 
     class InvalidParams < Error422
-      ERR_MSG = 'Invalid parameters'
+      ERR_MSG = "Invalid parameters"
       JSON = true
     end
 
     class SequelInvalidParams < Error422
-      ERR_MSG = 'Invalid parameters'
+      ERR_MSG = "Invalid parameters"
       JSON = true
     end
 
     # 404
     class ResourceNotFound < Error404
-      ERR_MSG = 'Resource not found'
+      ERR_MSG = "Resource not found"
     end
 
     class ActionNotFound < Error404
-      ERR_MSG = 'Action not found'
+      ERR_MSG = "Action not found"
 
       def self.create(path, request_method)
         new("path='#{path}' verb='#{request_method}'")
@@ -70,7 +72,11 @@ module Riff
 
     # 500
     class InvalidResponseBody < Error500
-      ERR_MSG = 'Invalid response body'
+      ERR_MSG = "Invalid response body"
+    end
+
+    class NotImplemented < Error500
+      ERR_MSG = "not implemented"
     end
   end
 end

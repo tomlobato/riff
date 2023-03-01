@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Riff
   module RequestHandlers
     class CheckParams < Base
@@ -9,7 +11,7 @@ module Riff
       end
 
       def select_action_validator
-        :SaveValidator if @context.action.in?(%w(create update))
+        :SaveValidator if @context.action.in?(%w[create update])
       end
 
       def select_validator_class
@@ -26,10 +28,10 @@ module Riff
         result = @validator_class.new.call(@context.params)
         thrown_error(result.errors) if result.failure?
       end
-      
+
       def thrown_error(errors)
         msg = errors.to_h.to_json
-        raise(Exceptions::InvalidParams.new(msg))
+        raise(Exceptions::InvalidParams, msg)
       end
     end
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Riff
   module Session
     class Close
@@ -15,7 +17,7 @@ module Riff
       private
 
       def user
-        @user ||= ::Riff::Authentication::TokenValidator.new(@headers['Authorization'], :access_token).call
+        @user ||= ::Riff::Authentication::TokenValidator.new(@headers["Authorization"], :access_token).call
       end
     end
   end

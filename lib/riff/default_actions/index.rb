@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Riff
   module DefaultActions
     class Index < Base
@@ -10,7 +12,7 @@ module Riff
 
       def scope
         scope_class = Util.const_get(scope_class_name)
-        scope_class.new(@context).call if scope_class
+        scope_class&.new(@context)&.call
       end
 
       def scope_class_name

@@ -19,3 +19,15 @@ Style/DocumentationMethod:
 
 Style/Documentation:
   Enabled: false
+
+Style/RequireOrder:
+  Enabled: false
+
+Style/Copyright:
+  Enabled: false
+
+Style/ConstantVisibility:
+  Enabled: false
+
+Lint/ConstantResolution:
+  Enabled: false

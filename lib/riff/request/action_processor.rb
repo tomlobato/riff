@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Riff
   module Request
     class ActionProcessor

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Riff
   module DefaultActions
     class Base
@@ -6,7 +8,7 @@ module Riff
       end
 
       def call
-        raise('must implement!')
+        raise(Exceptions::NotImplemented)
       end
 
       private
