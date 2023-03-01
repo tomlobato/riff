@@ -3,7 +3,7 @@ module Riff
     class Index < Base
       def call
         body = model_klass.where(scope || {}).map(&:values)
-        Result.new(body)
+        Request::Result.new(body)
       end
 
       private

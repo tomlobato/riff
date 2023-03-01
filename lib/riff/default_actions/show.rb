@@ -3,7 +3,7 @@ module Riff
     class Show < Base
       def call
         body = record&.values
-        Result.new(body)
+        Request::Result.new(body)
       end
     end
   end

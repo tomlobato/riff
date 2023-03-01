@@ -9,7 +9,7 @@ module Riff
         raise(Exceptions::AuthenticationFailure) unless user
 
         ::Riff::Authentication::UpdateAuthenticationToken.new(user).call
-        Result.new
+        Request::Result.new
       end
 
       private

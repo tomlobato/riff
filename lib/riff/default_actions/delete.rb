@@ -3,7 +3,7 @@ module Riff
     class Delete < Base
       def call
         record.delete
-        Result.new
+        Request::Result.new
       end
     end
   end

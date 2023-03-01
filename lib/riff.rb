@@ -27,29 +27,30 @@ require_relative 'riff/session/open'
 require_relative 'riff/session/close'
 require_relative 'riff/session/refresh'
 
-require_relative 'riff/request_context'
-require_relative 'riff/request_processor'
-require_relative 'riff/request_chain'
+require_relative 'riff/request/parse'
+require_relative 'riff/request/context'
+require_relative 'riff/request/action_processor'
+require_relative 'riff/request/session_processor'
+require_relative 'riff/request/chain'
+require_relative 'riff/request/result'
+require_relative 'riff/request/set_response'
+
 require_relative 'riff/settings'
 require_relative 'riff/util'
-require_relative 'riff/exceptions'
 require_relative 'riff/constants'
-require_relative 'riff/set_response'
-require_relative 'riff/parse_request'
-require_relative 'riff/result'
 require_relative 'riff/base_action_settings'
+require_relative 'riff/exceptions'
 require_relative 'riff/handle_error'
-require_relative 'riff/session_processor'
 
 module Riff
   def self.handle_action(request, response)
-    Riff::RequestProcessor
+    Riff::Request::ActionProcessor
       .new(request, response)
       .call
   end
 
   def self.handle_session(request, response, type)
-    Riff::SessionProcessor
+    Riff::Request::SessionProcessor
       .new(request, response, type)
       .call
   end

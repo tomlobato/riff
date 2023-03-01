@@ -8,7 +8,7 @@ module Riff
       def call
         Authentication::UpdateAuthenticationToken.new(user).call
         tokens = Authentication::CreateTokens.new(user).call
-        Result.new(body(user))
+        Request::Result.new(body(user))
       end
 
       private

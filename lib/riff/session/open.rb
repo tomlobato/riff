@@ -10,7 +10,7 @@ module Riff
         user = user_class.find(username: @params['username'])
         raise(Exceptions::InvalidEmailOrPassword) unless user&.authenticate(@params['password'])
 
-        Result.new(body(user))
+        Request::Result.new(body(user))
       end
 
       private

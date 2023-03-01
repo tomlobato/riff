@@ -10,7 +10,7 @@ module Riff
       def call
         raise(Exceptions::AuthenticationFailure) unless valid?
 
-        current_user
+        user
       end
 
       private
@@ -20,11 +20,11 @@ module Riff
       end
 
       def valid?
-        @message && current_user && current_user.authentication_token == @message[:authentication_token]
+        @message && user && user.authentication_token == @message[:authentication_token]
       end
 
-      def current_user
-        @current_user ||= user_class.find(id: @message[:user_id])
+      def user
+        @user ||= user_class.find(id: @message[:user_id])
       end
 
       def user_class
