@@ -28,7 +28,7 @@ module Riff
       end
 
       def user_class
-        @user_class ||= Riff::Settings.instance.get(:user_class)
+        Conf.get(:user_class)
       end
     end
   end

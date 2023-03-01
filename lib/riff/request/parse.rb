@@ -41,7 +41,7 @@ module Riff
       end
 
       def action_not_found
-        Riff::Exceptions::ActionNotFound.create(path, request_method)
+        Riff::Exceptions::ActionNotFound.create(@path, @request_method)
       end
 
       def action_map

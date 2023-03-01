@@ -35,7 +35,7 @@ require_relative 'riff/request/chain'
 require_relative 'riff/request/result'
 require_relative 'riff/request/set_response'
 
-require_relative 'riff/settings'
+require_relative 'riff/conf'
 require_relative 'riff/util'
 require_relative 'riff/constants'
 require_relative 'riff/base_action_settings'

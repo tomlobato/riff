@@ -1,5 +1,5 @@
 module Riff
-  class Settings
+  class Conf
     include Singleton
 
     def initialize
@@ -12,6 +12,14 @@ module Riff
 
     def get(key)
       @store[key]
+    end
+
+    def self.set(key, val)
+      instance.set(key, val)
+    end
+
+    def self.get(key)
+      instance.get(key)
     end
   end
 end

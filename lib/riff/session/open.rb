@@ -16,18 +16,14 @@ module Riff
       private
 
       def validate_params!
-        raise(Exceptions::InvalidParams.new(err_msg)) unless @params['username'].present? && @params['password'].present?
-      end
-
-      def err_msg
         msg = {}
         msg[:username] = 'is missing' unless @params['username'].present?
         msg[:password] = 'is missing' unless @params['password'].present?
-        Oj.dump(msg)
+        raise(Exceptions::InvalidParams.new(Oj.dump(msg))) if msg.present?
       end
 
       def user_class
-        Riff::Settings.instance.get(:user_class)
+        Conf.get(:user_class)
       end
 
       def body(user)
