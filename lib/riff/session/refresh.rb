@@ -8,6 +8,8 @@ module Riff
       end
 
       def call
+        raise(Exceptions::AuthenticationFailure) unless user
+
         Authentication::UpdateAuthenticationToken.new(user).call
         Authentication::CreateTokens.new(user).call
         Request::Result.new(body(user))
