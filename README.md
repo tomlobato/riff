@@ -1,38 +1,44 @@
 # Riff
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/riff`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Riff is a ruby gem that permits you to quickly build a Restful API in ruby projects that is using [Roda](https://github.com/jeremyevans/roda) and [Sequel ORM](https://github.com/jeremyevans/sequel).
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'riff'
+gem "riff", :git => "git://github.com/tomlobato/riff.git"
 ```
 
 And then execute:
 
-    $ bundle install
-
-Or install it yourself as:
-
-    $ gem install riff
+```sh
+bundle install
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+1) In your app.rb file (where you have `class App < Roda ...`), add entries like this to direct your requests to Riff (see the [sample riff app](https://github.com/tomlobato/riff/tree/main/sample_app)).
 
-## Development
+```ruby
+route do |r|
+  r.post('session', String) do |action|
+    Riff.handle_session(r, response, action)
+  end
+  r.on('actions') do
+    Riff.handle_action(r, response)
+  end
+end
+```
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+2) Create the customizations inside your app following the constant path `module Actions; module <MY_MODEL>...` (see examples in [sample_app/app/riff/actions](https://github.com/tomlobato/riff/tree/main/sample_app/app/riff/actions)).
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+3) Configure Riff minimally setting the user class `Riff::Conf.set(:user_class, User)`, so riff can handle authentication for you. See a example in [riff.rb](sample_app/system/boot/riff.rb)).
+
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/riff. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/riff/blob/main/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/tomlobato/riff. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/tomlobato/riff/blob/main/CODE_OF_CONDUCT.md).
 
 ## License
 
@@ -40,4 +46,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the Riff project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/riff/blob/main/CODE_OF_CONDUCT.md).
+Everyone interacting in the Riff project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/tomlobato/riff/blob/main/CODE_OF_CONDUCT.md).
