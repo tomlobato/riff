@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe 'GET /actions/posts', type: :request do
-  let(:user)   { create(:user)                  }
+  let(:user)  { create(:user)             }
   let!(:post) { create(:post, user: user) }
 
   before do

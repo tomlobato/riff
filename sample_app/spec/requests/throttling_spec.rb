@@ -7,11 +7,11 @@ describe 'Throttling', type: :throttling do
 
   describe 'POST requests to /session/sign_in by IP address' do
     before do
-      request_count.times do |i|
+      request_count.times do |_i|
         # We increment the email address here so we can be sure that it's
         # the IP address and not email address that's being blocked.
         header 'Authorization', access_token(user)
-        params = { username: "username", password: 'password' }
+        params = { username: 'username', password: 'password' }
         post '/session/sign_in', params, 'REMOTE_ADDR' => '1.2.3.4'
       end
     end

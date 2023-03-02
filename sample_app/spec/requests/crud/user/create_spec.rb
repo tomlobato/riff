@@ -34,9 +34,9 @@ describe 'POST /actions/users', type: :request do
         password_confirmation: 'password',
         authentication_token: SecureRandom.hex(40),
         company_id: user.company_id,
-        name: "John",
-        username: "john",
-        is_admin: true,
+        name: 'John',
+        username: 'john',
+        is_admin: true
       }
     end
     let(:keys_to_check) { params.keys.map(&:to_s) }

@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe 'DELETE /actions/posts/id', type: :request do
-  let!(:user)  { create(:user)                  }
+  let!(:user) { create(:user)             }
   let!(:post) { create(:post, user: user) }
 
   context 'when id is valid' do
@@ -15,7 +15,7 @@ describe 'DELETE /actions/posts/id', type: :request do
     it 'returns 200 HTTP status' do
       expect(response.status).to eq 200
     end
-    
+
     it 'returns empty response body' do
       expect(response.body).to eq ''
     end

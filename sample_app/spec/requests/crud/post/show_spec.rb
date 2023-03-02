@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe 'GET /actions/posts/id', type: :request do
-  let(:user)   { create(:user)                  }
+  let(:user)  { create(:user)             }
   let!(:post) { create(:post, user: user) }
 
   context 'when request params are valid' do

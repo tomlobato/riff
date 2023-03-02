@@ -3,9 +3,9 @@
 require 'spec_helper'
 
 describe 'PATCH /actions/posts', type: :request do
-  let!(:company) { create(:company)                                   }
-  let!(:user)  { create(:user, company: company)                  }
-  let!(:post) { create(:post, user: user, company: company) }
+  let!(:company) { create(:company)                            }
+  let!(:user)    { create(:user, company: company)             }
+  let!(:post)    { create(:post, user: user, company: company) }
 
   before do
     header 'Authorization', access_token(user)
