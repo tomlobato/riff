@@ -6,13 +6,7 @@ module Riff
       JSON = false
 
       def default_err_msg
-        self.class.name
-          .split('::')
-          .last
-          .gsub(/([A-Z])/, ' \1')
-          .strip
-          .downcase
-          .capitalize
+        self.class.name.split("::").last.gsub(/([A-Z])/, ' \1').strip.downcase.capitalize
       end
     end
 
