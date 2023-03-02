@@ -6,7 +6,7 @@ module Riff
       def initialize(request)
         @path = request.path
         @request_method = request.request_method
-        @params = request.params
+        @params = request.params.symbolize_keys
         @headers = request.headers
         @url = request.url
         setup
@@ -14,12 +14,12 @@ module Riff
 
       def call
         validate_path!
-        Context.new(basic_context_atts.merge(extra_context_atts))
+        Context.new(basic_context.merge(extra_context))
       end
 
       private
 
-      def basic_context_atts
+      def basic_context
         {
           request_method: @request_method,
           headers: @headers,
@@ -29,7 +29,7 @@ module Riff
         }
       end
 
-      def extra_context_atts
+      def extra_context
         {
           resource: @resource,
           id: @id,

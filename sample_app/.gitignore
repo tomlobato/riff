@@ -1,0 +1,9 @@
+.env.development
+.env.test
+/doc/*
+.yardoc/*
+/gems
+dump.rdb
+/coverage
+.DS_Store
+/tmp

@@ -7,7 +7,7 @@ module Riff
         private
 
         def record
-          record = model_class.find(id: @context.id, **scope.to_h)
+          record = model_class.find(id: @context.id.to_i, **scope.to_h)
           raise(record_not_found) unless record
 
           record
