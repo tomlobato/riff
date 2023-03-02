@@ -47,3 +47,9 @@ The gem is available as open source under the terms of the [MIT License](https:/
 ## Code of Conduct
 
 Everyone interacting in the Riff project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/tomlobato/riff/blob/main/CODE_OF_CONDUCT.md).
+
+## Acknowledgements
+
+Big thanks for [Jeremy Evans](https://github.com/jeremyevans) for bring to us Roda and Sequel, not mentioning [rodauth](https://github.com/jeremyevans/rodauth) and tons of other great code.
+
+Big thanks for [Mateusz Urbański](https://github.com/MatUrbanski) for bring to us the great project [todo_api](https://github.com/MatUrbanski/todo_api), used in riff as a seed for the sample app and its authentication logic for Riff authentication handler.
