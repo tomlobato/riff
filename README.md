@@ -15,6 +15,22 @@ And then execute:
 ```sh
 bundle install
 ```
+## Features
+
+- Authentication (access_token/refresh_token)
+- Authorization
+- Parameters checking
+- Default CRUD actions
+- Custom actions (aka restful custom methods)
+
+## Based on
+
+- [Roda](https://github.com/jeremyevans/roda)
+- [Sequel ORM](https://github.com/jeremyevans/sequel)
+- [ActiveSupport](https://github.com/rails/rails/tree/main/activesupport)
+- [dry-validation](https://github.com/dry-rb/dry-validation)
+- [todo_api](https://github.com/MatUrbanski/todo_api) for the sample app
+- [Oj](https://github.com/ohler55/oj)
 
 ## Usage
 
@@ -35,11 +51,21 @@ route do |r|
 end
 ```
 
-2) Create the customizations inside your app following the constant path `module Actions; module <MY_MODEL>...` (see examples in [sample_app/app/riff/actions](https://github.com/tomlobato/riff/tree/main/sample_app/app/riff/actions)).
+2) Create the riff customizations inside your app inside the constant path `Actions::<MY_MODEL>::*` for each model you want to deliver in you api (see examples in [sample_app/app/riff/actions](https://github.com/tomlobato/riff/tree/main/sample_app/app/riff/actions)).
 
 3) Configure Riff minimally setting the user class `Riff::Conf.set(:user_class, User)`, so riff can handle authentication for you. See a example in [riff.rb](https://github.com/tomlobato/riff/tree/main/sample_app/system/boot/riff.rb)).
 
 See also the [sample_app](https://github.com/tomlobato/riff/tree/main/sample_app) and its [specs](https://github.com/tomlobato/riff/tree/main/sample_app/spec) for help on using Riff.
+
+## Running tests
+
+```sh
+cd sample_app
+mysqladim create my_app_test
+# Then create .env.test based on .env.test.template
+RACK_ENV=test bundle exec rake db:migrate
+RACK_ENV=test bundle exec rspec
+```
 
 ## Contributing
 
