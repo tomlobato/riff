@@ -18,6 +18,10 @@ bundle install
 
 ## Usage
 
+Instead create a roda app from zero, copying the [sample riff app](https://github.com/tomlobato/riff/tree/main/sample_app) is a quick way to have your project up and running.
+
+But if you prefer to plug riff directly in you app...
+
 1) In your app.rb file (where you have `class App < Roda ...`), add entries like this to direct your requests to Riff (see the [sample riff app](https://github.com/tomlobato/riff/tree/main/sample_app)).
 
 ```ruby
@@ -33,8 +37,9 @@ end
 
 2) Create the customizations inside your app following the constant path `module Actions; module <MY_MODEL>...` (see examples in [sample_app/app/riff/actions](https://github.com/tomlobato/riff/tree/main/sample_app/app/riff/actions)).
 
-3) Configure Riff minimally setting the user class `Riff::Conf.set(:user_class, User)`, so riff can handle authentication for you. See a example in [riff.rb](sample_app/system/boot/riff.rb)).
+3) Configure Riff minimally setting the user class `Riff::Conf.set(:user_class, User)`, so riff can handle authentication for you. See a example in [riff.rb](https://github.com/tomlobato/riff/tree/main/sample_app/system/boot/riff.rb)).
 
+See also the [sample_app](https://github.com/tomlobato/riff/tree/main/sample_app) and its [specs](https://github.com/tomlobato/riff/tree/main/sample_app/spec) for help on using Riff.
 
 ## Contributing
 
