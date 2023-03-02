@@ -10,6 +10,9 @@ require_relative "riff/request_handlers/authorization"
 require_relative "riff/request_handlers/action"
 require_relative "riff/request_handlers/check_params"
 
+require_relative "riff/default_actions/helpers/record"
+require_relative "riff/default_actions/helpers/attributes"
+
 require_relative "riff/default_actions/base"
 require_relative "riff/default_actions/index"
 require_relative "riff/default_actions/create"
@@ -39,6 +42,7 @@ require_relative "riff/conf"
 require_relative "riff/util"
 require_relative "riff/constants"
 require_relative "riff/base_action_settings"
+require_relative "riff/base_authorizer"
 require_relative "riff/exceptions"
 require_relative "riff/handle_error"
 

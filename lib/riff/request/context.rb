@@ -11,7 +11,6 @@ module Riff
                   :action_class_name,
                   :is_custom_method,
                   :headers,
-                  :user,
                   :request_method,
                   :path,
                   :url

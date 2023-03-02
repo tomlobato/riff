@@ -31,7 +31,7 @@ module Riff
 
       def thrown_error(errors)
         msg = errors.to_h.to_json
-        raise(Exceptions::InvalidParams, msg)
+        raise(Exceptions::InvalidParameters, msg)
       end
     end
   end

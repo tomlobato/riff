@@ -36,7 +36,7 @@ module Riff
         when NilClass
           ""
         when Array, Hash
-          Oj.dump(raw)
+          raw.to_json
         else
           raise(Riff::Exceptions::InvalidResponseBody, "Unhandled body class '#{raw.class}'")
         end

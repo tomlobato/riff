@@ -23,5 +23,10 @@ module Riff
     def error_desc(error)
       "#{error.class}: #{error.message}"
     end
+
+    def log_error(error)
+      warn(error_desc(error))
+      warn(error.backtrace.to_a.join("\n"))
+    end
   end
 end

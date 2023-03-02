@@ -4,6 +4,24 @@ module Riff
   module Exceptions
     class RiffError < StandardError
       JSON = false
+
+      def default_err_msg
+        self.class.name
+          .split('::')
+          .last
+          .gsub(/([A-Z])/, ' \1')
+          .strip
+          .downcase
+          .capitalize
+      end
+    end
+
+    class Error401 < RiffError
+      WEB_STATUS = 401
+    end
+
+    class Error403 < RiffError
+      WEB_STATUS = 403
     end
 
     class Error422 < RiffError
@@ -18,65 +36,50 @@ module Riff
       WEB_STATUS = 500
     end
 
-    # 400
-    class AuthenticationFailure < RiffError
-      ERR_MSG = "Authentication failure"
-      WEB_STATUS = 401
+    # 40*
+    class AuthenticationFailure < Error401
     end
 
-    class InvalidEmailOrPassword < RiffError
-      ERR_MSG = "Invalid email or password"
-      WEB_STATUS = 401
+    class InvalidEmailOrPassword < Error401
     end
 
-    class AuthorizationFailure < RiffError
-      ERR_MSG = "Authorization failure"
-      WEB_STATUS = 403
+    class AuthorizationFailure < Error403
     end
 
-    # 422
     class InvalidPathNodes < Error422
-      ERR_MSG = "Invalid path nodes"
     end
 
     class InvalidRequestPath < Error422
-      ERR_MSG = "Invalid request path"
     end
 
     class OutOfBoundsPathNodes < Error422
-      ERR_MSG = "Out of bounds path nodes"
     end
 
-    class InvalidParams < Error422
-      ERR_MSG = "Invalid parameters"
+    class InvalidParameters < Error422
       JSON = true
     end
 
-    class SequelInvalidParams < Error422
-      ERR_MSG = "Invalid parameters"
+    class DbValidationError < Error422
       JSON = true
     end
 
-    # 404
     class ResourceNotFound < Error404
-      ERR_MSG = "Resource not found"
     end
 
     class ActionNotFound < Error404
-      ERR_MSG = "Action not found"
-
       def self.create(path, request_method)
         new("path='#{path}' verb='#{request_method}'")
       end
     end
 
-    # 500
+    # 50*
     class InvalidResponseBody < Error500
-      ERR_MSG = "Invalid response body"
     end
 
     class NotImplemented < Error500
-      ERR_MSG = "not implemented"
+    end
+
+    class InvalidAuthorizationResult < Error500
     end
   end
 end

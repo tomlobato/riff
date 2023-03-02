@@ -3,9 +3,16 @@
 module Riff
   module DefaultActions
     class Show < Base
+      include Helpers::Record
+
       def call
-        body = record&.values
         Request::Result.new(body)
+      end
+
+      private
+
+      def body
+        record&.values
       end
     end
   end

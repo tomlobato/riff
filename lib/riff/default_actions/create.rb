@@ -3,11 +3,13 @@
 module Riff
   module DefaultActions
     class Create < Base
+      include Helpers::Attributes
+
       def call
-        record = model_klass.create(@context.params)
+        record = model_class.create(attributes)
         Request::Result.new(record.values)
       rescue Sequel::ValidationFailed => e
-        raise(Exceptions::SequelInvalidParams, e.message.to_json)
+        raise(Exceptions::DbValidationError, e.message.to_json)
       end
     end
   end

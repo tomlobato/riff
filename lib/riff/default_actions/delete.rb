@@ -3,6 +3,8 @@
 module Riff
   module DefaultActions
     class Delete < Base
+      include Helpers::Record
+
       def call
         record.delete
         Request::Result.new

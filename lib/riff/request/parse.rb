@@ -42,8 +42,8 @@ module Riff
 
       def setup
         @node1, @node2, @node3 = @path_nodes = path_nodes
-        @id, @custom_method = parse_id_and_custom_method
         @resource = @node1.singularize
+        @id, @custom_method = @node2.to_s.split(":")
         @action = find_action
       end
 
@@ -68,17 +68,7 @@ module Riff
       end
 
       def validate_path!
-        raise(Riff::Exceptions::OutOfBoundsPathNodes) unless @path_nodes.size.between?(1, 3)
-      end
-
-      def parse_id_and_custom_method
-        if Util.id?(@node2)
-          [@node2, @node3]
-        else
-          raise(Riff::Exceptions::InvalidRequestPath) if @node3.present?
-
-          [nil, @node2]
-        end
+        raise(Riff::Exceptions::OutOfBoundsPathNodes) unless @path_nodes.size.between?(1, 2)
       end
     end
   end

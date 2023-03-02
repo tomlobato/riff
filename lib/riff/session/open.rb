@@ -21,7 +21,7 @@ module Riff
         msg = {}
         msg[:username] = "is missing" unless @params["username"].present?
         msg[:password] = "is missing" unless @params["password"].present?
-        raise(Exceptions::InvalidParams, Oj.dump(msg)) if msg.present?
+        raise(Exceptions::InvalidParameters, msg.to_json) if msg.present?
       end
 
       def user_class

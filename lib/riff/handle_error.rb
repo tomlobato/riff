@@ -23,7 +23,7 @@ module Riff
     end
 
     def desc_error
-      @is_web_error ? @error.class::ERR_MSG : "Error executing requested operation"
+      @is_web_error ? @error.default_err_msg : "Error executing requested operation"
     end
 
     def extra_desc
