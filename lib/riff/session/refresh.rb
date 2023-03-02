@@ -11,8 +11,7 @@ module Riff
         raise(Exceptions::AuthenticationFailure) unless user
 
         Authentication::UpdateAuthenticationToken.new(user).call
-        Authentication::CreateTokens.new(user).call
-        Request::Result.new(body(user))
+        Request::Result.new(body)
       end
 
       private
@@ -21,7 +20,7 @@ module Riff
         @user ||= ::Riff::Authentication::TokenValidator.new(@headers["Authorization"], :refresh_token).call
       end
 
-      def body(user)
+      def body
         {
           tokens: Authentication::CreateTokens.new(user).call
         }
