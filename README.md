@@ -15,22 +15,14 @@ And then execute:
 ```sh
 bundle install
 ```
+
 ## Features
 
 - Authentication (access_token/refresh_token)
 - Authorization
 - Parameters checking
-- Default CRUD actions
-- Custom actions (aka restful custom methods)
-
-## Based on
-
-- [Roda](https://github.com/jeremyevans/roda)
-- [Sequel ORM](https://github.com/jeremyevans/sequel)
-- [ActiveSupport](https://github.com/rails/rails/tree/main/activesupport)
-- [dry-validation](https://github.com/dry-rb/dry-validation)
-- [todo_api](https://github.com/MatUrbanski/todo_api) for the sample app
-- [Oj](https://github.com/ohler55/oj)
+- Default (but can be overwritten) CRUD actions
+- Custom actions (aka restful custom methods, like `POST /actions/users/123:custom_method`)
 
 ## Usage
 
@@ -82,6 +74,15 @@ The gem is available as open source under the terms of the [MIT License](https:/
 Everyone interacting in the Riff project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/tomlobato/riff/blob/main/CODE_OF_CONDUCT.md).
 
 ## Acknowledgements
+
+Riff runs on top of:
+
+- [Roda](https://github.com/jeremyevans/roda)
+- [Sequel ORM](https://github.com/jeremyevans/sequel)
+- [ActiveSupport](https://github.com/rails/rails/tree/main/activesupport)
+- [dry-validation](https://github.com/dry-rb/dry-validation)
+- [todo_api](https://github.com/MatUrbanski/todo_api) for the sample app
+- [Oj](https://github.com/ohler55/oj)
 
 Big thanks to [Jeremy Evans](https://github.com/jeremyevans) for bring to us Roda and Sequel, not mentioning [rodauth](https://github.com/jeremyevans/rodauth) and tons of other great code.
 
