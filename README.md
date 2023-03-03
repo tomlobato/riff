@@ -21,8 +21,22 @@ bundle install
 - Authentication (access_token/refresh_token)
 - Authorization
 - Parameters checking
-- Default (but can be overwritten) CRUD actions
+- Default CRUD actions (but can be overwritten)
 - Custom actions (aka restful custom methods, like `POST /actions/users/123:custom_method`)
+
+## TODO
+
+- Pagination
+- Rails and Activerecord support
+- Full test coverage (currently it is around 90%)
+- JSON API support
+- Project generator (`riff new my_api`)
+- Throttling
+- Gem docs
+- Docs generation for apis created with Riff
+- Elasticsearch support
+- Open source marketing
+- rake to generate resource customizations from database tables
 
 ## Usage
 
