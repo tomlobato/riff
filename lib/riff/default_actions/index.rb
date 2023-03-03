@@ -14,7 +14,19 @@ module Riff
       end
 
       def query
-        model_class.where(scope.to_h)
+        model_class.where(filters)
+      end
+
+      def filters
+        request_filters.merge(enforced_filters)
+      end
+      
+      def enforced_filters
+        scope.to_h
+      end
+
+      def request_filters
+        @context.params.to_h
       end
     end
   end

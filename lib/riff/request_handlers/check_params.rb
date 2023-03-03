@@ -6,32 +6,24 @@ module Riff
       private
 
       def setup
-        @action_validator = select_action_validator
-        @validator_class = select_validator_class if @action_validator
+        @action_validator = action_validator
       end
 
-      def select_action_validator
-        :SaveValidator if @context.action.in?(%w[create update])
+      def action_validator
+        case @context.action
+        when 'create', 'update'
+          :SaveValidator
+        when 'index'
+          :IndexParamsValidator
+        end
       end
 
-      def select_validator_class
-        Util.const_get(validator_class_nodes, anchor: true)
-      end
-
-      def validator_class_nodes
+      def class_nodes
         [:Actions, model_name, @action_validator]
       end
 
       def run
-        return unless @validator_class
-
-        result = @validator_class.new.call(@context.params)
-        thrown_error(result.errors) if result.failure?
-      end
-
-      def thrown_error(errors)
-        msg = errors.to_h.to_json
-        raise(Exceptions::InvalidParameters, msg)
+        Validator.new(class_nodes, @context.params).call if @action_validator
       end
     end
   end

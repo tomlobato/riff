@@ -26,7 +26,7 @@ bundle install
 
 ## Usage
 
-Instead create a roda app from zero, copying the [sample riff app](https://github.com/tomlobato/riff/tree/main/sample_app) is a quick way to have your project up and running.
+Instead to create a roda app from zero, copying the [sample riff app](https://github.com/tomlobato/riff/tree/main/sample_app) is a quick way to have your project up and running.
 
 But if you prefer to plug riff directly in you app...
 
@@ -43,7 +43,7 @@ route do |r|
 end
 ```
 
-2) Create the riff customizations inside your app inside the constant path `Actions::<MY_MODEL>::*` for each model you want to deliver in your api (see examples in [sample_app/app/riff/actions](https://github.com/tomlobato/riff/tree/main/sample_app/app/riff/actions)).
+2) Create the riff customizations inside your app inside the constant path `Actions::<MY_MODEL>::*` for each model you want to expose in your api (see examples in [sample_app/app/riff/actions](https://github.com/tomlobato/riff/tree/main/sample_app/app/riff/actions)).
 
 3) Configure Riff minimally setting the user class `Riff::Conf.set(:user_class, User)`, so riff can handle authentication for you. See a example in [riff.rb](https://github.com/tomlobato/riff/tree/main/sample_app/system/boot/riff.rb)).
 

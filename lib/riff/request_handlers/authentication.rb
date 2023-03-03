@@ -6,9 +6,15 @@ module Riff
       private
 
       def run
+        return unless authentication_enabled?
+
         user = authenticate
         @context.set(:user, user) if user
         nil
+      end
+
+      def authentication_enabled?
+        Conf.get(:user_class)
       end
 
       def authenticate
