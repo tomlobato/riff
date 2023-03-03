@@ -6,7 +6,7 @@ module Riff
       def initialize(request)
         @path = request.path
         @request_method = request.request_method
-        @params = request.params.symbolize_keys
+        @params = request.params.deep_symbolize_keys
         @headers = request.headers
         @url = request.url
         setup
@@ -43,7 +43,7 @@ module Riff
       def setup
         @node1, @node2, @node3 = @path_nodes = path_nodes
         @resource = @node1.singularize
-        @id, @custom_method = @node2.to_s.split(":")
+        @id, @custom_method = @node2.to_s.split(":", 2)
         @action = find_action
       end
 

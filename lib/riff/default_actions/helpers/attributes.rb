@@ -15,7 +15,7 @@ module Riff
 
         def validate_scope!
           invalid_params = {}
-          params.slice(scope.keys).each do |key, param_value|
+          params.slice(*@scope.keys).each do |key, param_value|
             next if param_value.blank?
             next if param_value == scope[key]
 
