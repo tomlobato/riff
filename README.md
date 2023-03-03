@@ -59,7 +59,7 @@ See also the [sample_app](https://github.com/tomlobato/riff/tree/main/sample_app
 
 ## Running tests
 
-The automated tests for riff are inside the sample_app:
+The automated tests for riff rest inside the sample_app:
 
 ```sh
 cd sample_app
