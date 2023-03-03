@@ -59,6 +59,8 @@ See also the [sample_app](https://github.com/tomlobato/riff/tree/main/sample_app
 
 ## Running tests
 
+The automated tests for riff are inside the sample_app:
+
 ```sh
 cd sample_app
 mysqladim create my_app_test
