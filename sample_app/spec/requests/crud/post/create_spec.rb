@@ -7,7 +7,8 @@ describe 'POST /actions/posts', type: :request do
 
   before do
     header 'Authorization', access_token(user)
-    post '/actions/posts', params
+    header 'Content-Type', 'application/json'
+    post '/actions/posts', params.to_json
   end
 
   context 'when request contains incorrectly formatted params' do

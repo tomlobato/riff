@@ -9,7 +9,8 @@ describe 'PATCH /actions/posts', type: :request do
 
   before do
     header 'Authorization', access_token(user)
-    patch "/actions/posts/#{post.id}", params
+    header 'Content-Type', 'application/json'
+    patch "/actions/posts/#{post.id}", params.to_json
   end
 
   context 'when request contains incorrectly formatted params' do
