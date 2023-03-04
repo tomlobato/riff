@@ -22,7 +22,6 @@ module Riff
       def check_permission
         @authorizer_class.new(@context, user).__send__("#{@context.action}?")
       rescue StandardError => e
-        Util.log_error(e)
         raise_authorization_error!
       end
 
@@ -49,7 +48,7 @@ module Riff
       end
 
       def invalid_authorization_result(result)
-        msg = "Authorization result must be one of true, false or a hash. We got a '#{result.class}'."
+        msg = "Authorization result must be one of true, false, nil or a hash. We got a '#{result.class}'."
         Exceptions::InvalidAuthorizationResult.new(msg)
       end
     end

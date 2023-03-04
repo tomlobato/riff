@@ -27,8 +27,8 @@ bundle install
 ## TODO
 
 - Pagination - on going
-- Rails and Activerecord support - on going
 - Full test coverage (currently it is around 90%) - on going
+- Rails and Activerecord support - on going
 - JSON API support
 - Project generator (`riff new my_api`)
 - Throttling
