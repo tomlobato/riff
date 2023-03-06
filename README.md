@@ -27,7 +27,7 @@ bundle install
 
 ## TODO
 
-- Full test coverage (currently it is around 98.3%) - on going
+- Full test coverage (98.3% currently) - on going
 - Rails and Activerecord support - on going
 - JSON API support
 - Project generator (`riff new my_api`)
