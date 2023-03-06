@@ -23,11 +23,11 @@ bundle install
 - Parameters checking
 - Default CRUD actions (but can be overwritten)
 - Custom actions (aka restful custom methods, like `POST /actions/users/123:custom_method`)
+- Pagination/Ordering
 
 ## TODO
 
-- Pagination - on going
-- Full test coverage (currently it is around 90%) - on going
+- Full test coverage (currently it is around 98.3%) - on going
 - Rails and Activerecord support - on going
 - JSON API support
 - Project generator (`riff new my_api`)
