@@ -12,20 +12,20 @@ module Riff
         def order
           parse.presence || [nil]
         end
-        
+
         private
 
         def parse
-          @params[:_order].to_s.split(',').map do |field|
+          @params[:_order].to_s.split(",").map do |field|
             parse_field(field)
           end
         end
 
         def parse_field(field)
-          name, direction = field.split(':', 2)
+          name, direction = field.split(":", 2)
           name = name.to_sym
           validate_field!(name)
-          name = Sequel.desc(name) if direction.to_s.downcase == 'desc'
+          name = Sequel.desc(name) if direction.to_s.downcase == "desc"
           name
         end
 
@@ -34,7 +34,7 @@ module Riff
         end
 
         def raise_invalid_params!(name)
-          raise(Exceptions::InvalidaParameters.new({order: name}.to_json))
+          raise(Exceptions::InvalidaParameters, { order: name }.to_json)
         end
       end
     end

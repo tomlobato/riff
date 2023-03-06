@@ -11,10 +11,12 @@ module Riff
 
       def action_validator
         case @context.action
-        when 'create', 'update'
+        when "create", "update"
           :Save
-        when 'index'
+        when "index"
           :IndexParams
+        else
+          false
         end
       end
 

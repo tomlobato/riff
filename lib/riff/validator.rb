@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Riff
   class Validator
     def initialize(class_nodes, params)
@@ -10,7 +12,7 @@ module Riff
       return unless @validator_class
 
       result = @validator_class.new.call(@params)
-      thrown_error(result.errors) if result.failure?          
+      thrown_error(result.errors) if result.failure?
     end
 
     private

@@ -8,7 +8,7 @@ module Riff
       def run
         action_class.new(@context).call
       end
-      
+
       def action_class
         @context.get(:action_class)
       end

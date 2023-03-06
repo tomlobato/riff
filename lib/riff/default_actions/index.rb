@@ -21,7 +21,7 @@ module Riff
       def filters
         request_filters.merge(enforced_filters)
       end
-      
+
       def enforced_filters
         scope.to_h
       end
@@ -37,7 +37,7 @@ module Riff
       def pagination
         Helpers::Pagination.new(@context.params, @context.get(:settings)).offset_limit
       end
-      
+
       def order
         Helpers::Order.new(@context.params, @context.model_class).order
       end

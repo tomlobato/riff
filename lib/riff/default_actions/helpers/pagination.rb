@@ -14,18 +14,18 @@ module Riff
         def offset_limit
           [offset, @limit]
         end
-        
+
         private
 
         def offset
-          return unless @page && @limit 
-          
+          return unless @page && @limit
+
           (@page - 1) * @limit
         end
 
         def page
           return unless @settings.paginate?
-          
+
           page = read(:_page)
           raise_invalid_pagination!(:_page) if page && page < 1
 
@@ -34,7 +34,7 @@ module Riff
 
         def limit
           return unless @settings.paginate?
-          
+
           read(:_limit) || @settings.per_page
         end
 
@@ -45,11 +45,11 @@ module Riff
           raise_invalid_pagination!(key) unless @settings.paginate?
           raise_invalid_pagination!(key) unless value =~ Constants::ONLY_DIGITS
 
-          value.to_i
+          Integer(value, 10)
         end
 
         def raise_invalid_pagination!(key)
-          raise(Exceptions::InvalidParameters.new({key => @params[key]}.to_json))
+          raise(Exceptions::InvalidParameters, { key => @params[key] }.to_json)
         end
       end
     end
