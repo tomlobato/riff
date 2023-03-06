@@ -8,6 +8,7 @@ module Riff
                   :action,
                   :params,
                   :model_name,
+                  :model_class,
                   :action_class_name,
                   :is_custom_method,
                   :headers,

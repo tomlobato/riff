@@ -2,28 +2,41 @@
 
 module Riff
   class BaseActionSettings
-    def default
+    # Enable CRUD actions
+
+    def default_enable_action
       true
     end
 
     def create?
-      default
+      default_enable_action
     end
 
     def show?
-      default
+      default_enable_action
     end
 
     def index?
-      default
+      default_enable_action
     end
 
     def update?
-      default
+      default_enable_action
     end
 
     def delete?
-      default
+      default_enable_action
+    end
+
+    # Pagination
+
+    def paginate?
+      paginate = Conf.get(:default_paginate)
+      paginate.nil? || paginate
+    end
+
+    def per_page
+      Conf.get(:default_per_page) || Constants::DEFAULT_PER_PAGE
     end
   end
 end

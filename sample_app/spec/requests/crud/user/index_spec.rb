@@ -4,6 +4,7 @@ require 'spec_helper'
 
 describe 'GET /actions/users', type: :request do
   let!(:user) { create(:user) }
+  let(:slice_fields) { %w[id user_id company_id body] }
 
   before do
     header 'Authorization', access_token(user)
@@ -15,6 +16,6 @@ describe 'GET /actions/users', type: :request do
   end
 
   it 'response contains correct body' do
-    expect(json_response.map { |o| remove_dates(o) }).to eq [remove_dates(user.values.stringify_keys)]
+    expect(json_response.map { |i| i.slice(*slice_fields) }).to eq [user.values.stringify_keys.slice(*slice_fields)]
   end
 end

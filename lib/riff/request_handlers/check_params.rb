@@ -12,14 +12,14 @@ module Riff
       def action_validator
         case @context.action
         when 'create', 'update'
-          :SaveValidator
+          :Save
         when 'index'
-          :IndexParamsValidator
+          :IndexParams
         end
       end
 
       def class_nodes
-        [:Actions, model_name, @action_validator]
+        [:Actions, model_name, :Validators, @action_validator]
       end
 
       def run

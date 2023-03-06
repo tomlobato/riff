@@ -8,6 +8,10 @@ module Riff
       instance.set(key, val)
     end
 
+    def self.configure(conf_map)
+      conf_map.each { |k, v| set(k, v) }
+    end
+
     def self.get(key)
       instance.get(key)
     end

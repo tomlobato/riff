@@ -8,6 +8,14 @@ Application.boot(:riff) do
   end
 
   start do
+    # Configure many
+    Riff::Conf.configure(
+      user_class: User,
+      default_paginate: true,
+      default_per_page: 20,
+    )
+
+    # Configure one
     Riff::Conf.set(:user_class, User)
   end
 end

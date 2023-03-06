@@ -14,6 +14,10 @@ module Actions
       def update?
         create?
       end
+
+      def stats?
+        default.merge(is_admin: true)
+      end
     end
   end
 end

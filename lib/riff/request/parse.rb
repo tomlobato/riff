@@ -34,10 +34,15 @@ module Riff
           resource: @resource,
           id: @id,
           model_name: @resource.classify,
+          model_class: model_class,
           action: @action,
           action_class_name: @action.classify,
           is_custom_method: !@custom_method.nil?
         }
+      end
+
+      def model_class
+        Util.const_get("::#{@resource.classify}")
       end
 
       def setup

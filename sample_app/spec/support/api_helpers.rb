@@ -32,11 +32,16 @@ module ApiHelpers
     response
   end
 
-  def remove_dates(obj)
-    obj = obj.dup
-    obj.delete('created_at')
-    obj.delete('updated_at')
-    obj
+  def remove_fields(list, fields)
+    list.map do |item|
+      item_dup = item.dup
+      fields.each{ |field| item_dup.delete(field) }
+      item_dup
+    end
+  end
+
+  def extract_field(response, field)
+    response.map{|i| i[field] }
   end
 end
 
