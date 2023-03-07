@@ -24,19 +24,19 @@ bundle install
 - Default CRUD actions (but can be overwritten)
 - Custom actions (aka restful custom methods, like `POST /actions/users/123:custom_method`)
 - Pagination/Ordering
+- Request throttling (in the seed/sample_app)
+- [tests] Full test coverage
 
 ## TODO
 
-- Full test coverage (98.3% currently) - on going
-- Rails and Activerecord support - on going
+- Rails and Activerecord support
 - JSON API support
 - Project generator (`riff new my_api`)
-- Throttling
 - Gem docs
 - Docs generation for apis created with Riff
 - Elasticsearch support
-- Open source marketing
 - rake to generate resource customizations from database tables
+- [marketing] Open source marketing
 
 ## Usage
 
@@ -65,7 +65,7 @@ See also the [sample_app](https://github.com/tomlobato/riff/tree/main/sample_app
 
 ## Running tests
 
-The automated tests for riff rest inside the sample_app:
+The automated tests for riff are inside the sample_app:
 
 ```sh
 cd sample_app

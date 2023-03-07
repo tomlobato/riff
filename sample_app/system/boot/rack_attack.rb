@@ -21,9 +21,9 @@ Application.boot(:rack_attack) do
     #
     # Another common method of attack is to use a swarm of computers with
     # different IPs to try brute-forcing a password for a specific account.
-    Rack::Attack.throttle('/logins/ip', limit: 10, period: 60) do |req|
-      req.ip if req.path == '/session/sign_in' && req.post?
-    end
+    # Rack::Attack.throttle('/logins/ip', limit: 10, period: 60) do |req|
+    #   req.ip if req.path == '/session/sign_in' && req.post?
+    # end
 
     # Throttle POST requests to /session/sign_in by email param.
     #
@@ -32,11 +32,11 @@ Application.boot(:rack_attack) do
     # This creates a problem where a malicious user could intentionally
     # throttle logins for another user and force their login requests to be
     # denied, but that's not very common and shouldn't happen to you.
-    Rack::Attack.throttle('/logins/username', limit: 10, period: 60) do |req|
-      if req.path == '/session/sign_in' && req.post? && req.params['username']
-        req.params['username'].to_s.downcase.gsub(/\s+/, '').presence
-      end
-    end
+    # Rack::Attack.throttle('/logins/username', limit: 10, period: 60) do |req|
+    #   if req.path == '/session/sign_in' && req.post? && req.params['username']
+    #     req.params['username'].to_s.downcase.gsub(/\s+/, '').presence
+    #   end
+    # end
 
     # Throttle POST requests to /api/v1/sign_up by IP address.
     #
