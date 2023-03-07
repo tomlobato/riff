@@ -21,7 +21,7 @@ bundle install
 - Authentication (access_token/refresh_token)
 - Authorization
 - Parameters checking
-- Default CRUD actions (but can be overwritten)
+- Implementation of the default CRUD actions (but can be overwritten)
 - Custom actions (aka restful custom methods, like `POST /actions/users/123:custom_method`)
 - Pagination/Ordering
 - Request throttling (in the seed/sample_app)
