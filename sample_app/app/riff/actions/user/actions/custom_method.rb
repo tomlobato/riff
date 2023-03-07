@@ -5,7 +5,7 @@ module Actions
     module Actions
       class CustomMethod < Riff::BaseAction
         def call
-          raise(StandardError.new("test error"))
+          raise(StandardError, 'test error')
         end
       end
     end

@@ -23,9 +23,9 @@ module Actions
             .join(:users, id: Sequel[:posts][:user_id])
             .where(Sequel[:posts][:company_id] => @user.company_id)
             .group(:user_id)
-            .order(Sequel.lit('COUNT(posts.id) DESC'))
             .select(Sequel.lit('users.id, users.name, COUNT(posts.id) AS post_count'))
-            .map{|r| [r[:id], r[:name], r[:post_count]] }
+            .order(Sequel.lit('COUNT(posts.id) DESC'))
+            .map { |r| [r[:id], r[:name], r[:post_count]] }
         end
       end
     end

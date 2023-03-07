@@ -35,13 +35,13 @@ module ApiHelpers
   def remove_fields(list, fields)
     list.map do |item|
       item_dup = item.dup
-      fields.each{ |field| item_dup.delete(field) }
+      fields.each { |field| item_dup.delete(field) }
       item_dup
     end
   end
 
   def extract_field(response, field)
-    response.map{|i| i[field] }
+    response.map { |i| i[field] }
   end
 end
 

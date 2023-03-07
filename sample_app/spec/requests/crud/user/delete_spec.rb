@@ -17,7 +17,7 @@ describe 'DELETE /actions/users', type: :request do
     end
 
     it 'returns correct error body' do
-      expect(json_response).to eq({"details"=>"Unhandled body class 'Integer'", "error"=>"Invalid response body"})
+      expect(json_response).to eq({ 'details' => "Unhandled body class 'Integer'", 'error' => 'Invalid response body' })
     end
   end
 end

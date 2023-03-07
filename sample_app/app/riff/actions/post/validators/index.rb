@@ -9,7 +9,7 @@ module Actions
         end
 
         rule(:user_id) do
-          key.failure('must be greater than 0') if value && value < 0
+          key.failure('must be greater than 0') if value&.negative?
         end
       end
     end

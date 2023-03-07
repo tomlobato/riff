@@ -24,13 +24,19 @@ describe 'PATCH /actions/users', type: :request do
         is_admin: true
       }
     end
+    let(:expected_json) do
+      {
+        'details' => 'Riff::Exceptions::AuthorizationFailure',
+        'error' => 'Authorization failure'
+      }
+    end
 
     it 'returns 403 HTTP status' do
       expect(response.status).to eq 403
     end
 
     it 'returns correct error body' do
-      expect(json_response).to eq({"details"=>"Riff::Exceptions::AuthorizationFailure", "error"=>"Authorization failure"})
+      expect(json_response).to eq(expected_json)
     end
   end
 end

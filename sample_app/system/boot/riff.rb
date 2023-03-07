@@ -12,7 +12,7 @@ Application.boot(:riff) do
     Riff::Conf.configure(
       user_class: User,
       default_paginate: true,
-      default_per_page: 20,
+      default_per_page: 20
     )
 
     # Configure one

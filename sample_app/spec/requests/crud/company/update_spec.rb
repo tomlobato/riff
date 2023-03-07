@@ -3,8 +3,8 @@
 require 'spec_helper'
 
 describe 'PATCH /actions/companies', type: :request do
-  let(:company) { create(:company) }
-  let(:user) { create(:user, company: company) }
+  let(:company) { create(:company)                }
+  let(:user)    { create(:user, company: company) }
 
   before do
     header 'Authorization', access_token(user)
@@ -15,7 +15,13 @@ describe 'PATCH /actions/companies', type: :request do
   context 'when request params are valid' do
     let(:params) do
       {
-        name: 'Other company',
+        name: 'Other company'
+      }
+    end
+    let(:expected_json) do
+      {
+        'details' => 'Riff::Exceptions::AuthorizationFailure',
+        'error' => 'Authorization failure'
       }
     end
 
@@ -24,7 +30,7 @@ describe 'PATCH /actions/companies', type: :request do
     end
 
     it 'returns correct error body' do
-      expect(json_response).to eq({"details"=>"Riff::Exceptions::AuthorizationFailure", "error"=>"Authorization failure"})
+      expect(json_response).to eq(expected_json)
     end
   end
 end

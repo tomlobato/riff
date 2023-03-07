@@ -12,12 +12,19 @@ describe 'GET /actions/users/id', type: :request do
   end
 
   context 'when request params are valid' do
+    let(:expected_json) do
+      {
+        'details' => "Authorization result must be one of true, false, nil or a hash. We got a 'String'.",
+        'error' => 'Invalid authorization result'
+      }
+    end
+
     it 'returns 500 HTTP status' do
       expect(response.status).to eq 500
     end
 
     it 'returns correct error body' do
-      expect(json_response).to eq({"details"=>"Authorization result must be one of true, false, nil or a hash. We got a 'String'.", "error"=>"Invalid authorization result"})
+      expect(json_response).to eq(expected_json)
     end
   end
 end

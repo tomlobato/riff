@@ -3,12 +3,12 @@
 require 'spec_helper'
 
 describe 'GET /actions/posts', type: :request do
-  let(:company) { create(:company)                                  }
-  let(:user)    { create(:user, company: company)                   }
-  let!(:post)   { create(:post, user: user, company: company)       }
-  let!(:post2)  { create(:post, user: user, company: company)       }
-  let!(:post3)  { create(:post, user: user, company: company)       }
-  let!(:ordered_ids)  { [post.id, post2.id, post3.id] }
+  let(:company)      { create(:company)                                  }
+  let(:user)         { create(:user, company: company)                   }
+  let!(:post)        { create(:post, user: user, company: company)       }
+  let!(:post2)       { create(:post, user: user, company: company)       }
+  let!(:post3)       { create(:post, user: user, company: company)       }
+  let!(:ordered_ids) { [post.id, post2.id, post3.id]                     }
 
   before do
     header 'Authorization', access_token(user)
@@ -19,15 +19,15 @@ describe 'GET /actions/posts', type: :request do
     let(:url) { '/actions/posts' }
     let(:slice_fields) { %w[id user_id company_id body] }
     let(:expected_response) do
-      [post, post2, post3].map{ |p| p.values.slice(*slice_fields.map(&:to_sym)).stringify_keys }
+      [post, post2, post3].map { |p| p.values.slice(*slice_fields.map(&:to_sym)).stringify_keys }
     end
-  
+
     it 'returns 200 HTTP status' do
       expect(response.status).to eq 200
     end
 
     it 'response contains correct body' do
-      expect(json_response.map{ |i| i.slice(*slice_fields) }).to eq expected_response
+      expect(json_response.map { |i| i.slice(*slice_fields) }).to eq expected_response
     end
   end
 
@@ -75,7 +75,7 @@ describe 'GET /actions/posts', type: :request do
     end
 
     it 'response contains ordered items' do
-      expect(json_response[0]['id'].to_i).to eq post3.id
+      expect(json_response[0]['id']).to eq post3.id
     end
   end
 
@@ -87,19 +87,19 @@ describe 'GET /actions/posts', type: :request do
     end
 
     it 'response contains ordered items' do
-      expect(json_response[0]['id'].to_i).to eq post.id
+      expect(json_response[0]['id']).to eq post.id
     end
   end
 
   context 'when pagination is tried with wrong page value' do
     let(:url) { '/actions/posts?_page=non_digit' }
-    
+
     it 'returns 422 HTTP status' do
       expect(response.status).to eq 422
     end
 
     it 'response contains correct body' do
-      expect(json_response).to eq({"error"=>"Invalid parameters", "messages"=>{"_page"=>"non_digit"}})
+      expect(json_response).to eq({ 'error' => 'Invalid parameters', 'messages' => { '_page' => 'non_digit' } })
     end
   end
 end

@@ -17,7 +17,7 @@ module Riff
     end
 
     def error_desc(error)
-      "#{error.class}: #{error.message}" unless ENV['RACK_ENV'] == 'test'
+      "#{error.class}: #{error.message}" unless ENV["RACK_ENV"] == "test"
     end
 
     # def id?(str)

@@ -50,14 +50,14 @@ describe 'PATCH /actions/posts', type: :request do
         body: 'changed post body'
       }
     end
-    let(:url) { "/actions/posts" }
+    let(:url) { '/actions/posts' }
 
     it 'returns 404 HTTP status' do
       expect(response.status).to eq 404
     end
 
     it 'returns user data in the JSON response' do
-      expect(json_response).to eq({"details"=>"path='/actions/posts' verb='PATCH'", "error"=>"Action not found"})
+      expect(json_response).to eq({ 'details' => "path='/actions/posts' verb='PATCH'", 'error' => 'Action not found' })
     end
   end
 
@@ -66,7 +66,7 @@ describe 'PATCH /actions/posts', type: :request do
       {
         body: 'changed post body',
         title: 'changed post title',
-        company_id: 123456789,
+        company_id: 123_456_789
       }
     end
     let(:url) { "/actions/posts/#{post.id}" }
@@ -76,7 +76,7 @@ describe 'PATCH /actions/posts', type: :request do
     end
 
     it 'returns user data in the JSON response' do
-      expect(json_response).to eq({"error"=>"Invalid parameters", "messages"=>{"company_id"=>params[:company_id]}})
+      expect(json_response).to eq({ 'error' => 'Invalid parameters', 'messages' => { 'company_id' => params[:company_id] } })
     end
   end
 
@@ -84,7 +84,7 @@ describe 'PATCH /actions/posts', type: :request do
     let(:params) do
       {
         body: 'changed msg body',
-        title: nil,
+        title: nil
       }
     end
     let(:url) { "/actions/posts/#{post.id}" }
@@ -94,7 +94,7 @@ describe 'PATCH /actions/posts', type: :request do
     end
 
     it 'returns user data in the JSON response' do
-      expect(json_response).to eq({"error"=>"Db validation error", "messages"=>"title is not present"})
+      expect(json_response).to eq({ 'error' => 'Db validation error', 'messages' => 'title is not present' })
     end
   end
 end
