@@ -12,7 +12,11 @@ module Riff
       private
 
       def body
-        record&.values
+        record(fields)&.values
+      end
+
+      def fields
+        settings.show_fields
       end
     end
   end

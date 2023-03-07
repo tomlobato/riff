@@ -23,6 +23,10 @@ module Riff
       def scope
         @scope ||= @context.get(:scope)
       end
+
+      def settings
+        @settings ||= @context.get(:settings)
+      end
     end
   end
 end

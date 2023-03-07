@@ -38,5 +38,19 @@ module Riff
     def per_page
       Conf.get(:default_per_page) || Constants::DEFAULT_PER_PAGE
     end
+
+    # Select fields
+
+    def default_fields
+      nil
+    end
+
+    def index_fields
+      default_fields
+    end
+
+    def show_fields
+      default_fields
+    end
   end
 end

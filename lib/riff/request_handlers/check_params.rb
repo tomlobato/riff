@@ -14,7 +14,7 @@ module Riff
         when "create", "update"
           :Save
         when "index"
-          :IndexParams
+          :Index
         else
           false
         end

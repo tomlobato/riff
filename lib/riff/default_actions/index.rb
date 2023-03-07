@@ -15,7 +15,7 @@ module Riff
 
       def query
         offset, limit = pagination
-        model_class.where(filters).offset(offset).limit(limit).order(*order)
+        model_class.select(*select).where(filters).offset(offset).limit(limit).order(*order)
       end
 
       def filters
@@ -28,18 +28,20 @@ module Riff
 
       def request_filters
         f = @context.params.deep_dup
-        f.delete(:_order)
-        f.delete(:_limit)
-        f.delete(:_page)
-        f.to_h
+        %i[_order _limit _page].each { |k| f.delete(k) }
+        f
       end
 
       def pagination
-        Helpers::Pagination.new(@context.params, @context.get(:settings)).offset_limit
+        Helpers::Pagination.new(@context.params, settings).offset_limit
       end
 
       def order
         Helpers::Order.new(@context.params, @context.model_class).order
+      end
+
+      def select
+        settings.index_fields || model_class.columns
       end
     end
   end

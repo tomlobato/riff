@@ -6,8 +6,9 @@ module Riff
       module Record
         private
 
-        def record
-          record = model_class.find(id: @context.id, **scope.to_h)
+        def record(fields = nil)
+          fields ||= model_class.columns
+          record = model_class.where(id: @context.id, **scope.to_h).select(*fields).first
           raise(record_not_found) unless record
 
           record

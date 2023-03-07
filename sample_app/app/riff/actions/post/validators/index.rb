@@ -3,7 +3,7 @@
 module Actions
   module Post
     module Validators
-      class IndexParams < Dry::Validation::Contract
+      class Index < Dry::Validation::Contract
         params do
           optional(:user_id).value(:integer)
         end
