@@ -6,10 +6,11 @@ module Riff
       include Helpers::Attributes
 
       def call
-        record = model_class.create(attributes)
-        Request::Result.new(record.values)
+        rec = model_class.new(attributes)
+        rec.save
+        Request::Result.new(rec.values)
       rescue Sequel::ValidationFailed => e
-        raise(Exceptions::DbValidationError, e.message.to_json)
+        raise(Exceptions::DbValidationError, Util.record_errors(rec.errors).to_json)
       end
     end
   end

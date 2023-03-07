@@ -7,10 +7,11 @@ module Riff
       include Helpers::Record
 
       def call
-        record.update(attributes)
-        Request::Result.new(record.values)
+        rec = record
+        rec.update(attributes)
+        Request::Result.new(rec.values)
       rescue Sequel::ValidationFailed => e
-        raise(Exceptions::DbValidationError, e.message.to_json)
+        raise(Exceptions::DbValidationError, Util.record_errors(rec.errors).to_json)
       end
     end
   end

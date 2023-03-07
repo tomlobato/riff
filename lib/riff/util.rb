@@ -20,6 +20,11 @@ module Riff
       "#{error.class}: #{error.message}" unless ENV["RACK_ENV"] == "test"
     end
 
+    def record_errors(rec_errors)
+      errors = {}
+      rec_errors.each{|k, v| errors[k] = v.uniq }
+      errors
+    end
     # def id?(str)
     #   str =~ Constants::ONLY_DIGITS || str =~ Constants::UUID
     # end
