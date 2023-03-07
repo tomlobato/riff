@@ -15,15 +15,19 @@ module Riff
       private
 
       def call_chain
-        @context = context
-        @context.set(:action_class, @action_class = action_class)
-        @context.set(:settings, @settings = settings)
+        setup
         raise_action_not_found! unless action_available? && @action_class
         Chain.new(@context).call
       rescue StandardError => e
         # Util.log_error(e)
         desc, status = HandleError.new(e).call
         Result.new(desc, status: status)
+      end
+
+      def setup
+        @context = context
+        @context.set(:action_class, @action_class = action_class)
+        @context.set(:settings, @settings = settings)
       end
 
       def context
