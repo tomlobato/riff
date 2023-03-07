@@ -3,7 +3,11 @@
 # Track code coverage
 if ENV.fetch('RACK_ENV', nil) == 'test'
   require 'simplecov'
-  SimpleCov.start
+  SimpleCov.start do
+    add_filter %r{^/sample_app/spec/}
+    add_filter %r{^/sample_app/system/boot/}
+    root '../'
+  end
 end
 
 # This file is responsible for loading all configuration files.

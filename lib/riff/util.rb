@@ -12,21 +12,21 @@ module Riff
       nil
     end
 
-    def id?(str)
-      str =~ Constants::ONLY_DIGITS || str =~ Constants::UUID
-    end
-
     def web_exception?(error)
       error.class.ancestors[0].to_s.index("Riff::Exceptions::")
     end
 
     def error_desc(error)
-      "#{error.class}: #{error.message}"
+      "#{error.class}: #{error.message}" unless ENV['RACK_ENV'] == 'test'
     end
 
-    def log_error(error)
-      warn(error_desc(error))
-      warn(error.backtrace.to_a.join("\n"))
-    end
+    # def id?(str)
+    #   str =~ Constants::ONLY_DIGITS || str =~ Constants::UUID
+    # end
+
+    # def log_error(error)
+    #   warn(error_desc(error))
+    #   warn(error.backtrace.to_a.join("\n"))
+    # end
   end
 end

@@ -11,20 +11,21 @@ module Actions
         private
 
         def body
-          (headers + data).each{|line| line.join("\t") }.join("\n")
+          (headers + data).map { |line| line.join("\t") }.join("\n")
         end
 
         def headers
-          ['User ID', 'User name', 'Post count']
+          [['User ID', 'User name', 'Post count']]
         end
 
         def data
-          Post
+          ::Post
             .join(:users, id: Sequel[:posts][:user_id])
-            .where(user_id: @user.id)
+            .where(Sequel[:posts][:company_id] => @user.company_id)
             .group(:user_id)
             .order(Sequel.lit('COUNT(posts.id) DESC'))
-            .select_map("users.id", "users.name", "COUNT(posts.id)"))
+            .select(Sequel.lit('users.id, users.name, COUNT(posts.id) AS post_count'))
+            .map{|r| [r[:id], r[:name], r[:post_count]] }
         end
       end
     end

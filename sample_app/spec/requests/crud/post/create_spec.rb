@@ -27,7 +27,8 @@ describe 'POST /actions/posts', type: :request do
   context 'when request params are valid' do
     let(:params) do
       {
-        body: 'post body'
+        body: 'post body',
+        title: 'post title'
       }
     end
     let(:keys_to_check) { params.keys.map(&:to_s) }

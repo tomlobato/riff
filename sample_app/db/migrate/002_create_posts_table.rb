@@ -7,6 +7,7 @@ Sequel.migration do
       column :user_id,              Integer,  null: false
       column :company_id,           Integer,  null: false
       column :body,                 String,   null: false
+      column :title,                String,   null: false
       column :created_at,           DateTime, null: false, default: Sequel::CURRENT_TIMESTAMP
       column :updated_at,           DateTime, null: false, default: Sequel::CURRENT_TIMESTAMP
     end

@@ -4,6 +4,5 @@
 .yardoc/*
 /gems
 dump.rdb
-/coverage
 .DS_Store
 /tmp

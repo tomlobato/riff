@@ -90,4 +90,16 @@ describe 'GET /actions/posts', type: :request do
       expect(json_response[0]['id'].to_i).to eq post.id
     end
   end
+
+  context 'when pagination is tried with wrong page value' do
+    let(:url) { '/actions/posts?_page=non_digit' }
+    
+    it 'returns 422 HTTP status' do
+      expect(response.status).to eq 422
+    end
+
+    it 'response contains correct body' do
+      expect(json_response).to eq({"error"=>"Invalid parameters", "messages"=>{"_page"=>"non_digit"}})
+    end
+  end
 end

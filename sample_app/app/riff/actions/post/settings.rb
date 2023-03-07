@@ -20,13 +20,13 @@ module Actions
       ####
       # Configure pagination
 
-      def paginate?
-        true
-      end
+      # def paginate?
+      #   true
+      # end
 
-      def per_page
-        50
-      end
+      # def per_page
+      #   50
+      # end
 
       ####
       # Configure fields
@@ -35,9 +35,9 @@ module Actions
         %i[id body user_id company_id]
       end
 
-      def show_fields
-        %i[id body user_id]
-      end
+      # def show_fields
+      #   %i[id body user_id]
+      # end
     end
   end
 end

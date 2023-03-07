@@ -3,6 +3,7 @@
 FactoryBot.define do
   factory :post do
     body { 'post body' }
+    title { 'post title' }
 
     user
     company

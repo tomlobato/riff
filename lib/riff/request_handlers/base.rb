@@ -22,9 +22,11 @@ module Riff
         @next_handler&.handle
       end
 
+      # :nocov:
       def run
         raise(Exceptions::NotImplemented)
       end
+      # :nocov:
 
       def setup
         # may implement

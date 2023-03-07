@@ -21,8 +21,6 @@ module Riff
 
       def check_permission
         @authorizer_class.new(@context, user).__send__("#{@context.action}?")
-      rescue StandardError
-        raise_authorization_error!
       end
 
       def handle_result(result)

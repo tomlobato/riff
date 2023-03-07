@@ -8,14 +8,42 @@ describe 'GET /actions/users', type: :request do
 
   before do
     header 'Authorization', access_token(user)
-    get('/actions/users')
+    get(url)
   end
 
-  it 'returns 200 HTTP status' do
-    expect(response.status).to eq 200
+  context 'when request has no id' do
+    let(:url) { '/actions/users' }
+
+    it 'returns 200 HTTP status' do
+      expect(response.status).to eq 200
+    end
+
+    it 'response contains correct body' do
+      expect(json_response.map { |i| i.slice(*slice_fields) }).to eq [user.values.stringify_keys.slice(*slice_fields)]
+    end
   end
 
-  it 'response contains correct body' do
-    expect(json_response.map { |i| i.slice(*slice_fields) }).to eq [user.values.stringify_keys.slice(*slice_fields)]
+  context 'when pagination is tried but disabled' do
+    let(:url) { '/actions/users?_page=2' }
+    
+    it 'returns 422 HTTP status' do
+      expect(response.status).to eq 422
+    end
+
+    it 'response contains correct body' do
+      expect(json_response).to eq({"error"=>"Invalid parameters", "messages"=>{"_page"=>"2"}})
+    end
+  end
+
+  context 'when order refers to unexistent column' do
+    let(:url) { '/actions/users?_order=non_existent_column' }
+    
+    it 'returns 422 HTTP status' do
+      expect(response.status).to eq 422
+    end
+
+    it 'response contains correct body' do
+      expect(json_response).to eq({"error"=>"Invalid parameters", "messages"=>{"order"=>"non_existent_column"}})
+    end
   end
 end

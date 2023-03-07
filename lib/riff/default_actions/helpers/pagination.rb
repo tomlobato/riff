@@ -24,17 +24,15 @@ module Riff
         end
 
         def page
-          return unless @settings.paginate?
+          value = read(:_page)
+          return unless value
 
-          page = read(:_page)
-          raise_invalid_pagination!(:_page) if page && page < 1
+          raise_invalid_pagination!(:_page) if value < 1
 
-          page
+          value
         end
 
         def limit
-          return unless @settings.paginate?
-
           read(:_limit) || @settings.per_page
         end
 

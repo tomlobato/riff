@@ -6,7 +6,6 @@ module Riff
       def initialize(request, response)
         @request = request
         @response = response
-        setup
       end
 
       def call
@@ -15,16 +14,14 @@ module Riff
 
       private
 
-      def setup
+      def call_chain
         @context = context
         @context.set(:action_class, @action_class = action_class)
         @context.set(:settings, @settings = settings)
-      end
-
-      def call_chain
         raise_action_not_found! unless action_available? && @action_class
         Chain.new(@context).call
       rescue StandardError => e
+        # Util.log_error(e)
         desc, status = HandleError.new(e).call
         Result.new(desc, status: status)
       end
@@ -38,11 +35,11 @@ module Riff
       end
 
       def raise_action_not_found!
-        Riff::Exceptions::ActionNotFound.create(path, request_method)
+        raise(Riff::Exceptions::ActionNotFound.create(@context.path, @context.request_method))
       end
 
       def custom_action
-        [:Actions, @context.model_name, @context.action_class_name]
+        [:Actions, @context.model_name, :Actions, @context.action_class_name]
       end
 
       def default_action

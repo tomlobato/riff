@@ -12,7 +12,7 @@ module Riff
         content_type
         headers
         status
-        body(@result.body)
+        @result.body
       end
 
       private
@@ -27,19 +27,6 @@ module Riff
 
       def status
         @response.status = @result.status if @result.status
-      end
-
-      def body(raw)
-        case raw
-        when String
-          raw
-        when NilClass
-          ""
-        when Array, Hash
-          raw.to_json
-        else
-          raise(Riff::Exceptions::InvalidResponseBody, "Unhandled body class '#{raw.class}'")
-        end
       end
     end
   end

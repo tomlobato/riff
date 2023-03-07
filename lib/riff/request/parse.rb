@@ -36,9 +36,13 @@ module Riff
           model_name: @resource.classify,
           model_class: model_class,
           action: @action,
-          action_class_name: @action.classify,
+          action_class_name: action_class_name,
           is_custom_method: !@custom_method.nil?
         }
+      end
+
+      def action_class_name
+        @custom_method ? @action.camelize : @action.classify
       end
 
       def model_class

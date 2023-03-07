@@ -15,7 +15,8 @@ module Riff
     private
 
     def print_error
-      warn(Util.error_desc(@error))
+      err_msg = Util.error_desc(@error)
+      warn(err_msg) if err_msg
     end
 
     def desc

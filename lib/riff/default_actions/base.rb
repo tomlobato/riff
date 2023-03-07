@@ -10,9 +10,11 @@ module Riff
         @context = context
       end
 
+      # :nocov:
       def call
         raise(Exceptions::NotImplemented)
       end
+      # :nocov:
 
       private
 

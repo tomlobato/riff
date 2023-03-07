@@ -34,7 +34,7 @@ module Riff
         end
 
         def raise_invalid_params!(name)
-          raise(Exceptions::InvalidaParameters, { order: name }.to_json)
+          raise(Exceptions::InvalidParameters, { order: name }.to_json)
         end
       end
     end
