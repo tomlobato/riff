@@ -94,7 +94,7 @@ describe 'PATCH /actions/posts', type: :request do
     end
 
     it 'returns user data in the JSON response' do
-      expect(json_response).to eq({ 'error' => 'Db validation error', 'messages' => {"title"=>["is not present"]} })
+      expect(json_response).to eq({ 'error' => 'Db validation error', 'messages' => { 'title' => ['is not present'] } })
     end
   end
 end

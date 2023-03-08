@@ -15,8 +15,8 @@ describe 'POST /actions/companies', type: :request do
     let(:params) { {} }
     let(:expected_json) do
       {
-        "error" => "Db validation error", 
-        "messages"=>{"name"=>["is not present"]}
+        'error' => 'Db validation error',
+        'messages' => { 'name' => ['is not present'] }
       }
     end
 
