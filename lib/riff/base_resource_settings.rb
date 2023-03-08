@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Riff
-  class BaseActionSettings
+  class BaseResourceSettings
     # Enable CRUD actions
 
     def default_enable_action

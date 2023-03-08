@@ -24,13 +24,14 @@ module Riff
         def parse_field(field)
           name, direction = field.split(":", 2)
           name = name.to_sym
-          validate_field!(name)
+          validate_field!(name, direction)
           name = Sequel.desc(name) if direction.to_s.downcase == "desc"
           name
         end
 
-        def validate_field!(name)
+        def validate_field!(name, direction)
           raise_invalid_params!(name) unless @model_class.columns.include?(name)
+          raise_invalid_params!("#{name}:#{direction}") if direction.present? && !direction.to_s.downcase.in?(%w[desc asc])
         end
 
         def raise_invalid_params!(name)

@@ -40,7 +40,7 @@ require_relative "riff/request/chain"
 require_relative "riff/request/result"
 require_relative "riff/request/set_response"
 
-require_relative "riff/base_action_settings"
+require_relative "riff/base_resource_settings"
 require_relative "riff/base_action"
 require_relative "riff/base_authorizer"
 

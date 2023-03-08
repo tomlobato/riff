@@ -2,7 +2,7 @@
 
 module Actions
   module Post
-    class Settings < Riff::BaseActionSettings
+    class Settings < Riff::BaseResourceSettings
       ####
       # Enable/disable CRUD actions for /actions/posts requests.
       # Available methods: create?, show?, index?, update? and delete?

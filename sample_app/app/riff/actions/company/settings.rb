@@ -2,7 +2,7 @@
 
 module Actions
   module Company
-    class Settings < Riff::BaseActionSettings
+    class Settings < Riff::BaseResourceSettings
     end
   end
 end

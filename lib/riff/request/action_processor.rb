@@ -61,7 +61,7 @@ module Riff
       end
 
       def settings
-        Util.const_get(settings_class_path, anchor: true)&.new || BaseActionSettings.new
+        Util.const_get(settings_class_path, anchor: true)&.new || BaseResourceSettings.new
       end
     end
   end

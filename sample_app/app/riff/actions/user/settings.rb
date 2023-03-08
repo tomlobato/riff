@@ -2,7 +2,7 @@
 
 module Actions
   module User
-    class Settings < Riff::BaseActionSettings
+    class Settings < Riff::BaseResourceSettings
       def paginate?
         false
       end
