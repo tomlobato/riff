@@ -2,8 +2,8 @@
 
 require 'spec_helper'
 
-describe 'POST /session/sign_out', type: :request do
-  include_examples 'authorization check', 'post', '/session/sign_out'
+describe 'POST /session/logout', type: :request do
+  include_examples 'authorization check', 'post', '/session/logout'
 
   context 'when Authorization headers contains valid token' do
     let(:user) { create(:user) }
@@ -23,7 +23,7 @@ describe 'POST /session/sign_out', type: :request do
 
       header 'Authorization', access_token(user)
 
-      post '/session/sign_out'
+      post '/session/logout'
     end
 
     it 'returns 200 HTTP status' do

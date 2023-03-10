@@ -10,6 +10,7 @@ module Riff
         @headers = request.headers
         @url = request.url
         setup
+        # pp self
       end
 
       def call

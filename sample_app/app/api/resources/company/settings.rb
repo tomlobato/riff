@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Actions
+module Resources
   module Company
     class Settings < Riff::BaseResourceSettings
     end

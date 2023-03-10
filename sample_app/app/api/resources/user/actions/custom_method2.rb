@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Actions
+module Resources
   module User
     module Actions
       class CustomMethod2 < Riff::BaseAction

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Actions
+module Resources
   module User
     class Settings < Riff::BaseResourceSettings
       def paginate?

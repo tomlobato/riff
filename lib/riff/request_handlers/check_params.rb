@@ -11,8 +11,10 @@ module Riff
 
       def action_validator
         case @context.action
-        when "create", "update"
-          :Save
+        when "create"
+          :Create
+        when "update"
+          :Update
         when "index"
           :Index
         else
@@ -21,11 +23,15 @@ module Riff
       end
 
       def class_nodes
-        [:Actions, model_name, :Validators, @action_validator]
+        [:Resources, model_name, :Validators, @action_validator]
       end
 
       def run
-        Validator.new(class_nodes, @context.params).call if @action_validator
+        Validator.new(class_nodes, @context.params, allow_empty_params: allow_empty_params).call if @action_validator
+      end
+
+      def allow_empty_params
+        @context.action != 'update'
       end
     end
   end

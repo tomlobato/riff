@@ -5,14 +5,14 @@ require 'spec_helper'
 describe 'Throttling', type: :throttling do
   let(:user) { create(:user, username: 'username', password: 'password') }
 
-  describe 'POST requests to /session/sign_in by IP address' do
+  describe 'POST requests to /session/login by IP address' do
     before do
       request_count.times do |_i|
         # We increment the email address here so we can be sure that it's
         # the IP address and not email address that's being blocked.
         header 'Authorization', access_token(user)
         params = { username: 'username', password: 'password' }
-        post '/session/sign_in', params, 'REMOTE_ADDR' => '1.2.3.4'
+        post '/session/login', params, 'REMOTE_ADDR' => '1.2.3.4'
       end
     end
 
@@ -33,14 +33,14 @@ describe 'Throttling', type: :throttling do
     end
   end
 
-  describe 'POST requests to /session/sign_in by username param' do
+  describe 'POST requests to /session/login by username param' do
     before do
       request_count.times do |i|
         # This time we increment the IP address so we can be sure that
         # it's the username and not the IP address that's being blocked.
         header 'Authorization', access_token(user)
         params = { username: 'username', password: 'password' }
-        post '/session/sign_in', params, 'REMOTE_ADDR' => "1.2.3.#{i}"
+        post '/session/login', params, 'REMOTE_ADDR' => "1.2.3.#{i}"
       end
     end
 

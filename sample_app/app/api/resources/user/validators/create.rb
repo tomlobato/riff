@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-module Actions
+module Resources
   module User
     module Validators
-      class Save < Dry::Validation::Contract
+      class Create < Dry::Validation::Contract
         params do
           required(:company_id).value(:integer)
           required(:email).value(:string)

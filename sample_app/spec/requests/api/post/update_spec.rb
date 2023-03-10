@@ -22,7 +22,7 @@ describe 'PATCH /actions/posts', type: :request do
     end
 
     it 'returns error post in JSON response' do
-      expected = { 'error' => 'Invalid parameters', 'messages' => { 'body' => ['is missing'] } }
+      expected = { 'error' => 'Invalid parameters', 'messages' => { '' => 'parameters cannot be blank' } }
       expect(json_response).to eq(expected)
     end
   end

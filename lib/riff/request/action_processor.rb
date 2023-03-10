@@ -43,7 +43,7 @@ module Riff
       end
 
       def custom_action
-        [:Actions, @context.model_name, :Actions, @context.action_class_name]
+        [:Resources, @context.model_name, :Actions, @context.action_class_name]
       end
 
       def default_action
@@ -57,7 +57,7 @@ module Riff
       end
 
       def settings_class_path
-        [:Actions, @context.model_name, :Settings]
+        [:Resources, @context.model_name, :Settings]
       end
 
       def settings

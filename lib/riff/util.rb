@@ -25,6 +25,7 @@ module Riff
       rec_errors.each{|k, v| errors[k] = v.uniq }
       errors
     end
+
     # def id?(str)
     #   str =~ Constants::ONLY_DIGITS || str =~ Constants::UUID
     # end

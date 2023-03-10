@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Actions
+module Resources
   module Post
     module Validators
       class Index < Dry::Validation::Contract

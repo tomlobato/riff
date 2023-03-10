@@ -24,9 +24,9 @@ module Riff
 
       def call_session
         case @type
-        when "sign_in"
+        when "login"
           Session::Open.new(@request.params).call
-        when "sign_out"
+        when "logout"
           Session::Close.new(@request.headers).call
         when "refresh"
           Session::Refresh.new(@request.headers).call

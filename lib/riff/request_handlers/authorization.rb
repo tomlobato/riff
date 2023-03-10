@@ -10,7 +10,7 @@ module Riff
       end
 
       def authorizer_class
-        Util.const_get([:Actions, model_name, :Authorizer], anchor: true)
+        Util.const_get([:Resources, model_name, :Authorizer], anchor: true)
       end
 
       def run

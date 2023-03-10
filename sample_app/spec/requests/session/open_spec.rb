@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe 'POST /session/sign_in', type: :request do
+describe 'POST /session/login', type: :request do
   context 'when request contains incorrectly formatted params' do
     let(:expected_json_response) do
       {
@@ -11,7 +11,7 @@ describe 'POST /session/sign_in', type: :request do
       }
     end
 
-    before { post '/session/sign_in' }
+    before { post '/session/login' }
 
     it 'returns 422 HTTP status' do
       expect(response.status).to eq 422
@@ -31,7 +31,7 @@ describe 'POST /session/sign_in', type: :request do
       }
     end
 
-    before { post '/session/sign_in', params }
+    before { post '/session/login', params }
 
     it 'returns 401 status' do
       expect(response.status).to eq 401
@@ -86,7 +86,7 @@ describe 'POST /session/sign_in', type: :request do
         .to receive(:call)
         .and_return(tokens)
 
-      post '/session/sign_in', params
+      post '/session/login', params
     end
 
     it 'returns 200 status' do

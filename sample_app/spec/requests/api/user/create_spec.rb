@@ -53,6 +53,7 @@ describe 'POST /actions/users', type: :request do
     end
 
     it 'returns user data in the JSON response' do
+      # puts response.body
       expect(json_response.slice(*keys_to_check)).to eq user_json_response
     end
   end
