@@ -24,7 +24,7 @@ module Riff
 
       def missing_params
         %w[username password].map do |k|
-          [k, "is missing"] if @params["username"].blank?
+          [k, "is missing"] if @params[k].blank?
         end
       end
 

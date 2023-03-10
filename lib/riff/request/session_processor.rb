@@ -3,6 +3,12 @@
 module Riff
   module Request
     class SessionProcessor
+      ACTIONS = {
+        login: 'login',
+        logout: 'logout',
+        refresh: 'refresh',
+      }
+
       def initialize(request, response, type)
         @request = request
         @response = response
@@ -24,11 +30,11 @@ module Riff
 
       def call_session
         case @type
-        when "login"
+        when ACTIONS[:login]
           Session::Open.new(@request.params).call
-        when "logout"
+        when ACTIONS[:logout]
           Session::Close.new(@request.headers).call
-        when "refresh"
+        when ACTIONS[:refresh]
           Session::Refresh.new(@request.headers).call
         else
           raise(invalid_request_path)
@@ -36,7 +42,8 @@ module Riff
       end
 
       def invalid_request_path
-        Exceptions::InvalidRequestPath.new("'#{@type}' is not a valid session action")
+        msg = "'#{@type}' is not a valid session action. Expected actions: #{ACTIONS.values.join(', ')}."
+        Exceptions::InvalidRequestPath.new(msg)
       end
     end
   end

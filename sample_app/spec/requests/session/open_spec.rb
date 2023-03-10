@@ -101,7 +101,7 @@ describe 'POST /session/login', type: :request do
   context 'when session action is invalid' do
     let(:expected_json) do
       {
-        'details' => "'invalid_action' is not a valid session action",
+        'details' => "'invalid_action' is not a valid session action. Expected actions: login, logout, refresh.",
         'error' => 'Invalid request path'
       }
     end
