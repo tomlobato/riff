@@ -68,6 +68,8 @@ See also the [sample_app](https://github.com/tomlobato/riff/tree/main/sample_app
 The automated tests for riff are inside the sample_app:
 
 ```sh
+cd sample_app
+
 mysqladim create my_app_test
 # Then create .env.test based on .env.test.template
 
@@ -75,7 +77,6 @@ mysqladim create my_app_test
 brew install redis # on mac
 redis-server # on mac
 
-cd sample_app
 RACK_ENV=test bundle exec rake db:migrate
 RACK_ENV=test bundle exec rspec
 ```
