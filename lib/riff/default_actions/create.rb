@@ -6,20 +6,10 @@ module Riff
       include Helpers::Attributes
 
       def call
-        a=attributes
-        # puts attributes
-        rec = model_class.new(a)
+        rec = model_class.new(attributes.merge(extra_attributes.to_h))
         rec.save
-        # puts rec.id
-        # puts 'rec.values'
-        # puts rec.values
-        # puts 'rec.values.slice(*fields)'
-        # puts rec.values.slice(*fields)
-        # puts 'fields'
-        # puts fields
         Request::Result.new(rec.values.slice(*fields))
       rescue Sequel::ValidationFailed => e
-        # puts 'opss'
         raise(Exceptions::DbValidationError, Util.record_errors(rec.errors).to_json)
       end
 
@@ -27,6 +17,10 @@ module Riff
 
       def fields
         settings.show_fields || model_class.columns
+      end
+
+      def extra_attributes
+        # may implement
       end
     end
   end

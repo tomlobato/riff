@@ -58,6 +58,9 @@ module Riff
     end
 
     class ResourceNotFound < Error404
+      def self.create(resource, id)
+        new("unable to find #{resource} with id '#{id}'")
+      end
     end
 
     class ActionNotFound < Error404

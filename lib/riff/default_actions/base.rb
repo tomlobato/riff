@@ -8,6 +8,7 @@ module Riff
 
       def initialize(context)
         @context = context
+        @user = @context.get(:user)
       end
 
       # :nocov:

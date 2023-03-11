@@ -15,7 +15,7 @@ module Riff
         end
 
         def record_not_found
-          Riff::Exceptions::ResourceNotFound.new("unable to find #{@context.resource} with id '#{@context.id}'")
+          Riff::Exceptions::ResourceNotFound.create(@context.resource, @context.id)
         end
       end
     end
