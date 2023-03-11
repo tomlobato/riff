@@ -17,7 +17,7 @@ module Riff
     end
 
     def error_desc(error)
-      "#{error.class}: #{error.message}" unless ENV["RACK_ENV"] == "test"
+      "#{error.class}: #{error.message}" #unless ENV["RACK_ENV"] == "test"
     end
 
     def record_errors(rec_errors)
@@ -30,9 +30,9 @@ module Riff
     #   str =~ Constants::ONLY_DIGITS || str =~ Constants::UUID
     # end
 
-    # def log_error(error)
-    #   warn(error_desc(error))
-    #   warn(error.backtrace.to_a.join("\n"))
-    # end
+    def log_error(error)
+      warn(error_desc(error))
+      warn(error.backtrace.to_a.join("\n"))
+    end
   end
 end
