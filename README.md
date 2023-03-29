@@ -70,12 +70,16 @@ The automated tests for riff are inside the sample_app:
 ```sh
 cd sample_app
 
-mysqladim create my_app_test
+mysqladmin create my_app_test
 # Then create .env.test based on .env.test.template
 
 # Install and run redis-server in another terminal:
 brew install redis # on mac
 redis-server # on mac
+
+sudo aptitude install redis-server # on ubuntu/debian
+
+bundle install
 
 RACK_ENV=test bundle exec rake db:migrate
 RACK_ENV=test bundle exec rspec
