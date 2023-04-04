@@ -3,7 +3,7 @@
 module Riff
   module Request
     class Context
-      attr_reader :resource,
+      attr_accessor :resource,
                   :id,
                   :action,
                   :params,

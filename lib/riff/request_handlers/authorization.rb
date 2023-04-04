@@ -6,11 +6,11 @@ module Riff
       private
 
       def setup
-        @authorizer_class = authorizer_class
+        @authorizer_class = authorize_class
       end
 
-      def authorizer_class
-        Util.const_get([:Resources, model_name, :Authorizer], anchor: true)
+      def authorize_class
+        Util.const_get([:Resources, model_name, :Authorize], anchor: true)
       end
 
       def run

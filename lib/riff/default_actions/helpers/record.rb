@@ -8,13 +8,17 @@ module Riff
 
         def record(fields = nil)
           fields ||= model_class.columns
-          record = model_class
-            .where(id: @context.id, **scope.to_h)
-            .select(*fields)
-            .first
+          record = query(fields)
           record_not_found! unless record
 
           record
+        end
+
+        def query(fields)
+          model_class
+            .where(id: @context.id, **scope.to_h)
+            .select(*fields)
+            .first
         end
 
         def record_not_found!

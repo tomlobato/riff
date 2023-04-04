@@ -2,7 +2,7 @@
 
 module Resources
   module User
-    class Authorizer < Riff::BaseAuthorizer
+    class Authorize < Riff::Authorize
       def default
         { company_id: @user.company_id } if @user.is_admin
       end

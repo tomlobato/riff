@@ -20,8 +20,9 @@ class Skeleton
   def create(resource)
     resource_class_name = resource.classify
     base_dir = "app/api/resources/#{resource.singularize}"
-    write("#{base_dir}/authorizer.rb", authorizer(resource_class_name))
+    write("#{base_dir}/authorize.rb", authorize(resource_class_name))
     write("#{base_dir}/settings.rb", settings(resource_class_name))
+    write("#{base_dir}/enable.rb", enable(resource_class_name))
     write("#{base_dir}/validators/save.rb", validator(resource_class_name, :Save))
     write("#{base_dir}/validators/index.rb", validator(resource_class_name, :Index))
     %w[create show index update delete].each do |action|
@@ -35,13 +36,13 @@ class Skeleton
     File.write(path, content)
   end
 
-  def authorizer(resource_class_name)
+  def authorize(resource_class_name)
     <<~HD
       # frozen_string_literal: true
 
       module Resources
         module #{resource_class_name}
-          class Authorizer < Riff::BaseAuthorizer
+          class Authorize < Riff::Authorize
           end
         end
       end
@@ -54,7 +55,20 @@ class Skeleton
 
       module Resources
         module #{resource_class_name}
-          class Settings < Riff::BaseResourceSettings
+          class Settings < Riff::Settings
+          end
+        end
+      end
+    HD
+  end
+
+  def enable(resource_class_name)
+    <<~HD
+      # frozen_string_literal: true
+
+      module Resources
+        module #{resource_class_name}
+          class Enable < Riff::Enable
           end
         end
       end

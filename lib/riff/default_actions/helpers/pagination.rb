@@ -33,14 +33,14 @@ module Riff
         end
 
         def limit
-          read(:_limit) || @settings.per_page
+          read(:_limit) || @settings[:per_page]
         end
 
         def read(key)
           value = @params[key].presence
           return unless value
 
-          raise_invalid_pagination!(key) unless @settings.paginate?
+          raise_invalid_pagination!(key) unless @settings[:paginate]
           raise_invalid_pagination!(key) unless value =~ Constants::ONLY_DIGITS
 
           Integer(value, 10)

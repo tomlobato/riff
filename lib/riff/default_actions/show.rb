@@ -12,11 +12,16 @@ module Riff
       private
 
       def body
-        record(fields)&.values
+        rec = record(fields)
+        rec&.values.merge(extra_fields(rec).to_h)
       end
 
       def fields
         settings.show_fields
+      end
+
+      def extra_fields(rec)
+        # may implement
       end
     end
   end

@@ -26,6 +26,7 @@ module Riff
 
       def setup
         @context = context
+        @enabler = enabler
         @context.set(:action_class, @action_class = action_class)
         @context.set(:settings, @settings = settings)
       end
@@ -53,7 +54,15 @@ module Riff
       def action_available?
         return true if @context.is_custom_method
 
-        !@settings || @settings.__send__("#{@context.action}?")
+        !@enabler || @enabler.__send__("#{@context.action}?")
+      end
+
+      def enabler_class_path
+        [:Resources, @context.model_name, :Enable]
+      end
+
+      def enabler
+        Util.const_get(enabler_class_path, anchor: true)&.new || Enable.new
       end
 
       def settings_class_path
@@ -61,7 +70,7 @@ module Riff
       end
 
       def settings
-        Util.const_get(settings_class_path, anchor: true)&.new || BaseResourceSettings.new
+        Util.const_get(settings_class_path, anchor: true)&.new || Settings.new
       end
     end
   end

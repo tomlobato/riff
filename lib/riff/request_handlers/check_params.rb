@@ -10,16 +10,9 @@ module Riff
       end
 
       def action_validator
-        case @context.action
-        when "create"
-          :Create
-        when "update"
-          :Update
-        when "index"
-          :Index
-        else
-          false
-        end
+        return if @context.action.to_s.in?(%w[show delete]) 
+
+        @context.action.camelize.to_sym
       end
 
       def class_nodes

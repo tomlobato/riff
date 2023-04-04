@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Riff
-  class BaseAuthorizer
+  class Authorize
     def initialize(context, user)
       @context = context
       @user = user

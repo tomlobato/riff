@@ -2,7 +2,7 @@
 
 module Resources
   module Company
-    class Authorizer < Riff::BaseAuthorizer
+    class Authorize < Riff::Authorize
       def create?
         true
       end

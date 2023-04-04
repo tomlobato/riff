@@ -2,7 +2,7 @@
 
 module Resources
   module Post
-    class Authorizer < Riff::BaseAuthorizer
+    class Authorize < Riff::Authorize
       def default
         { user_id: @user.id }
       end
