@@ -52,9 +52,21 @@ module Riff
 
       def setup
         @node1, @node2, @node3 = @path_nodes = path_nodes
-        @resource = @node1.singularize
+        @resource = find_resource(@node1)
         @id, @custom_method = @node2.to_s.split(":", 2)
         @action = find_action
+      end
+
+      def find_resource(node1)
+        return node1.singularize unless resource_remap
+
+        (resource_remap[node1] || node1).singularize
+      end
+
+      def resource_remap
+        return @resource_remap if defined?(@resource_remap)
+
+        @resource_remap = Riff::Conf.get(:resource_remap)&.transform_keys(&:to_s)&.transform_values(&:to_s)
       end
 
       def find_action

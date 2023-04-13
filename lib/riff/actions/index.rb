@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Riff
-  module DefaultActions
+  module Actions
     class Index < Base
       def call
         Request::Result.new(body)
@@ -27,9 +27,7 @@ module Riff
       end
 
       def request_filters
-        f = @context.params.deep_dup
-        %i[_order _limit _page].each { |k| f.delete(k) }
-        f
+        @context.params.reject{|k, _| k.to_s.index('_') == 0 }
       end
 
       def pagination

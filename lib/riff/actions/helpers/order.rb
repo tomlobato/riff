@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Riff
-  module DefaultActions
+  module Actions
     module Helpers
       class Order
         def initialize(param_order, model_class, allow_extra_fields: nil)

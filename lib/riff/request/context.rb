@@ -4,17 +4,17 @@ module Riff
   module Request
     class Context
       attr_accessor :resource,
-                  :id,
-                  :action,
-                  :params,
-                  :model_name,
-                  :model_class,
-                  :action_class_name,
-                  :is_custom_method,
-                  :headers,
-                  :request_method,
-                  :path,
-                  :url
+                    :id,
+                    :action,
+                    :params,
+                    :model_name,
+                    :model_class,
+                    :action_class_name,
+                    :is_custom_method,
+                    :headers,
+                    :request_method,
+                    :path,
+                    :url
 
       def initialize(vars)
         vars.each { |k, v| instance_variable_set("@#{k}", v) }

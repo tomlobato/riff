@@ -59,7 +59,7 @@ module Riff
 
     class ResourceNotFound < Error404
       def self.create(resource, id)
-        new("unable to find #{resource} with id '#{id}'")
+        new("unable to find #{resource.to_s.singularize} with id '#{id}'")
       end
     end
 

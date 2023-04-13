@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Riff
-  module DefaultActions
+  module Actions
     class Show < Base
       include Helpers::Record
 

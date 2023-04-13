@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Riff
-  module DefaultActions
+  module Actions
     class Delete < Base
       include Helpers::Record
 

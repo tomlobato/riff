@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Riff
-  module DefaultActions
+  module Actions
     module Helpers
       class Pagination
         def initialize(params, settings)

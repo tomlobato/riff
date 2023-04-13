@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Riff
-  module DefaultActions
+  module Actions
     class Base
       extend Forwardable
       def_delegators :@context, :params

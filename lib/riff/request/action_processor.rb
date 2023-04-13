@@ -19,7 +19,7 @@ module Riff
         raise_action_not_found! unless action_available? && @action_class
         Chain.new(@context).call
       rescue StandardError => e
-        # Util.log_error(e)
+        # Util.log_error(e) #if e.message =~ /no implicit conversion of nil into String/
         desc, status = HandleError.new(e).call
         Result.new(desc, status: status)
       end
@@ -48,7 +48,7 @@ module Riff
       end
 
       def default_action
-        [:Riff, :DefaultActions, @context.action_class_name]
+        [:Riff, :Actions, @context.action_class_name]
       end
 
       def action_available?

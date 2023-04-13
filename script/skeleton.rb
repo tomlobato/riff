@@ -105,7 +105,7 @@ class Skeleton
       module Resources
         module #{resource_class_name}
           module Actions
-            class #{type} < Riff::DefaultActions::#{type}
+            class #{type} < Riff::Actions::#{type}
             end
           end
         end
