@@ -3,9 +3,15 @@
 module Riff
   module Request
     class Parse
+      ACTION_MAP_WITH_ID = { 'GET' => "show", 'DELETE' => "delete", 'PATCH' => "update" }.freeze
+      ACTION_MAP_WITHOUT_ID = { 'GET' => "index", 'POST' => "create" }.freeze
+
+      private_constant :ACTION_MAP_WITH_ID
+      private_constant :ACTION_MAP_WITHOUT_ID
+
       def initialize(request)
         @path = request.path
-        @request_method = request.request_method
+        @request_method = request_method(request.request_method)
         @params = request.params.deep_symbolize_keys
         @headers = request.headers
         @url = request.url
@@ -42,6 +48,13 @@ module Riff
         }
       end
 
+      def request_method(raw_request_method)
+        # puts "HttpVerbs::#{raw_request_method.upcase}"
+        Object.const_get("Riff::HttpVerbs::#{raw_request_method.upcase}")
+      rescue NameError
+        raise(action_not_found(request_method: raw_request_method))
+      end
+
       def action_class_name
         @custom_method ? @action.camelize : @action.classify
       end
@@ -70,19 +83,15 @@ module Riff
       end
 
       def find_action
-        @custom_method || action_map[@request_method.upcase.to_sym] || raise(action_not_found)
+        @custom_method || action_map[@request_method] || raise(action_not_found)
       end
 
-      def action_not_found
-        Riff::Exceptions::ActionNotFound.create(@path, @request_method)
+      def action_not_found(request_method: nil)
+        Riff::Exceptions::ActionNotFound.create(@path, request_method || @request_method)
       end
 
       def action_map
-        if @id
-          { GET: "show", DELETE: "delete", PATCH: "update" }
-        else
-          { GET: "index", POST: "create" }
-        end
+        @id ? ACTION_MAP_WITH_ID : ACTION_MAP_WITHOUT_ID
       end
 
       def path_nodes

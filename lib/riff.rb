@@ -52,6 +52,7 @@ require_relative "riff/constants"
 require_relative "riff/validator"
 require_relative "riff/exceptions"
 require_relative "riff/handle_error"
+require_relative "riff/http_verbs"
 
 module Riff
   def self.handle_action(request, response)

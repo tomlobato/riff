@@ -3,6 +3,8 @@
 module Riff
   module Request
     class ActionProcessor
+      extend Memo
+
       def initialize(request, response)
         @request = request
         @response = response
@@ -19,7 +21,7 @@ module Riff
         raise_action_not_found! unless action_available? && @action_class
         Chain.new(@context).call
       rescue StandardError => e
-        # Util.log_error(e) #if e.message =~ /no implicit conversion of nil into String/
+        Util.log_error(e) unless e.is_a?(Riff::Exceptions::RiffError)
         desc, status = HandleError.new(e).call
         Result.new(desc, status: status)
       end
@@ -36,11 +38,16 @@ module Riff
       end
 
       def action_class
-        Util.const_get(custom_action, anchor: true) || Util.const_get(default_action)
+        custom_action_class || Util.const_get(default_action)
       end
 
-      def raise_action_not_found!
-        raise(Riff::Exceptions::ActionNotFound.create(@context.path, @context.request_method))
+      def custom_action_class
+        Util.const_get(custom_action, anchor: true)
+      end
+      memo :custom_action_class
+
+      def raise_action_not_found!(details: nil)
+        raise(Riff::Exceptions::ActionNotFound.create(@context.path, @context.request_method, details: details))
       end
 
       def custom_action
@@ -52,9 +59,21 @@ module Riff
       end
 
       def action_available?
-        return true if @context.is_custom_method
+        # puts "custom_method_available?=#{custom_method_available?} @context.is_custom_method=#{@context.is_custom_method}"
+        return custom_method_available? if @context.is_custom_method
 
         !@enabler || @enabler.__send__("#{@context.action}?")
+      end
+
+      def custom_method_available?
+        return unless custom_action_class
+        raise_action_not_found!(details: "Custom method exists but with different http verb") if custom_method_verb_mismatch?
+
+        true
+      end
+
+      def custom_method_verb_mismatch?
+        "#{custom_action_class}::VERB".constantize != @context.request_method
       end
 
       def enabler_class_path

@@ -64,8 +64,10 @@ module Riff
     end
 
     class ActionNotFound < Error404
-      def self.create(path, request_method)
-        new("path='#{path}' verb='#{request_method}'")
+      def self.create(path, request_method, details: nil)
+        msg = "path=#{path} verb=#{request_method}"
+        msg += ", #{details}" if details
+        new(msg)
       end
     end
 
