@@ -3,11 +3,12 @@
 module Riff
   module Request
     class Parse
-      ACTION_MAP_WITH_ID = { 'GET' => "show", 'DELETE' => "delete", 'PATCH' => "update" }.freeze
-      ACTION_MAP_WITHOUT_ID = { 'GET' => "index", 'POST' => "create" }.freeze
+      ACTION_MAP = { 
+        with_id: { 'GET' => "show", 'DELETE' => "delete", 'PATCH' => "update" },
+        without_id: { 'GET' => "index", 'POST' => "create" }
+      }.freeze
 
-      private_constant :ACTION_MAP_WITH_ID
-      private_constant :ACTION_MAP_WITHOUT_ID
+      private_constant :ACTION_MAP
 
       def initialize(request)
         @path = request.path
@@ -15,6 +16,7 @@ module Riff
         @params = request.params.deep_symbolize_keys
         @headers = request.headers
         @url = request.url
+        @remote_ip = request.headers["REMOTE_ADDR"]
         setup
         # pp self
       end
@@ -32,7 +34,8 @@ module Riff
           headers: @headers,
           params: @params,
           path: @path,
-          url: @url
+          url: @url,
+          remote_ip: @remote_ip
         }
       end
 
@@ -91,7 +94,7 @@ module Riff
       end
 
       def action_map
-        @id ? ACTION_MAP_WITH_ID : ACTION_MAP_WITHOUT_ID
+        ACTION_MAP[@id ? :with_id : :without_id]
       end
 
       def path_nodes

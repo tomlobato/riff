@@ -14,7 +14,9 @@ module Riff
                     :headers,
                     :request_method,
                     :path,
-                    :url
+                    :url,
+                    :authentication_method,
+                    :remote_ip
 
       def initialize(vars)
         vars.each { |k, v| instance_variable_set("@#{k}", v) }

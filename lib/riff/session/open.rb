@@ -29,7 +29,7 @@ module Riff
       end
 
       def user_class
-        Conf.get(:user_class)
+        Conf.get(:default_user_class)
       end
 
       def body(user)

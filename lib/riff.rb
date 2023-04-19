@@ -28,6 +28,7 @@ require_relative "riff/authentication/create_tokens"
 require_relative "riff/authentication/update_authentication_token"
 require_relative "riff/authentication/message_signer"
 require_relative "riff/authentication/token_validator"
+require_relative "riff/authentication/default_method"
 
 require_relative "riff/session/open"
 require_relative "riff/session/close"

@@ -14,19 +14,22 @@ module Riff
       end
 
       def authentication_enabled?
-        Conf.get(:user_class)
+        Conf.get(:default_user_class)
       end
 
       def authenticate
-        ::Riff::Authentication::TokenValidator.new(authorization_token, purpose).call
+        method.new(@context).authenticate
       end
 
-      def purpose
-        @context.url.include?("refresh_token") ? :refresh_token : :access_token
+      def method
+        custom_resource_method || 
+          Conf.get(:custom_authentication_method) || 
+          Riff::Authentication::DefaultMethod
       end
 
-      def authorization_token
-        @context.headers["Authorization"]
+      def custom_resource_method
+        settings = @context.get(:settings)
+        settings.authentication_method if settings && settings.respond_to?(:authentication_method)
       end
     end
   end
