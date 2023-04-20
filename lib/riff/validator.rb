@@ -22,6 +22,8 @@ module Riff
 
       result = @validator_class.new.call(@params)
       thrown_error(result.errors) if result.failure?
+
+      result.to_h
     end
 
     private

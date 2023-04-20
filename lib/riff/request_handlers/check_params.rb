@@ -20,7 +20,11 @@ module Riff
       end
 
       def run
-        Validator.new(class_nodes, @context.params, allow_empty_params: allow_empty_params).call if @action_validator
+        return unless @action_validator
+
+        result = Validator.new(class_nodes, @context.params, allow_empty_params: allow_empty_params).call 
+        @context.params = result if result
+        nil
       end
 
       def allow_empty_params
