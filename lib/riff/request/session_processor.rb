@@ -31,7 +31,7 @@ module Riff
       def call_session
         case @type
         when ACTIONS[:login]
-          Session::Open.new(@request.params).call
+          Session::Open.new(@request).call
         when ACTIONS[:logout]
           Session::Close.new(@request.headers).call
         when ACTIONS[:refresh]

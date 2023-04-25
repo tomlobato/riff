@@ -8,17 +8,17 @@ describe 'POST /session/logout', type: :request do
   context 'when Authorization headers contains valid token' do
     let(:user) { create(:user) }
 
-    let(:update_authentication_token) do
-      instance_double(Riff::Authentication::UpdateAuthenticationToken)
+    let(:update_auth_token) do
+      instance_double(Riff::Auth::DefaultMethod::Token::UpdateAuthToken)
     end
 
     before do
-      expect(Riff::Authentication::UpdateAuthenticationToken)
+      expect(Riff::Auth::DefaultMethod::Token::UpdateAuthToken)
         .to receive(:new)
         .with(user)
-        .and_return(update_authentication_token)
+        .and_return(update_auth_token)
 
-      expect(update_authentication_token)
+      expect(update_auth_token)
         .to receive(:call)
 
       header 'Authorization', access_token(user)

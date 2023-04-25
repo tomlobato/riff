@@ -4,7 +4,7 @@ module Riff
   module Request
     class Chain
       HANDLERS = [
-        RequestHandlers::Authentication,
+        RequestHandlers::Auth,
         RequestHandlers::Authorization,
         RequestHandlers::CheckParams,
         RequestHandlers::Action

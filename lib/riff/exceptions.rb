@@ -22,6 +22,10 @@ module Riff
       WEB_STATUS = 422
     end
 
+    class Error428 < RiffError
+      WEB_STATUS = 428
+    end
+
     class Error404 < RiffError
       WEB_STATUS = 404
     end
@@ -31,7 +35,7 @@ module Riff
     end
 
     # 40*
-    class AuthenticationFailure < Error401
+    class AuthFailure < Error401
     end
 
     class InvalidEmailOrPassword < Error401
@@ -55,6 +59,9 @@ module Riff
 
     class DbValidationError < Error422
       JSON = true
+    end
+
+    class PreconditionFailed < Error428
     end
 
     class ResourceNotFound < Error404

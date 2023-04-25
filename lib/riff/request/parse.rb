@@ -16,7 +16,7 @@ module Riff
         @params = request.params.deep_symbolize_keys
         @headers = request.headers
         @url = request.url
-        @remote_ip = request.headers["REMOTE_ADDR"]
+        @remote_ip = remote_ip
         setup
         # pp self
       end
@@ -27,6 +27,14 @@ module Riff
       end
 
       private
+
+      def setup
+        @node1, @node2, @node3 = @path_nodes = path_nodes
+        @resource = find_resource(@node1)
+        @model_less = model_less?
+        @id, @custom_method = @node2.to_s.split(":", 2)
+        @action = find_action
+      end
 
       def basic_context
         {
@@ -44,6 +52,7 @@ module Riff
           resource: @resource,
           id: @id,
           model_name: @resource.classify,
+          model_less: @model_less,
           model_class: model_class,
           action: @action,
           action_class_name: action_class_name,
@@ -52,7 +61,6 @@ module Riff
       end
 
       def request_method(raw_request_method)
-        # puts "HttpVerbs::#{raw_request_method.upcase}"
         Object.const_get("Riff::HttpVerbs::#{raw_request_method.upcase}")
       rescue NameError
         raise(action_not_found(request_method: raw_request_method))
@@ -63,14 +71,12 @@ module Riff
       end
 
       def model_class
-        Util.const_get("::#{@resource.classify}")
+        Util.const_get("::#{@resource.classify}") unless @model_less
       end
 
-      def setup
-        @node1, @node2, @node3 = @path_nodes = path_nodes
-        @resource = find_resource(@node1)
-        @id, @custom_method = @node2.to_s.split(":", 2)
-        @action = find_action
+      def model_less?
+        mlr = Riff::Conf.get(:model_less_resources)
+        mlr && mlr.include?(@resource.to_sym)
       end
 
       def find_resource(node1)
@@ -103,6 +109,10 @@ module Riff
 
       def validate_path!
         raise(Riff::Exceptions::OutOfBoundsPathNodes) unless @path_nodes.size.between?(1, 2)
+      end
+
+      def remote_ip
+        RemoteIp.new(@headers).call
       end
     end
   end

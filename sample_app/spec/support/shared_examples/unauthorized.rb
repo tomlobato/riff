@@ -3,8 +3,8 @@
 RSpec.shared_examples 'unauthorized' do
   let(:expected_json_response) do
     {
-      'details' => 'Riff::Exceptions::AuthenticationFailure',
-      'error' => 'Authentication failure'
+      'details' => 'Riff::Exceptions::AuthFailure',
+      'error' => 'Auth failure'
     }
   end
 

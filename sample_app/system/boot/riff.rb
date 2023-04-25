@@ -10,12 +10,12 @@ Application.boot(:riff) do
   start do
     # Configure many
     Riff::Conf.configure(
-      default_user_class: User,
+      default_auth_user_class: User,
       default_paginate: true,
       default_per_page: 20
     )
 
     # Configure one
-    Riff::Conf.set(:default_user_class, User)
+    Riff::Conf.set(:default_auth_user_class, User)
   end
 end

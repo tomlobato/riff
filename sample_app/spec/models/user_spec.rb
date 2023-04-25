@@ -106,49 +106,49 @@ describe User do
     end
   end
 
-  describe 'authentication_token presence validation' do
-    let(:user) { build(:user, authentication_token: authentication_token) }
+  describe 'auth_token presence validation' do
+    let(:user) { build(:user, authentication_token: auth_token) }
 
     before { user.valid? }
 
     context 'when is blank' do
-      let(:authentication_token) { nil }
+      let(:auth_token) { nil }
 
-      it 'adds error to the :authentication_token field' do
+      it 'adds error to the :auth_token field' do
         expect(user.errors[:authentication_token]).to eq ['is not present']
       end
     end
 
     context 'when is not blank' do
-      let(:authentication_token) { 'test' }
+      let(:auth_token) { 'test' }
 
-      it 'does not add error to the :authentication_token field' do
+      it 'does not add error to the :auth_token field' do
         expect(user.errors[:authentication_token]).to be_nil
       end
     end
   end
 
-  describe 'authentication_token uniqueness validation' do
-    let(:user) { build(:user, authentication_token: authentication_token) }
+  describe 'auth_token uniqueness validation' do
+    let(:user) { build(:user, authentication_token: auth_token) }
 
     before do
-      create(:user, authentication_token: 'test')
+      create(:user, auth_token: 'test')
 
       user.valid?
     end
 
-    context 'when user authentication_token is unique' do
-      let(:authentication_token) { 'test_2' }
+    context 'when user auth_token is unique' do
+      let(:auth_token) { 'test_2' }
 
-      it 'does not add error to the :authentication_token field' do
+      it 'does not add error to the :auth_token field' do
         expect(user.errors[:authentication_token]).to be_nil
       end
     end
 
-    context 'when user authentication_token is not unique' do
-      let(:authentication_token) { 'test' }
+    context 'when user auth_token is not unique' do
+      let(:auth_token) { 'test' }
 
-      it 'adds error to the :authentication_token field' do
+      it 'adds error to the :auth_token field' do
         expect(user.errors[:authentication_token]).to eq ['is already taken']
       end
     end

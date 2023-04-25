@@ -3,40 +3,47 @@
 module Riff
   module Session
     class Open
-      def initialize(params)
-        @params = params
+      def initialize(roda_request)
+        @roda_request = roda_request
+        @params = roda_request.params
       end
 
       def call
-        validate_params!
-        user = user_class.find(username: @params["username"])
-        raise(Exceptions::InvalidEmailOrPassword) unless user&.authenticate(@params["password"])
+        user = validate_credentials
 
         Request::Result.new(body(user))
       end
 
       private
 
-      def validate_params!
-        msg = missing_params.compact.to_h
-        raise(Exceptions::InvalidParameters, msg.to_json) if msg.present?
-      end
-
-      def missing_params
-        %w[username password].map do |k|
-          [k, "is missing"] if @params[k].blank?
-        end
-      end
-
-      def user_class
-        Conf.get(:default_user_class)
-      end
-
       def body(user)
         {
           user: user.values.slice(:id, :name, :email),
-          tokens: Authentication::CreateTokens.new(user).call
+          tokens: Riff::Auth::DefaultMethod::Token::CreateTokens.new(user).call
         }
+      end
+
+      def validate_credentials
+        [validate_credentials_methods].flatten.each do |method|
+          instance = method.new(@roda_request)
+          next info_log("Request is not authenticable with method #{method}") unless instance.request_is_authenticable?
+
+          user = instance.authenticate
+          return user if user
+        end
+        raise(Exceptions::AuthFailure)
+      end
+
+      def info_log(msg)
+        Application['logger'].info(msg)
+      end
+
+      def validate_credentials_methods
+        Conf.get(:validate_credentials_methods) || default_validate_credentials_methods
+      end
+
+      def default_validate_credentials_methods
+        Riff::Auth::DefaultMethod::Token::ValidateCredentials
       end
     end
   end

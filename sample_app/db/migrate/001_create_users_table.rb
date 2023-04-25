@@ -10,7 +10,7 @@ Sequel.migration do
       column :username,             String,   null: false, unique: true
       column :is_admin,             TrueClass, null: false, default: false
       column :password_digest,      String,   null: false
-      column :authentication_token, String,   null: false, unique: true
+      column :auth_token, String,   null: false, unique: true
       column :created_at,           DateTime, null: false, default: Sequel::CURRENT_TIMESTAMP
       column :updated_at,           DateTime, null: false, default: Sequel::CURRENT_TIMESTAMP
     end

@@ -19,6 +19,7 @@ module Riff
       def call_chain
         setup
         raise_action_not_found! unless action_available? && @action_class
+        
         Chain.new(@context).call
       rescue StandardError => e
         Util.log_error(e) unless e.is_a?(Riff::Exceptions::RiffError)

@@ -47,7 +47,7 @@ describe 'POST /session/login', type: :request do
     let(:params) { { username: user.username, password: 'password' } }
 
     let(:authorization_tokens_generator) do
-      instance_double(Riff::Authentication::CreateTokens)
+      instance_double(Riff::Auth::DefaultMethod::Token::CreateTokens)
     end
 
     let(:tokens) do
@@ -77,7 +77,7 @@ describe 'POST /session/login', type: :request do
     end
 
     before do
-      expect(Riff::Authentication::CreateTokens)
+      expect(Riff::Auth::DefaultMethod::Token::CreateTokens)
         .to receive(:new)
         .with(user)
         .and_return(authorization_tokens_generator)

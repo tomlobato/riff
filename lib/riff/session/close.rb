@@ -8,16 +8,16 @@ module Riff
       end
 
       def call
-        raise(Exceptions::AuthenticationFailure) unless user
+        raise(Exceptions::AuthFailure) unless user
 
-        ::Riff::Authentication::UpdateAuthenticationToken.new(user).call
+        Riff::Auth::DefaultMethod::Token::InvalidateAuthToken.new(user).call
         Request::Result.new
       end
 
       private
 
       def user
-        @user ||= ::Riff::Authentication::TokenValidator.new(@headers["Authorization"], :access_token).call
+        @user ||= Riff::Auth::DefaultMethod::Token::TokenValidator.new(@headers["Authorization"], :access_token).call
       end
     end
   end

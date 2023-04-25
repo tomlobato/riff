@@ -17,7 +17,7 @@ RSpec.shared_examples 'authorization check' do |method, url|
     include_examples 'unauthorized'
   end
 
-  context 'when user authentication_token is invalid' do
+  context 'when user auth_token is invalid' do
     let(:user) { create(:user) }
 
     before do

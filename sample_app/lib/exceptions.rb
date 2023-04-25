@@ -15,7 +15,7 @@ module Exceptions
     end
   end
 
-  # {Exceptions::InvalidEmailOrPassword} is an error which is raised during authentication process when email or password is invalid.
+  # {Exceptions::InvalidEmailOrPassword} is an error which is raised during auth process when email or password is invalid.
   class InvalidEmailOrPassword < StandardError
   end
 end

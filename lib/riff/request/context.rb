@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# TODO implement lazy properties
+
 module Riff
   module Request
     class Context
@@ -9,13 +11,14 @@ module Riff
                     :params,
                     :model_name,
                     :model_class,
+                    :model_less,
                     :action_class_name,
                     :is_custom_method,
                     :headers,
                     :request_method,
                     :path,
                     :url,
-                    :authentication_method,
+                    :auth_method,
                     :remote_ip
 
       def initialize(vars)

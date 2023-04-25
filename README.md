@@ -18,7 +18,7 @@ bundle install
 
 ## Features
 
-- Authentication (access_token/refresh_token)
+- Auth (access_token/refresh_token)
 - Authorization
 - Parameters checking
 - Implementation of the default CRUD actions (but can be overwritten)
@@ -59,7 +59,7 @@ end
 
 2) Create the riff customizations inside your app inside the constant path `Actions::<MY_MODEL>::*` for each model you want to expose in your api (see examples in [sample_app/app/riff/actions](https://github.com/tomlobato/riff/tree/main/sample_app/app/riff/actions)).
 
-3) Configure Riff minimally setting the user class `Riff::Conf.set(:default_user_class, User)`, so riff can handle authentication for you. See a example in [riff.rb](https://github.com/tomlobato/riff/tree/main/sample_app/system/boot/riff.rb)).
+3) Configure Riff minimally setting the user class `Riff::Conf.set(:default_auth_user_class, User)`, so riff can handle auth for you. See a example in [riff.rb](https://github.com/tomlobato/riff/tree/main/sample_app/system/boot/riff.rb)).
 
 See also the [sample_app](https://github.com/tomlobato/riff/tree/main/sample_app) and its [specs](https://github.com/tomlobato/riff/tree/main/sample_app/spec) for help on using Riff.
 
@@ -110,4 +110,4 @@ Riff runs on top of:
 
 Big thanks to [Jeremy Evans](https://github.com/jeremyevans) for bring to us Roda and Sequel, not mentioning [rodauth](https://github.com/jeremyevans/rodauth) and tons of other great code.
 
-Big thanks to [Mateusz Urbański](https://github.com/MatUrbanski) for bring to us the great project [todo_api](https://github.com/MatUrbanski/todo_api), used in riff as a seed for the sample app and its authentication logic for Riff authentication handler.
+Big thanks to [Mateusz Urbański](https://github.com/MatUrbanski) for bring to us the great project [todo_api](https://github.com/MatUrbanski/todo_api), used in riff as a seed for the sample app and its auth logic for Riff auth handler.

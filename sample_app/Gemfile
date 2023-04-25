@@ -43,7 +43,7 @@ gem 'dry-system'
 # A toolkit of support libraries and Ruby core extensions extracted from the Rails framework.
 gem 'activesupport'
 
-# Plugin that adds BCrypt authentication and password hashing to Sequel models.
+# Plugin that adds BCrypt auth and password hashing to Sequel models.
 gem 'sequel_secure_password'
 
 # A gem providing "time travel" and "time freezing" capabilities, making it dead simple to test time-dependent code. It provides a unified method to mock Time.now, Date.today, and DateTime.now in a single call.

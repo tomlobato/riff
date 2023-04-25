@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class User < Sequel::Model
-  # Plugin that adds BCrypt authentication and password hashing to Sequel models.
+  # Plugin that adds BCrypt auth and password hashing to Sequel models.
   plugin :secure_password
 
   one_to_many :posts
