@@ -47,8 +47,13 @@ module Riff
       end
 
       def on_auth(user)
-        Object.const_get('OnRiffAuth').new(user).call
-      rescue NameError
+        on_auth_handlers.each do |handler|
+          handler.new(user).call
+        end
+      end
+
+      def on_auth_handlers
+        [Conf.get(:on_auth)].flatten.compact
       end
     end
   end

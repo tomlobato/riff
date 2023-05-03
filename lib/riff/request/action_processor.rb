@@ -60,7 +60,6 @@ module Riff
       end
 
       def action_available?
-        # puts "custom_method_available?=#{custom_method_available?} @context.is_custom_method=#{@context.is_custom_method}"
         return custom_method_available? if @context.is_custom_method
 
         !@enabler || @enabler.__send__("#{@context.action}?")

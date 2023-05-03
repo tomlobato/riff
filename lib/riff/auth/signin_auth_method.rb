@@ -17,6 +17,10 @@ module Riff
       private
 
       attr_reader :params
+
+      def raise_auth_error!
+        raise(Riff::Exceptions::AuthFailure)
+      end
     end
   end
 end

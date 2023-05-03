@@ -10,17 +10,25 @@ module Riff
       end
 
       def authorize_class
-        Util.const_get([:Resources, model_name, :Authorize], anchor: true)
+        Util.const_get(class_nodes, anchor: true)
+      end
+
+      def class_nodes
+        [:Resources, model_name, :Authorize]
       end
 
       def run
-        raise_authorization_error! unless @authorizer_class
+        raise_authorization_error!("Class #{class_nodes.join('::')} must be implemented") unless @authorizer_class
 
         handle_result(check_permission)
       end
 
       def check_permission
-        @authorizer_class.new(@context, user).__send__("#{@context.action}?")
+        instance = @authorizer_class.new(@context, user)
+        method = "#{@context.action}?".to_sym
+        raise_authorization_error!("Method #{method} must be implemented in #{@authorizer_class}") unless instance.respond_to?(method)
+
+        instance.__send__(method)
       end
 
       def handle_result(result)
@@ -37,8 +45,8 @@ module Riff
         end
       end
 
-      def raise_authorization_error!
-        raise(Exceptions::AuthorizationFailure)
+      def raise_authorization_error!(msg = nil)
+        raise(Exceptions::AuthorizationFailure, msg)
       end
 
       def user

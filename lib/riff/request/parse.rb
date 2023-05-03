@@ -23,16 +23,24 @@ module Riff
 
       def call
         validate_path!
-        Context.new(basic_context.merge(extra_context))
+        context = Context.new(basic_context.merge(extra_context))
+        custom_context(context).to_h.each{ |k, v| context.set(k, v) }
+        context
       end
 
       private
+
+      def custom_context(context)
+        return unless (custom_context_class = Conf.get(:custom_context_class))
+
+        custom_context_class.new(context).call
+      end
 
       def setup
         @node1, @node2, @node3 = @path_nodes = path_nodes
         @resource = find_resource(@node1)
         @model_less = model_less?
-        @id, @custom_method = @node2.to_s.split(":", 2)
+        @id, @custom_method = @node2.to_s.split(":", 2).map(&:presence)
         @action = find_action
       end
 
