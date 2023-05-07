@@ -24,7 +24,11 @@ module Riff
       end
 
       def response_body(rec)
-        rec.values.slice(*fields)
+        if rec.values.keys.sort != fields.sort
+          @context.model_class.where(id: rec.id).select(*fields).first.values 
+        else
+          rec.values.slice(*fields)
+        end
       end
     end
   end

@@ -26,12 +26,12 @@ module Riff
           end
 
           def create_user_token
-            ::SellerToken.create(
+            ::SellerToken.new(
               user_id: @user.id,
               inpersonator_id: @user.inpersonator_id,
               authentication_token: Util.generate_authentication_token,
               created_at: Time.now
-            )
+            ).save_without_log
           end
         end
       end

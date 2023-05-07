@@ -8,7 +8,7 @@ module Riff
           def self.generate_authentication_token
             loop do
               t = SecureRandom.hex(40)
-              break t if ::SellerToken.where(authentication_token: t).none?
+              break t if ::SellerToken.where(authentication_token: t).blank?
             end
           end
         end

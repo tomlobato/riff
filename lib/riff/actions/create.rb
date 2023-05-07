@@ -25,6 +25,10 @@ module Riff
       def fields
         settings.show_fields || model_class.columns
       end
+
+      def response_body(rec)
+        @context.model_class.where(id: rec.id).select(*fields).first.values if rec.values.keys.sort != fields.sort
+      end
   
       def after(rec)
         # may implement
@@ -35,10 +39,6 @@ module Riff
       end
 
       def before
-        # may implement
-      end
-
-      def response_body(rec)
         # may implement
       end
     end

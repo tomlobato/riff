@@ -40,8 +40,32 @@ module Riff
         @node1, @node2, @node3 = @path_nodes = path_nodes
         @resource = find_resource(@node1)
         @model_less = model_less?
-        @id, @custom_method = @node2.to_s.split(":", 2).map(&:presence)
+        @id, @custom_method = parse_node2
         @action = find_action
+      end
+
+      def parse_node2
+        node = @node2.to_s
+        return node.split(":", 2).map(&:presence) if node.index(':')
+
+        case no_colon_mode
+        when :id
+          [node, nil]
+        when :custom_method
+          [nil, node]
+        when :id_if_digits
+          node.match?(Constants::ONLY_DIGITS) ? [node, nil] : [nil, node]
+        when :id_if_uuid
+          node.match?(Constants::UUID) ? [node, nil] : [nil, node]
+        when :id_if_digits_or_uuid
+          node.match?(Constants::ONLY_DIGITS) || node.match?(Constants::UUID) ? [node, nil] : [nil, node]
+        else
+          raise(StandardError, "Unknown no_colon_mode: #{no_colon_mode}")
+        end
+      end
+
+      def no_colon_mode
+        Conf.get(:no_column_node) || :id_if_digits_or_uuid
       end
 
       def basic_context

@@ -87,5 +87,8 @@ module Riff
 
     class InvalidAuthorizationResult < Error500
     end
+
+    class InternalServerError < Error500
+    end
   end
 end
