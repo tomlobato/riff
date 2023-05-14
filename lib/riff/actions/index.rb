@@ -10,7 +10,7 @@ module Riff
       private
 
       def body
-        query.map(&:values)
+        query.map{ |rec| rec.values.merge(extra_fields(rec).to_h) }
       end
 
       def query
@@ -19,7 +19,7 @@ module Riff
       end
 
       def filters
-        request_filters.merge(enforced_filters)
+        request_filters.merge(enforced_filters).merge(extra_filters.to_h)
       end
 
       def enforced_filters
@@ -28,6 +28,14 @@ module Riff
 
       def request_filters
         @context.params.reject{|k, _| k.to_s.index('_') == 0 }
+      end
+
+      def extra_filters
+        # may implement
+      end
+
+      def extra_fields(_rec)
+        # may implement
       end
 
       def pagination
