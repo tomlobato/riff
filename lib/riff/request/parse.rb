@@ -45,7 +45,8 @@ module Riff
       end
 
       def parse_node2
-        node = @node2.to_s
+        node = @node2.to_s.presence
+        return unless node
         return node.split(":", 2).map(&:presence) if node.index(':')
 
         case no_colon_mode
