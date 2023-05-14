@@ -17,6 +17,7 @@ require_relative "riff/actions/helpers/order"
 require_relative "riff/actions/helpers/save"
 
 require_relative "riff/actions/base"
+require_relative "riff/actions/custom_method_base"
 require_relative "riff/actions/index"
 require_relative "riff/actions/create"
 require_relative "riff/actions/update"

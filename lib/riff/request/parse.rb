@@ -23,6 +23,7 @@ module Riff
 
       def call
         validate_path!
+        validate_custom_method_id_presence!
         context = Context.new(basic_context.merge(extra_context))
         custom_context(context).to_h.each{ |k, v| context.set(k, v) }
         context
@@ -42,6 +43,23 @@ module Riff
         @model_less = model_less?
         @id, @custom_method = parse_node2
         @action = find_action
+      end
+
+      def validate_custom_method_id_presence!
+        return unless @custom_method
+
+        with_id = begin
+                    "#{@action_class_name}::WITH_ID".constantize
+                  rescue NameError
+                    raise(Riff::Exceptions::NotImplemented, "Class #{@action_class_name} must be implemented.")
+                  end
+        raise(Riff::Exceptions::InternalServerError, "Constant WITH_ID must be true or false.") unless with_id.class.in?(TrueClass, FalseClass)
+
+        if with_id
+          raise(Riff::Exceptions::InvalidParams, { id: 'id in the url path is required' }.to_json) unless @id
+        else
+          raise(Riff::Exceptions::InvalidParams, { id: 'This custom method must not have an id in the url path' }.to_json) if @id
+        end
       end
 
       def parse_node2

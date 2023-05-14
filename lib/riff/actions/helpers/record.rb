@@ -15,10 +15,20 @@ module Riff
         end
 
         def query(fields)
-          model_class
+          q = model_class
             .where(id: @context.id, **scope.to_h)
+            .where(extra_filters.to_h)
             .select(*fields)
-            .first
+          tap_query(q)
+          q.first
+        end
+
+        def tap_query(_query)
+          # may implement
+        end
+
+        def extra_filters
+          # may implement
         end
 
         def record_not_found!
