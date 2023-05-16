@@ -4,6 +4,7 @@ module Riff
   module Request
     class ActionProcessor
       extend Memo
+      WITH_ID_VALUES = %i[required denied allowed].freeze
 
       def initialize(request, response)
         @request = request
@@ -31,7 +32,28 @@ module Riff
         @context = context
         @enabler = enabler
         @context.set(:action_class, @action_class = action_class)
+        validate_custom_method_id_presence! if @context.is_custom_method
         @context.set(:settings, @settings = settings)
+      end
+
+      def validate_custom_method_id_presence!
+        raise(Riff::Exceptions::InternalServerError, "Constant WITH_ID must be: #{WITH_ID_VALUES.join(', ')}.") unless id_presence.in?(WITH_ID_VALUES)
+
+        case id_presence
+        when :required
+          raise(Riff::Exceptions::InvalidParameters, { id: 'id in the url path is required' }.to_json) unless @context.id          
+        when :denied
+          raise(Riff::Exceptions::InvalidParameters, { id: 'This custom method must not have an id in the url path' }.to_json) if @context.id
+        when :allowed
+          # do nothing
+        end
+      end
+
+      def id_presence
+        @id_presence ||= "#{@action_class}::ID_PRESENCE".constantize
+      rescue NameError
+        msgs = "Missing constant ID_PRESENCE for class #{@action_class}. Custom methods classes must have it set one of #{WITH_ID_VALUES.join(', ')}."
+        raise(Riff::Exceptions::NotImplemented, msg)
       end
 
       def context
