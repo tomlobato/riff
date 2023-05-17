@@ -2,12 +2,13 @@
 
 module Riff
   class Validate
-    def initialize(class_nodes, params, allow_empty_params: true, context: nil)
+    def initialize(class_nodes, params, allow_empty_params: true, context: nil, use_fallback: false)
       @class_nodes = class_nodes
       @params = params
       @allow_empty_params = allow_empty_params
       @context = context
       @validator_class = validator_class
+      @use_fallback = use_fallback
     end
 
     def call
@@ -25,11 +26,17 @@ module Riff
 
     def validator_class
       klass = Util.const_get(@class_nodes, anchor: true)
+      klass = Riff::FallbackValidator if !klass #&& @use_fallback
       raise(Exceptions::NotImplemented, "#{@class_nodes.join('::')} must me implemented!") unless klass
-      return klass if klass.superclass == Riff::Validator
-      return klass.new.klass(@context) if klass.superclass == Riff::DynamicValidator
-      
-      raise(Exceptions::NotImplemented, "Validator must be a subclass of Riff::Validator or Riff::DynamicValidator, but it is #{klass}")
+
+      case klass.superclass.to_s
+      when 'Riff::Validator'
+        klass
+      when 'Riff::DynamicValidator'
+        klass.new.klass(@context)
+      else
+        raise(Exceptions::NotImplemented, "Validator superclass must be Riff::Validator or Riff::DynamicValidator, but it is #{klass.superclass}")
+      end
     end
 
     def thrown_error(errors)

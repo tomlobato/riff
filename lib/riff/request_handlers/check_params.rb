@@ -10,19 +10,17 @@ module Riff
       end
 
       def action_validator
-        return if @context.action.to_s.in?(%w[show delete]) 
-
         @context.action.camelize.to_sym
       end
 
       def class_nodes
-        [:Resources, model_name, :Validators, @action_validator]
+        [Conf.get(:resources_base_module), model_name, :Validators, @action_validator]
       end
 
       def run
         return unless @action_validator
 
-        result = Validate.new(class_nodes, @context.params, allow_empty_params: allow_empty_params, context: @context).call
+        result = Validate.new(class_nodes, @context.params, allow_empty_params: allow_empty_params, context: @context, use_fallback: true).call
         if result
           check_excess_params!(result)
           @context.params = result 

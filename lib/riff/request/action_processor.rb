@@ -4,7 +4,7 @@ module Riff
   module Request
     class ActionProcessor
       extend Memo
-      WITH_ID_VALUES = %i[required denied allowed].freeze
+      WITH_ID_VALUES = %i[required denied optional].freeze
 
       def initialize(request, response)
         @request = request
@@ -44,7 +44,7 @@ module Riff
           raise(Riff::Exceptions::InvalidParameters, { id: 'id in the url path is required' }.to_json) unless @context.id          
         when :denied
           raise(Riff::Exceptions::InvalidParameters, { id: 'This custom method must not have an id in the url path' }.to_json) if @context.id
-        when :allowed
+        when :optional
           # do nothing
         end
       end
@@ -52,7 +52,7 @@ module Riff
       def id_presence
         @id_presence ||= "#{@action_class}::ID_PRESENCE".constantize
       rescue NameError
-        msgs = "Missing constant ID_PRESENCE for class #{@action_class}. Custom methods classes must have it set one of #{WITH_ID_VALUES.join(', ')}."
+        msg = "Missing constant ID_PRESENCE for class #{@action_class}. Custom methods classes must have it set one of #{WITH_ID_VALUES.join(', ')}."
         raise(Riff::Exceptions::NotImplemented, msg)
       end
 
@@ -74,7 +74,7 @@ module Riff
       end
 
       def custom_action
-        [:Resources, @context.model_name, :Actions, @context.action_class_name]
+        [Conf.get(:resources_base_module), @context.model_name, :Actions, @context.action_class_name]
       end
 
       def default_action
@@ -99,7 +99,7 @@ module Riff
       end
 
       def enabler_class_path
-        [:Resources, @context.model_name, :Enable]
+        [Conf.get(:resources_base_module), @context.model_name, :Enable]
       end
 
       def enabler
@@ -107,7 +107,7 @@ module Riff
       end
 
       def settings_class_path
-        [:Resources, @context.model_name, :Settings]
+        [Conf.get(:resources_base_module), @context.model_name, :Settings]
       end
 
       def settings
