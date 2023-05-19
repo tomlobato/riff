@@ -20,7 +20,12 @@ module Riff
     end
 
     def desc
-      { error: desc_error }.merge(extra_desc.to_h)
+      { 
+        msg: { 
+          text: desc_error,
+          type: 'error'
+        }.merge(extra_desc.to_h)
+      }
     end
 
     def desc_error
@@ -31,9 +36,9 @@ module Riff
       return unless @error.message.present?
 
       if @is_web_error && @error.class::JSON
-        { messages: Oj.load(@error.message) }
+        { fields: Oj.load(@error.message) }
       else
-        { details: @error.message }
+        { detail: @error.message } unless @error.message == @error.class.to_s
       end
     end
 

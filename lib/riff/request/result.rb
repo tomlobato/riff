@@ -3,40 +3,29 @@
 module Riff
   module Request
     class Result
+      DEFAULT_CONTENT_TYPE = 'application/json'.freeze
+
       attr_reader :body, :content_type, :headers, :status
 
-      def self.redirect_permanent(location)
-        redirect(location, 301)
-      end
-
-      def self.redirect_temporary(location)
-        redirect(location, 302)
-      end
-
-      def self.redirect(location, status)
-        new(nil, headers: { "Location" => location }, status: status)
-      end
-
       def initialize(body = nil, content_type: nil, headers: nil, status: nil)
-        @body = check_body(body)
-        @content_type = content_type
+        select_content_type(content_type)
+        @body = ResponseBody.new(body, status, header_content_type).call
         @headers = headers
         @status = status
       end
 
       private
 
-      def check_body(raw)
-        case raw
-        when String
-          raw
-        when NilClass
-          ""
-        when Array, Hash
-          raw.to_json
-        else
-          raise(Riff::Exceptions::InvalidResponseBody, "Unhandled body class '#{raw.class}'")
+      def select_content_type(content_type)
+        if content_type.present? && header_content_type.present?
+          raise(Riff::Exceptions::ContentTypeAlreadySet, "Content-Type already set to '#{header_content_type}' in headers parameter.")
         end
+        @headers ||= {}
+        @headers['Content-Type'] = content_type.presence || Conf.get(:default_content_type) || DEFAULT_CONTENT_TYPE
+      end
+
+      def header_content_type
+        @headers['Content-Type']
       end
     end
   end

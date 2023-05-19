@@ -15,7 +15,7 @@ module Riff
           after(rec)
         end
         after_commit(rec)
-        Request::Result.new(response_body(rec) || rec.values.slice(*fields))
+        Request::Result.new({data: response_body(rec) || rec.values.slice(*fields)})
       rescue Sequel::ValidationFailed => e
         raise(Exceptions::DbValidationError, Util.record_errors(rec.errors).to_json)
       end

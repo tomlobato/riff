@@ -66,7 +66,7 @@ module Riff
       end
 
       def no_colon_mode
-        Conf.get(:no_column_node) || :id_if_digits_or_uuid
+        Conf.get(:no_colon_mode) || :id_if_digits_or_uuid
       end
 
       def basic_context

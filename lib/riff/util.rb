@@ -4,11 +4,12 @@ module Riff
   module Util
     module_function
 
-    def const_get(*nodes, anchor: false)
+    def const_get(*nodes, anchor: false, reraise: false)
       name = nodes.flatten.join("::")
       name.prepend("::") if anchor
       Object.const_get(name)
     rescue NameError
+      raise if reraise
       nil
     end
 

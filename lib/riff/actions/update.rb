@@ -12,7 +12,7 @@ module Riff
         rec = record
         rec.update(attributes)
         after(rec)
-        Request::Result.new(response_body(rec))
+        Request::Result.new({data: response_body(rec)})
       rescue Sequel::ValidationFailed => e
         raise(Exceptions::DbValidationError, Util.record_errors(rec.errors).to_json)
       end

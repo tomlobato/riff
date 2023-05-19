@@ -4,6 +4,8 @@ module Riff
   module Swagger
     class Read
       ACTION_VERB_MAP = { create: 'POST', show: 'GET', index: 'GET', update: 'PATCH', delete: 'DELETE' }.freeze
+      REST_DEFAULT_ACTIONS = %i[create show index update delete].freeze
+      REST_ID_ACTIONS = %i[show update delete].freeze
 
       def initialize(base_path)
         @base_path = base_path
@@ -37,20 +39,35 @@ module Riff
       end
 
       def handle_action(model_name, action_name)
-        action_class = "#{@res_mod}::#{model_name}::Actions::#{action_name}".constantize
-        return unless action_class.instance_of?(Class)
+        action_class = Util.const_get(@res_mod, model_name, :Actions, action_name, anchor: true)
+        save(action_class, model_name, action_name) if action_class.instance_of?(Class)
+      end
 
-        node1 = find_node1(model_name)
-        node2 = find_node2(action_name, action_class)
-        verb = find_verb(action_name, action_class)
-        path = '/' + [node1, node2].select(&:present?).join('/')
+      def build_tag(node1)
+        node1.split('_').map(&:capitalize).join(' ')
+      end
+
+      def build_path(node1, node2)
+        '/' + [node1, node2].select(&:present?).join('/')
+      end
+
+      def save(action_class, model_name, action_name)
+        node1, node2, verb = build_action_data(model_name, action_name, action_class)
+        path = build_path(node1, node2)
 
         @paths[path] ||= {}
         @paths[path][verb] = {
-          tag: node1.split('_').map(&:capitalize).join(' '),
+          tag: build_tag(node1),
           action_class: action_class,
           validator_class: validator_class(model_name, action_name)
         }
+      end
+
+      def build_action_data(model_name, action_name, action_class)
+        node1 = find_node1(model_name)
+        node2 = find_node2(action_name, action_class)
+        verb = find_verb(action_name, action_class)
+        [node1, node2, verb]
       end
 
       def validator_class(model_name, action_name)
@@ -69,30 +86,34 @@ module Riff
 
       def find_verb(action_name, action_class)
         node2 = action_name.to_s.underscore
-        if node2.in?(%w[create show index update delete])
+        if node2.to_sym.in?(REST_DEFAULT_ACTIONS)
           verb = ACTION_VERB_MAP[node2.to_sym]
         else
-          verb = action_class::VERB.to_s.upcase
+          verb = custom_action_verb(action_class)
         end
         verb
       end
 
+      def custom_action_verb(csutom_action_class)
+        return @custom_action_verb if defined?(@custom_action_verb)
+
+        @custom_action_verb = "#{csutom_action_class}::VERB".constantize.upcase
+      rescue NameError
+        @custom_action_verb = Riff::HttpVerbs::POST
+      end
+
       def find_node2(action_name, action_class)
         node2 = action_name.to_s.underscore
-        if node2.in?(%w[create show index update delete])
-          if node2.in?(%w[show update delete])
-            node2 = "{id}" 
-          else
-            node2 = ""
-          end
+        if node2.to_sym.in?(REST_DEFAULT_ACTIONS)
+          node2 = node2.to_sym.in?(REST_ID_ACTIONS) ? '{id}' : ''
         else
           case action_class::ID_PRESENCE
           when :required
             node2.prepend("{id}:") 
           when :optional
-            node2.prepend("{id}?:") 
+            node2.prepend("{optional_id}:") 
           when :denied
-            # node changes
+            # no change
           end
         end
         node2

@@ -3,6 +3,8 @@
 module Riff
   module Actions
     class Base
+      include Helpers::ResultBuilder
+
       extend Forwardable
       def_delegators :@context, :params
 

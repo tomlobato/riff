@@ -7,7 +7,7 @@ module Riff
 
       def call
         record.delete
-        Request::Result.new
+        Request::Result.new({})
       end
     end
   end

@@ -1,11 +1,14 @@
 module Riff
   module Swagger
     class Verb
-      def initialize(tag, action_class, validator_class, context)
+      def initialize(tag, action_class, validator_class, context, path, verb, examples)
         @tag = tag
         @action_class = action_class
         @validator_class = validator_class
         @context = context
+        @path = path
+        @verb = verb
+        @verb_examples = verb_examples(examples)
       end
 
       def call
@@ -17,6 +20,12 @@ module Riff
       end
 
       private
+
+      def verb_examples(examples)
+        path = ('/v1' + @path).to_sym
+        verb = @verb.downcase.to_sym
+        examples[path].to_h[verb].to_a.presence
+      end
 
       def request_body
         return unless schema
@@ -36,14 +45,7 @@ module Riff
       def responses
         {
           '200': {
-            description: 'Successful operation',
-            content: {
-              'application/json': {
-                # schema: {
-                #   '$ref': '#/components/schemas/Message'          
-                # }
-              }
-            }
+            description: 'Successful operation'
           },
           '401': {
             description: 'Authentication failure'
@@ -57,7 +59,37 @@ module Riff
           '422': {
             description: 'Invalid parameters'
           }
+        }.map do |k, v|
+          [k, v.merge(content(k.to_s.to_i))]
+        end.to_h
+      end
+
+      def content(code)
+        examples = find_examples(code)
+        return {} if examples.blank?
+
+        {
+          content: {
+            'application/json': {
+              examples: examples
+            }
+          }
         }
+      end
+
+      def find_examples(code)
+        return unless @verb_examples
+
+        i = 0
+        @verb_examples.filter_map do |example|
+          next unless example[:response][:status] == code
+
+          {
+            "Example-#{i += 1}": {
+              value: Oj.load(example[:response][:body])
+            }
+          }
+        end.inject(&:merge)
       end
 
       def schema
@@ -79,7 +111,7 @@ module Riff
           when 'Riff::DynamicValidator'
             @validator_class.new.klass(@context)
           else
-            raise "Validator subclass must be one of Riff::Validator or Riff::DynamicValidator, but it is #{@validator_class.superclass}"
+            raise "Validator superclass must be one of Riff::Validator or Riff::DynamicValidator, but it is #{@validator_class.superclass}"
           end
         end
       end

@@ -11,7 +11,7 @@ module Riff
       def call
         user = validate_credentials
 
-        Request::Result.new(body(user))
+        Request::Result.new({data: body(user)})
       end
 
       private

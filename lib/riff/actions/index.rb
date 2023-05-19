@@ -4,7 +4,7 @@ module Riff
   module Actions
     class Index < Base
       def call
-        Request::Result.new(body)
+        Request::Result.new({data: body})
       end
 
       private

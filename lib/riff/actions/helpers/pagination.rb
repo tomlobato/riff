@@ -47,7 +47,7 @@ module Riff
         end
 
         def raise_invalid_pagination!(key)
-          raise(Exceptions::InvalidParameters, { key => @params[key] }.to_json)
+          raise(Exceptions::InvalidParameters, { key => 'unknown key' }.to_json)
         end
       end
     end

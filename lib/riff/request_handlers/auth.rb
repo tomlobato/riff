@@ -36,14 +36,20 @@ module Riff
       end
 
       def methods
-        custom_resource_methods || 
+        action_custom_auth_methods || 
+          resource_custom_auth_methods || 
           Conf.get(:custom_auth_method) || 
           [Riff::Auth::DefaultMethod::RequestAuth]
       end
 
-      def custom_resource_methods
+      def resource_custom_auth_methods
         settings = @context.get(:settings)
-        [settings.auth_method].flatten if settings && settings.respond_to?(:auth_method)
+        [settings.class.auth_method].flatten if settings && settings.class.respond_to?(:auth_method)
+      end
+      
+      def action_custom_auth_methods
+        action_class = @context.get(:action_class)
+        [action_class.auth_method].flatten if action_class.respond_to?(:auth_method)
       end
 
       def on_auth(user)

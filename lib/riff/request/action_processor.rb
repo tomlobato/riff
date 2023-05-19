@@ -4,7 +4,8 @@ module Riff
   module Request
     class ActionProcessor
       extend Memo
-      WITH_ID_VALUES = %i[required denied optional].freeze
+      ID_PRESENCE_VALUES = %i[required denied optional].freeze
+      DEFAULT_ID_PRESENCE = :denied
 
       def initialize(request, response)
         @request = request
@@ -37,7 +38,7 @@ module Riff
       end
 
       def validate_custom_method_id_presence!
-        raise(Riff::Exceptions::InternalServerError, "Constant WITH_ID must be: #{WITH_ID_VALUES.join(', ')}.") unless id_presence.in?(WITH_ID_VALUES)
+        raise(Riff::Exceptions::InternalServerError, "Constant WITH_ID must be: #{ID_PRESENCE_VALUES.join(', ')}.") unless id_presence.in?(ID_PRESENCE_VALUES)
 
         case id_presence
         when :required
@@ -50,10 +51,11 @@ module Riff
       end
 
       def id_presence
-        @id_presence ||= "#{@action_class}::ID_PRESENCE".constantize
+        return @id_presence if defined?(@id_presence)
+
+        @id_presence = "#{@action_class}::ID_PRESENCE".constantize
       rescue NameError
-        msg = "Missing constant ID_PRESENCE for class #{@action_class}. Custom methods classes must have it set one of #{WITH_ID_VALUES.join(', ')}."
-        raise(Riff::Exceptions::NotImplemented, msg)
+        @id_presence = DEFAULT_ID_PRESENCE
       end
 
       def context
@@ -95,7 +97,15 @@ module Riff
       end
 
       def custom_method_verb_mismatch?
-        "#{custom_action_class}::VERB".constantize != @context.request_method
+        custom_action_verb != @context.request_method
+      end
+
+      def custom_action_verb
+        return @custom_action_verb if defined?(@custom_action_verb)
+
+        @custom_action_verb = "#{custom_action_class}::VERB".constantize
+      rescue NameError
+        @custom_action_verb = Riff::HttpVerbs::POST
       end
 
       def enabler_class_path

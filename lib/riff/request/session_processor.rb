@@ -24,6 +24,7 @@ module Riff
       def sign_in_out
         call_session
       rescue StandardError => e
+        Util.log_error(e) unless e.is_a?(Riff::Exceptions::RiffError)
         desc, status = HandleError.new(e).call
         Result.new(desc, status: status)
       end

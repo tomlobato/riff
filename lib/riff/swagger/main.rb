@@ -6,6 +6,7 @@ module Riff
       def initialize(base_path)
         @base_path = base_path
         @context = context
+        @examples = load_examples
       end
 
       def generate
@@ -28,22 +29,38 @@ module Riff
 
       private
 
+      def load_examples
+        request_log_path = Conf.get(:request_log_path)
+        raise(StandardError, path_not_set_error_msg) unless request_log_path.present?
+        raise(StandardError, path_not_found_error_msg(request_log_path)) unless File.exist?(request_log_path)
+
+        YAML.load(File.read(Conf.get(:request_log_path)))
+      end
+  
+      def path_not_set_error_msg
+        "Riff request log path not set. Use Conf.set(:request_log_path, '...')."
+      end
+
+      def path_not_found_error_msg(request_log_path)
+        "File #{request_log_path} not found"
+      end
+
       def paths
         Read.new(@base_path).call.map do |path, verb|
-          [path, verbs(verb)]
+          [path, verbs(path, verb)]
         end.to_h
       end
 
-      def verbs(verb)
+      def verbs(path, verb)
         verb.map do |verb, data|
           {
-            verb.downcase => build_verb(data)
+            verb.downcase => build_verb(path, verb, data)
           }
         end.inject(&:merge)
       end
 
-      def build_verb(data)
-        Verb.new(data[:tag], data[:action_class], data[:validator_class], @context).call
+      def build_verb(path, verb, data)
+        Verb.new(data[:tag], data[:action_class], data[:validator_class], @context, path, verb, @examples).call
       end
 
       def context

@@ -90,5 +90,11 @@ module Riff
 
     class InternalServerError < Error500
     end
+
+    class ContentTypeAlreadySet < Error500
+    end
+
+    class InvalidContentType < Error500
+    end
   end
 end
