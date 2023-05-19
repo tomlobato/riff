@@ -11,18 +11,7 @@ module Riff
 
       def generate
         {
-          openapi: '3.0.3',
-          info: {
-            title: 'App Api - Leadfy',
-            version: '2.0.0'
-          },
-          servers: [{
-            url: 'https://api-stage.leadfy.com.br/v1',
-            description: 'Stage server'
-          }, {
-            url: 'https://api.leadfy.com.br/v1',
-            description: 'Production server'
-          }],
+          **Conf.get(:oas_root).to_h,
           paths: paths
         }
       end
@@ -46,7 +35,7 @@ module Riff
       end
 
       def paths
-        Read.new(@base_path).call.map do |path, verb|
+        Read.new.call.map do |path, verb|
           [path, verbs(path, verb)]
         end.to_h
       end

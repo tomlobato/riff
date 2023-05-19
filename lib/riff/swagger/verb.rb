@@ -35,7 +35,8 @@ module Riff
             required: true,
             content: {
               'application/json': {
-                schema: schema
+                schema: schema,
+                **request_examples.to_h
               }
             }
           }
@@ -65,7 +66,7 @@ module Riff
       end
 
       def content(code)
-        examples = find_examples(code)
+        examples = find_examples(code, :response)
         return {} if examples.blank?
 
         {
@@ -77,16 +78,27 @@ module Riff
         }
       end
 
-      def find_examples(code)
+      def find_examples(code, type)
         return unless @verb_examples
 
         i = 0
+        added = Set.new
         @verb_examples.filter_map do |example|
-          next unless example[:response][:status] == code
+          next if type == :response && example[type][:status] != code
+          next unless example[type] && example[type][:body].present?
+
+          body = example[type][:body]
+          next unless added.add?(body)
+          
+          value = begin
+                    Oj.load(body)
+                  rescue EncodingError
+                    next
+                  end
 
           {
             "Example-#{i += 1}": {
-              value: Oj.load(example[:response][:body])
+              value: value
             }
           }
         end.inject(&:merge)
@@ -127,6 +139,11 @@ module Riff
         end
         schema.delete('required') if schema['required'].blank?
         schema
+      end
+
+      def request_examples
+        examples = find_examples(nil, :request)
+        {examples: examples} if examples.present?
       end
     end
   end

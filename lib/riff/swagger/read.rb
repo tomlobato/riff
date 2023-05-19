@@ -4,11 +4,9 @@ module Riff
   module Swagger
     class Read
       ACTION_VERB_MAP = { create: 'POST', show: 'GET', index: 'GET', update: 'PATCH', delete: 'DELETE' }.freeze
-      REST_DEFAULT_ACTIONS = %i[create show index update delete].freeze
       REST_ID_ACTIONS = %i[show update delete].freeze
 
-      def initialize(base_path)
-        @base_path = base_path
+      def initialize
         @res_mod = Conf.get(:resources_base_module)
         @res_remap = Riff::Conf.get(:resource_remap).invert
         @model_less_res = Riff::Conf.get(:model_less_resources)
@@ -73,7 +71,7 @@ module Riff
       def validator_class(model_name, action_name)
         "#{@res_mod}::#{model_name}::Validators::#{action_name}".constantize
       rescue NameError
-        nil
+        Riff::FallbackValidator
       end
 
       def find_node1(model_name)
@@ -86,28 +84,22 @@ module Riff
 
       def find_verb(action_name, action_class)
         node2 = action_name.to_s.underscore
-        if node2.to_sym.in?(REST_DEFAULT_ACTIONS)
-          verb = ACTION_VERB_MAP[node2.to_sym]
-        else
-          verb = custom_action_verb(action_class)
-        end
-        verb
+        node2.to_sym.in?(ACTION_VERB_MAP.keys) ? ACTION_VERB_MAP[node2.to_sym] : custom_action_verb(action_class)
       end
 
-      def custom_action_verb(csutom_action_class)
-        return @custom_action_verb if defined?(@custom_action_verb)
-
-        @custom_action_verb = "#{csutom_action_class}::VERB".constantize.upcase
+      def custom_action_verb(custom_action_class)
+        "#{custom_action_class}::VERB".constantize
       rescue NameError
-        @custom_action_verb = Riff::HttpVerbs::POST
+        Riff::HttpVerbs::POST
       end
 
       def find_node2(action_name, action_class)
         node2 = action_name.to_s.underscore
-        if node2.to_sym.in?(REST_DEFAULT_ACTIONS)
+        if node2.to_sym.in?(ACTION_VERB_MAP.keys)
           node2 = node2.to_sym.in?(REST_ID_ACTIONS) ? '{id}' : ''
         else
-          case action_class::ID_PRESENCE
+          id_presence = defined?(action_class::ID_PRESENCE) ? action_class::ID_PRESENCE : Request::ActionProcessor::DEFAULT_ID_PRESENCE
+          case id_presence
           when :required
             node2.prepend("{id}:") 
           when :optional
