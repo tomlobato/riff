@@ -5,8 +5,12 @@ module Riff
     module DefaultMethod
       module Token
         class TokenValidator
+          extend Memo
+
           def initialize(authorization_token, purpose)
+            # puts "TV authorization_token: '#{authorization_token}' purpose: '#{purpose}'"
             @message = decode(authorization_token, purpose)
+            # puts "TV @message: '#{@message}'"
           end
 
           def call
@@ -46,6 +50,7 @@ module Riff
           def user_token
             ::SellerToken.where(authentication_token: @message[:auth_token]).select(*user_token_fields).first
           end
+          memo :user_token
 
           def user_token_fields
             Conf.get(:user_token_fields)

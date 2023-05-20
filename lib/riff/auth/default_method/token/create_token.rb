@@ -5,14 +5,16 @@ module Riff
     module DefaultMethod
       module Token
         class CreateToken
-          def initialize(user, type)
+          def initialize(user, type, expires_at)
             @user = user
             @type = type
+            @expires_at = expires_at
             @user.user_token ||= create_user_token
           end
 
           def call
-            MessageSigner.encode(data: message, expires_at: Time.now + 300, purpose: purpose)
+            # puts "message: #{message}\nexpires_at: #{@expires_at}\npurpose: #{purpose}"
+            MessageSigner.encode(data: message, expires_at: @expires_at, purpose: purpose)
           end
 
           private

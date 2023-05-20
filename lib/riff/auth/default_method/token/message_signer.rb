@@ -14,6 +14,7 @@ module Riff
           def decode(message:, purpose:)
             verifier.verify(message, purpose: purpose)
           rescue ActiveSupport::MessageVerifier::InvalidSignature
+            # puts "InvalidSignature"
             nil
           end
 
