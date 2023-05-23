@@ -157,36 +157,3 @@ module Riff
     end
   end
 end
-
-# spec:
-# 
-# {
-#   success: true,
-#   data: <anything>,
-#   msg: {
-#     title: "string",
-#     text: "string",
-#     detail: "string",
-#     links: "string",
-#     type: "success" || "error" || "warning" || "info",
-#     view_type: "toast" || "modal" || "alert" || "notification" || "inline",
-#     view_options: {timeout: 5000, color: "$color", background: "$color", allow_close: true, close_on_tap: true}
-#     fields: {
-#       field: ["string", "string"],
-#       field: ["string", "string"]
-#     }
-#   },
-#   meta: {
-#     pagination: {
-#       total: 1,
-#       per_page: 1,
-#       current_page: 1,
-#       total_pages: 1
-#     }
-#    }
-#   extra: {
-#     x: "string",
-#     y: "string",
-#     ...
-#   }
-# }

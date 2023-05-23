@@ -16,17 +16,6 @@ module Riff
 
       private
 
-      def serialize(raw)
-        case header_content_type
-        when 'application/json'
-          raw.presence&.to_json
-        when 'application/xml', 'text/xml'
-          raw.presence&.to_xml
-        else
-          raw
-        end
-      end
-
       def select_content_type(content_type)
         if content_type.present? && header_content_type.present?
           raise(Riff::Exceptions::ContentTypeAlreadySet, "Content-Type already set to '#{header_content_type}' in headers parameter.")
@@ -39,10 +28,10 @@ module Riff
       end
 
       def brush_body(body)
-        body.keys.each { |k| body.delete(k) if body[k].blank? } if body.is_a?(Hash)
         return '' unless body
 
-        serialize(body.merge(success: success?))
+        body.keys.each { |k| body.delete(k) if body[k].blank? } if body.is_a?(Hash)
+        body.merge(success: success?)
       end
 
       def success?

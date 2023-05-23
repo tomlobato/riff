@@ -53,7 +53,7 @@ require_relative "riff/request/session_processor"
 require_relative "riff/request/chain"
 require_relative "riff/request/result"
 require_relative "riff/request/set_response"
-require_relative "riff/request/response_body"
+require_relative "riff/request/response_body_validator"
 
 require_relative "riff/settings"
 require_relative "riff/enable"
@@ -71,6 +71,7 @@ require_relative "riff/fallback_validator"
 require_relative "riff/exceptions"
 require_relative "riff/handle_error"
 require_relative "riff/http_verbs"
+require_relative "riff/hash_validator"
 
 module Riff
   def self.handle_action(request, response)
