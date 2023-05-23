@@ -54,7 +54,7 @@ module Riff
     end
 
     def normalized_path(req)
-      req.env['PATH_INFO'].sub(/\/(\d+)(:.*)?$/, '/{id}\\2').to_sym
+      req.env['PATH_INFO'].sub(/\/(\d+)(:.*)?$/, '/{id}\\2').sub('/:', '/').to_sym
     end
 
     def read_verb(req)

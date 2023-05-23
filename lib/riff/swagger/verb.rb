@@ -1,12 +1,14 @@
 module Riff
   module Swagger
     class Verb
+      extend Memo
+      
       def initialize(tag, action_class, validator_class, context, path, verb, examples)
         @tag = tag
         @action_class = action_class
         @validator_class = validator_class
         @context = context
-        @path = path
+        @path = path.sub('/:', '/')
         @verb = verb
         @verb_examples = verb_examples(examples)
       end
@@ -28,7 +30,8 @@ module Riff
       end
 
       def request_body
-        return unless schema
+        schema = build_schema
+        return if schema.blank? || schema['properties'].blank?
 
         {
           requestBody: {
@@ -89,13 +92,15 @@ module Riff
 
           body = example[type][:body]
           next unless added.add?(body)
-          
+
           value = begin
                     Oj.load(body)
                   rescue EncodingError
                     next
                   end
 
+          next if value.blank?
+          
           {
             "Example-#{i += 1}": {
               value: value
@@ -104,7 +109,7 @@ module Riff
         end.inject(&:merge)
       end
 
-      def schema
+      def build_schema
         return unless contract_class
 
         require 'dry/swagger'
@@ -112,6 +117,7 @@ module Riff
         parser.call(contract_class)
         brush_schema(parser.to_swagger)
       end
+      memo :build_schema
 
       def contract_class
         return unless @validator_class
