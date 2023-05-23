@@ -30,7 +30,7 @@ module Riff
 
             invalid_params[key] = param_value
           end
-          raise(Exceptions::InvalidParameters, invalid_params.to_json) if invalid_params.present?
+          Exceptions::InvalidParameters.raise!(field_errors: invalid_params) if invalid_params.present?
         end
   
         def only_keys(atts)

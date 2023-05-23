@@ -40,8 +40,7 @@ module Riff
     end
 
     def thrown_error(errors)
-      msg = errors.to_h.to_json
-      raise(Exceptions::InvalidParameters.new(msg))
+      Exceptions::InvalidParameters.raise!(field_errors: errors.to_h)
     end
 
     def check_blank!

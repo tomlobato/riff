@@ -16,14 +16,14 @@ module ApiHelpers
   #
   # @see AccessTokenGenerator
   def access_token(user)
-    Riff::Auth::CreateToken.new(user, :access).call
+    Riff::Auth::CreateToken.new(user, :access, Time.now + 10.minutes).call
   end
 
   # It generates refresh token for {User}.
   #
   # @see RefreshTokenGenerator
   def refresh_token(user)
-    Riff::Auth::CreateToken.new(user, :refresh).call
+    Riff::Auth::CreateToken.new(user, :refresh, Time.now + 10.minutes).call
   end
 
   def replace_tokens(response)

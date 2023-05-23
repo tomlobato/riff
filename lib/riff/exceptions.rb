@@ -5,7 +5,36 @@ module Riff
     class RiffError < StandardError
       JSON = false
 
-      def default_err_msg
+      attr_accessor :display_msg, :field_errors, :raw_msg
+
+      # Creates a RiffError instance.
+
+      # message: string, low level error message, never shown to user (hidden in production).
+      # display_msg: string, high level error message, shown to user.
+      #   Defaults to #message_from_class_name if WEB_STATUS is 4*, and Conf.default_display_error_msg otherwise.
+      # field_errors: hash, errors by field, shown to user on invalid form submits.
+      # raw_msg: hash, raw error message sent to frontend. If set, no other parameters are used.
+      
+      def self.create(message = nil, display_msg: nil, field_errors: nil, raw_msg: nil)
+        new(message).tap do |e|
+          e.display_msg = display_msg
+          e.field_errors = field_errors
+          e.raw_msg = raw_msg
+        end
+      end
+
+      def self.raise!(message = nil, display_msg: nil, field_errors: nil, raw_msg: nil)
+        raise(
+          create(
+            message,
+            display_msg: display_msg, 
+            field_errors: field_errors,
+            raw_msg: raw_msg, 
+          )
+        )
+      end
+
+      def message_from_class_name
         self.class.name.split("::").last.gsub(/([A-Z])/, ' \1').strip.downcase.capitalize
       end
     end
@@ -38,7 +67,7 @@ module Riff
     class AuthFailure < Error401
     end
 
-    class InvalidEmailOrPassword < Error401
+    class InvalidCredentials < Error401
     end
 
     class AuthorizationFailure < Error403

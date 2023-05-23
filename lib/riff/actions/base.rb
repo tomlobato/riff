@@ -19,6 +19,10 @@ module Riff
       end
       # :nocov:
 
+      def error_msg
+        # may implement
+      end
+
       private
 
       def model_class

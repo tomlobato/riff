@@ -26,7 +26,7 @@ describe 'POST /session/login', type: :request do
     let(:params) { { username: 'wrong@email.com', password: 'wrong-password' } }
     let(:expected_json_response) do
       {
-        'details' => 'Riff::Exceptions::InvalidEmailOrPassword',
+        'details' => 'Riff::Exceptions::InvalidCredentials',
         'error' => 'Invalid email or password'
       }
     end

@@ -42,9 +42,9 @@ module Riff
 
         case id_presence
         when :required
-          raise(Riff::Exceptions::InvalidParameters, { id: 'id in the url path is required' }.to_json) unless @context.id          
+          Riff::Exceptions::InvalidParameters.raise!(field_errors: { id: 'id in the url path is required' }) unless @context.id          
         when :denied
-          raise(Riff::Exceptions::InvalidParameters, { id: 'This custom method must not have an id in the url path' }.to_json) if @context.id
+          Riff::Exceptions::InvalidParameters.raise!(field_errors: { id: 'This custom method must not have an id in the url path' }) if @context.id
         when :optional
           # do nothing
         end

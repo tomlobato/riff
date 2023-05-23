@@ -8,7 +8,7 @@ module Riff
   
         def authenticate
           user = user_class.find(username: params['username'])
-          raise(Exceptions::InvalidEmailOrPassword) unless user&.authenticate(params['password'])
+          raise(Exceptions::InvalidCredentials) unless user&.authenticate(params['password'])
 
           user
         end
