@@ -47,7 +47,7 @@ module Riff
         end
 
         def raise_invalid_pagination!(key)
-          Exceptions::InvalidParameters.raise!(field_errors: { key => 'unknown key' })
+          Exceptions::InvalidParameters.raise!(field_errors: { key => "unknown key" })
         end
       end
     end

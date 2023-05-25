@@ -4,8 +4,27 @@ module Riff
   module Session
     class Open
       DEFAULT_USER_PAYLOAD_FIELDS = %i[
-        id name nome email e_email username user_name role role_id company_id group_id group fullname full_name 
-        firstname first_name lastname last_name is_admin is_administrator is_administrador
+        id
+        name
+        nome
+        email
+        e_email
+        username
+        user_name
+        role
+        role_id
+        company_id
+        group_id
+        group
+        fullname
+        full_name
+        firstname
+        first_name
+        lastname
+        last_name
+        is_admin
+        is_administrator
+        is_administrador
       ].freeze
 
       def initialize(roda_request)
@@ -16,7 +35,7 @@ module Riff
       def call
         user = validate_credentials
 
-        Request::Result.new({data: body(user)})
+        Request::Result.new({ data: body(user) })
       end
 
       private
@@ -49,7 +68,7 @@ module Riff
       end
 
       def info_log(msg)
-        Application['logger'].info(msg)
+        Application["logger"].info(msg)
       end
 
       def validate_credentials_methods

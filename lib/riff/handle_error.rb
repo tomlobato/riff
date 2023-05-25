@@ -2,7 +2,7 @@
 
 module Riff
   class HandleError
-    DEFAULT_DISPLAY_ERROR_MSG = "Error processing request".freeze
+    DEFAULT_DISPLAY_ERROR_MSG = "Error processing request"
     DEFAULT_HTTP_STATUS = 500
 
     def initialize(error)
@@ -16,7 +16,7 @@ module Riff
     private
 
     def result_body
-      return custom_error_body if @error.raw_msg
+      return custom_error_body if riff_error? && @error.raw_msg
 
       riff_error? ? riff_error_body : base_error_body
     end
@@ -40,16 +40,12 @@ module Riff
       detail = detail_msg
       detail = nil if detail == display
       {
-        msg: {
-          text: display,
-          detail: detail,
-          type: 'error'
-        }.compact
+        msg: { text: display, detail: detail, type: "error" }.compact
       }
     end
 
     def detail_msg
-      return if ENV['RACK_ENV'] == 'production'
+      return if ENV["RACK_ENV"] == "production"
       return @error.message if @error.message != @error.class.name
       return message_from_class_name if riff_error_400?
     end
@@ -62,7 +58,7 @@ module Riff
     end
 
     def message_from_class_name
-      I18n.t(@error.class.name.split('::').last.underscore)
+      I18n.t(@error.class.name.split("::").last.underscore)
     end
 
     def riff_error_400?

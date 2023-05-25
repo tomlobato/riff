@@ -15,10 +15,7 @@ module Riff
         end
 
         def query(fields)
-          q = model_class
-            .where(id: @context.id, **scope.to_h)
-            .where(extra_filters.to_h)
-            .select(*fields)
+          q = model_class.where(id: @context.id, **scope.to_h).where(extra_filters.to_h).select(*fields)
           tap_query(q)
           q.first
         end

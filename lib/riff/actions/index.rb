@@ -4,13 +4,13 @@ module Riff
   module Actions
     class Index < Base
       def call
-        Request::Result.new({data: body})
+        Request::Result.new({ data: body })
       end
 
       private
 
       def body
-        query.map{ |rec| rec.values.merge(extra_fields(rec).to_h) }
+        query.map { |rec| rec.values.merge(extra_fields(rec).to_h) }
       end
 
       def query
@@ -27,7 +27,7 @@ module Riff
       end
 
       def request_filters
-        @context.params.reject{|k, _| k.to_s.index('_') == 0 }
+        @context.params.reject { |k, _| k.to_s.index("_") == 0 }
       end
 
       def extra_filters
@@ -50,13 +50,17 @@ module Riff
         paginate = Conf.get(:default_paginate)
         paginate.nil? || paginate
       end
-  
+
       def per_page
         Conf.get(:default_per_page) || Constants::DEFAULT_PER_PAGE
       end
 
       def order
-        Helpers::Order.new(@context.params[:_order], @context.model_class, allow_extra_fields: order_allow_extra_fields).order
+        Helpers::Order.new(
+          @context.params[:_order],
+          @context.model_class,
+          allow_extra_fields: order_allow_extra_fields
+        ).order
       end
 
       def order_allow_extra_fields

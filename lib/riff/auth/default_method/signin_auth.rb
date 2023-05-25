@@ -3,12 +3,12 @@ module Riff
     module DefaultMethod
       class SigninAuth < SigninAuthMethod
         def request_is_authenticable?
-          params['username'].present? && params['password'].present?
+          params["username"].present? && params["password"].present?
         end
-  
+
         def authenticate
-          user = user_class.find(username: params['username'])
-          raise(Exceptions::InvalidCredentials) unless user&.authenticate(params['password'])
+          user = user_class.find(username: params["username"])
+          raise(Exceptions::InvalidCredentials) unless user&.authenticate(params["password"])
 
           user
         end

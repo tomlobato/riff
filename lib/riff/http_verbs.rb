@@ -2,12 +2,12 @@
 
 module Riff
   module HttpVerbs
-    POST = 'POST'
-    GET = 'GET'
-    HEAD = 'HEAD'
-    PATCH = 'PATCH'
-    PUT = 'PUT'
-    DELETE = 'DELETE'
+    POST = "POST"
+    GET = "GET"
+    HEAD = "HEAD"
+    PATCH = "PATCH"
+    PUT = "PUT"
+    DELETE = "DELETE"
 
     public_constant :POST
     public_constant :GET

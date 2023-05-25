@@ -26,16 +26,19 @@ module Riff
 
     def validator_class
       klass = Util.const_get(@class_nodes, anchor: true)
-      klass = Riff::FallbackValidator if !klass #&& @use_fallback
-      raise(Exceptions::NotImplemented, "#{@class_nodes.join('::')} must me implemented!") unless klass
+      klass ||= Riff::FallbackValidator # && @use_fallback
+      raise(Exceptions::NotImplemented, "#{@class_nodes.join("::")} must me implemented!") unless klass
 
       case klass.superclass.to_s
-      when 'Riff::Validator'
+      when "Riff::Validator"
         klass
-      when 'Riff::DynamicValidator'
+      when "Riff::DynamicValidator"
         klass.new.klass(@context)
       else
-        raise(Exceptions::NotImplemented, "Validator superclass must be Riff::Validator or Riff::DynamicValidator, but it is #{klass.superclass}")
+        raise(
+          Exceptions::NotImplemented,
+          "Validator superclass must be Riff::Validator or Riff::DynamicValidator, but it is #{klass.superclass}"
+        )
       end
     end
 
@@ -44,7 +47,7 @@ module Riff
     end
 
     def check_blank!
-      thrown_error({nil => "parameters cannot be blank"}) if @params.blank?      
+      thrown_error({ nil => "parameters cannot be blank" }) if @params.blank?
     end
   end
 end

@@ -8,13 +8,13 @@ module Riff
       def run
         action_instance = action_class.new(@context)
         action_instance.call
-      rescue StandardError => error
-        if error.is_a?(Riff::Exceptions::RiffError)
-          riff_error = error
+      rescue StandardError => e
+        if e.is_a?(Riff::Exceptions::RiffError)
+          riff_error = e
         else
-          Util.log_error(error)
-          riff_error = Riff::Exceptions::ActionExecutionError.new(error.message)
-          riff_error.set_backtrace(error.backtrace)
+          Util.log_error(e)
+          riff_error = Riff::Exceptions::ActionExecutionError.new(e.message)
+          riff_error.set_backtrace(e.backtrace)
         end
         riff_error.display_msg ||= action_instance&.error_msg.presence
         raise(riff_error)

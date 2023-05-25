@@ -25,7 +25,7 @@ module Riff
 
         YAML.load(File.read(Conf.get(:test_request_log_path)))
       end
-  
+
       def path_not_set_error_msg
         "Riff request log path not set. Use Conf.set(:test_request_log_path, '...')."
       end
@@ -57,18 +57,18 @@ module Riff
         user_class = Conf.get(:default_auth_user_class)
         user = user_class.last
         unless user
-          company = Company.new(nome_fantasia: 'Company')
+          company = Company.new(nome_fantasia: "Company")
           user = user_class.new(
-            name: 'User', 
-            email: 'asd@asd.com', 
-            username: 'user', 
-            password: '123456', 
-            confirmation_password: '123456', 
+            name: "User",
+            email: "asd@asd.com",
+            username: "user",
+            password: "123456",
+            confirmation_password: "123456",
             company_id: company.id
           )
         end
         ctx.set(:user, user)
-        ctx.set(:app_device, 'android')
+        ctx.set(:app_device, "android")
         ctx
       end
     end

@@ -31,10 +31,7 @@ module Riff
       verb_key = verb.downcase.to_sym
       requests[path] ||= {}
       requests[path][verb_key] ||= []
-      requests[path][verb_key] << {
-        request: request(req, path, verb),
-        response: response(resp)
-      }
+      requests[path][verb_key] << { request: request(req, path, verb), response: response(resp) }
     end
 
     private
@@ -54,18 +51,18 @@ module Riff
     end
 
     def normalized_path(req)
-      req.env['PATH_INFO'].sub(/\/(\d+)(:.*)?$/, '/{id}\\2').sub('/:', '/').to_sym
+      req.env["PATH_INFO"].sub(%r{/(\d+)(:.*)?$}, '/{id}\\2').sub("/:", "/").to_sym
     end
 
     def read_verb(req)
-      req.env['REQUEST_METHOD']
+      req.env["REQUEST_METHOD"]
     end
 
     def response(resp)
       {
         status: resp.status,
-        content_type: resp.headers['Content-Type'],
-        body: resp.body,
+        content_type: resp.headers["Content-Type"],
+        body: resp.body
       }
     end
 
@@ -73,15 +70,15 @@ module Riff
       {
         verb: verb,
         path: path.to_s,
-        query: req.env['rack.request.query_hash'],
-        body: req.env['rack.input'].gets.presence,
-        headers: headers(req),
+        query: req.env["rack.request.query_hash"],
+        body: req.env["rack.input"].gets.presence,
+        headers: headers(req)
       }
     end
 
     def headers(req)
-      req.env.slice(*HEADER_FIELDS).transform_keys do |k| 
-        k.sub(/^HTTP_/, '').downcase.to_sym 
+      req.env.slice(*HEADER_FIELDS).transform_keys do |k|
+        k.sub(/^HTTP_/, "").downcase.to_sym
       end
     end
   end

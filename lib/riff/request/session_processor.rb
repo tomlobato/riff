@@ -3,11 +3,7 @@
 module Riff
   module Request
     class SessionProcessor
-      ACTIONS = {
-        login: 'login',
-        logout: 'logout',
-        refresh: 'refresh',
-      }
+      ACTIONS = { login: "login", logout: "logout", refresh: "refresh" }
 
       def initialize(request, response, type)
         @request = request
@@ -43,7 +39,7 @@ module Riff
       end
 
       def invalid_request_path
-        msg = "'#{@type}' is not a valid session action. Expected actions: #{ACTIONS.values.join(', ')}."
+        msg = "'#{@type}' is not a valid session action. Expected actions: #{ACTIONS.values.join(", ")}."
         Exceptions::InvalidRequestPath.new(msg)
       end
     end

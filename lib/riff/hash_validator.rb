@@ -8,7 +8,7 @@ module Riff
     end
 
     def call!
-      error!('param must be a hash') unless @param.instance_of?(Hash)
+      error!("param must be a hash") unless @param.instance_of?(Hash)
 
       keys = find_invalid_keys
       error!("param has invalid key(s): #{invalid_keys_error_detail(keys)}") unless keys.empty?
@@ -21,7 +21,7 @@ module Riff
 
     def find_invalid_value_keys
       @param.filter_map do |key, val|
-        # TODO handle blank? of booleans
+        # TODO: handle blank? of booleans
         # TODO give option to deny blank values
         key unless val.blank? || val.class.in?(valid_value_classes(key))
       end
@@ -40,13 +40,14 @@ module Riff
     end
 
     def invalid_keys_error_detail(keys)
-      keys.map { |k| "#{k}:#{k.class}" }.join(', ')
+      keys.map { |k| "#{k}:#{k.class}" }
+          .join(", ")
     end
 
     def invalid_value_keys_error_detail(invalid_value_keys)
       invalid_value_keys.map do |key|
         "value for key #{key} is a #{@param[key].class} but should be: #{::Util::Array.smart_join(valid_value_classes(key))}"
-      end.join('; ')
+      end.join("; ")
     end
   end
 end

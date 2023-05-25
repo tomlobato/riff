@@ -14,7 +14,7 @@ module Riff
       #   Defaults to #message_from_class_name if WEB_STATUS is 4*, and Conf.default_display_error_msg otherwise.
       # field_errors: hash, errors by field, shown to user on invalid form submits.
       # raw_msg: hash, raw error message sent to frontend. If set, no other parameters are used.
-      
+
       def self.create(message = nil, display_msg: nil, field_errors: nil, raw_msg: nil)
         new(message).tap do |e|
           e.display_msg = display_msg
@@ -24,14 +24,7 @@ module Riff
       end
 
       def self.raise!(message = nil, display_msg: nil, field_errors: nil, raw_msg: nil)
-        raise(
-          create(
-            message,
-            display_msg: display_msg, 
-            field_errors: field_errors,
-            raw_msg: raw_msg, 
-          )
-        )
+        raise(create(message, display_msg: display_msg, field_errors: field_errors, raw_msg: raw_msg))
       end
 
       def message_from_class_name

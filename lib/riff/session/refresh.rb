@@ -11,7 +11,7 @@ module Riff
         raise(Exceptions::AuthFailure) unless user
 
         Auth::DefaultMethod::Token::UpdateAuthToken.new(user).call
-        Request::Result.new({data: body})
+        Request::Result.new({ data: body })
       end
 
       private

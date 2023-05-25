@@ -12,7 +12,7 @@ module Riff
         rec = record
         rec.update(attributes)
         after(rec)
-        Request::Result.new({data: response_body(rec)})
+        Request::Result.new({ data: response_body(rec) })
       rescue Sequel::ValidationFailed => e
         raise(Exceptions::DbValidationError, Util.record_errors(rec.errors).to_json)
       end
@@ -24,10 +24,10 @@ module Riff
       end
 
       def response_body(rec)
-        if rec.values.keys.sort != fields.sort
-          @context.model_class.where(id: rec.id).select(*fields).first.values 
-        else
+        if rec.values.keys.sort == fields.sort
           rec.values.slice(*fields)
+        else
+          @context.model_class.where(id: rec.id).select(*fields).first.values
         end
       end
     end

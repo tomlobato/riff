@@ -20,16 +20,22 @@ module Riff
       def run
         return unless @action_validator
 
-        result = Validate.new(class_nodes, @context.params, allow_empty_params: allow_empty_params, context: @context, use_fallback: true).call
+        result = Validate.new(
+          class_nodes,
+          @context.params,
+          allow_empty_params: allow_empty_params,
+          context: @context,
+          use_fallback: true
+        ).call
         if result
           check_excess_params!(result)
-          @context.params = result 
+          @context.params = result
         end
         nil
       end
 
       def allow_empty_params
-        @context.action != 'update'
+        @context.action != "update"
       end
 
       def check_excess_params!(result)

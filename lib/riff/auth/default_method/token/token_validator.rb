@@ -28,11 +28,7 @@ module Riff
           end
 
           def valid?
-            @message && 
-              user && 
-              user_token && 
-              user_token.user_id == user.id &&
-              user_token.invalidated_at.nil?
+            @message && user && user_token && user_token.user_id == user.id && user_token.invalidated_at.nil?
           end
 
           def user

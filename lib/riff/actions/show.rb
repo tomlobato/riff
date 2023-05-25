@@ -7,14 +7,14 @@ module Riff
 
       def call
         # puts "body=#{body}"
-        Request::Result.new({data: body})
+        Request::Result.new({ data: body })
       end
 
       private
 
       def body
         rec = record(fields)
-        rec&.values.merge(extra_fields(rec).to_h)
+        rec&.values&.merge(extra_fields(rec).to_h)
       end
 
       def fields

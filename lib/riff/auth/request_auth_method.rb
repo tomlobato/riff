@@ -9,11 +9,11 @@ module Riff
       end
 
       def request_is_authenticable?
-        raise('must implement!')
+        raise("must implement!")
       end
 
       def authenticate
-        raise('must implement!')
+        raise("must implement!")
       end
 
       private

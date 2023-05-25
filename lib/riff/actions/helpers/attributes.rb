@@ -11,20 +11,18 @@ module Riff
 
           validate_scope!
           atts = params.merge(scope)
-          atts
-            .slice(*only_keys(atts))
-            .merge(extra_attributes.to_h)
+          atts.slice(*only_keys(atts)).merge(extra_attributes.to_h)
         end
 
         def validate_scope!
           invalid_params = {}
           params.slice(*scope.keys).each do |key, param_value|
             next if param_value.blank?
-            # @context.scope is generated in authorization handler, 
+            # @context.scope is generated in authorization handler,
             # while validation/coercing wans`t run yet.
-            # @context.params here have the validated/coerced values. 
+            # @context.params here have the validated/coerced values.
             # How to compare both if both may be differente even if are valid?
-            # By now its handled with .to_s, but some other solution must be found 
+            # By now its handled with .to_s, but some other solution must be found
             # to handle this comparation accordingly
             next if param_value.to_s == scope[key].to_s
 
@@ -32,7 +30,7 @@ module Riff
           end
           Exceptions::InvalidParameters.raise!(field_errors: invalid_params) if invalid_params.present?
         end
-  
+
         def only_keys(atts)
           atts.keys - ignore_attributes.to_a.map(&:to_sym)
         end
@@ -40,7 +38,7 @@ module Riff
         def extra_attributes
           # may implement
         end
-  
+
         def ignore_attributes
           # may implement
         end

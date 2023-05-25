@@ -20,7 +20,7 @@ module Riff
         view_type: String,
         view_options: Hash,
         fields: Hash,
-        icon_left: Hash,
+        icon_left: Hash
       }.freeze
 
       VIEW_OPTIONS_KEYS = {
@@ -31,8 +31,8 @@ module Riff
         close_on_tap: [TrueClass, FalseClass]
       }.freeze
 
-      MSG_TYPES = ["success", "error", "warning", "info"].freeze
-      MSG_VIEW_TYPES = ["toast", "modal", "alert", "notification", "inline"].freeze
+      MSG_TYPES = %w[success error warning info].freeze
+      MSG_VIEW_TYPES = %w[toast modal alert notification inline].freeze
 
       def initialize(body)
         @body = body
@@ -41,23 +41,29 @@ module Riff
       def call
         # pp @body
         Riff::HashValidator.new(@body, ROOT_KEYS).call!
-        if (msg = @body[:msg])
-          Riff::HashValidator.new(msg, MSG_KEYS).call! if msg
-          raise(ArgumentError, "msg.type must be one of: #{MSG_TYPES.joni(', ')}.") if msg[:type] && !msg[:type].in?(MSG_TYPES)
-          raise(ArgumentError, "msg.view_type must be one of: #{MSG_VIEW_TYPES.joni(', ')}.") if msg[:view_type] && !msg[:view_type].in?(MSG_VIEW_TYPES)
+        return unless (msg = @body[:msg])
 
-          if (view_options = msg[:view_options])
-            Riff::HashValidator.new(view_options, VIEW_OPTIONS_KEYS).call! 
-            raise(ArgumentError, "msg.view_options.timeout must be greater than 0.") if view_options[:timeout] && view_options[:timeout] <= 0
-          end
+        Riff::HashValidator.new(msg, MSG_KEYS).call! if msg
+        if msg[:type] && !msg[:type].in?(MSG_TYPES)
+          raise(ArgumentError, "msg.type must be one of: #{MSG_TYPES.joni(", ")}.")
         end
+        if msg[:view_type] && !msg[:view_type].in?(MSG_VIEW_TYPES)
+          raise(ArgumentError, "msg.view_type must be one of: #{MSG_VIEW_TYPES.joni(", ")}.")
+        end
+
+        return unless (view_options = msg[:view_options])
+
+        Riff::HashValidator.new(view_options, VIEW_OPTIONS_KEYS).call!
+        return unless view_options[:timeout] && view_options[:timeout] <= 0
+
+        raise(ArgumentError, "msg.view_options.timeout must be greater than 0.")
       end
     end
   end
 end
 
 # spec:
-# 
+#
 # {
 #   success: true,
 #   data: <anything>,

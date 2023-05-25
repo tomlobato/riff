@@ -3,7 +3,7 @@
 module Riff
   module Swagger
     class Read
-      ACTION_VERB_MAP = { create: 'POST', show: 'GET', index: 'GET', update: 'PATCH', delete: 'DELETE' }.freeze
+      ACTION_VERB_MAP = { create: "POST", show: "GET", index: "GET", update: "PATCH", delete: "DELETE" }.freeze
       REST_ID_ACTIONS = %i[show update delete].freeze
 
       def initialize
@@ -24,7 +24,7 @@ module Riff
       private
 
       def sort(paths)
-        paths.sort.to_h.each do |path, verbs|
+        paths.sort.to_h.each do |_path, verbs|
           verbs.sort.to_h.each do |verb, data|
           end
         end
@@ -43,11 +43,11 @@ module Riff
       end
 
       def build_tag(node1)
-        node1.split('_').map(&:capitalize).join(' ')
+        node1.split("_").map(&:capitalize).join(" ")
       end
 
       def build_path(node1, node2)
-        '/' + [node1, node2].select(&:present?).join('/')
+        "/" + [node1, node2].select(&:present?).join("/")
       end
 
       def save(action_class, model_name, action_name)
@@ -97,14 +97,14 @@ module Riff
       def find_node2(action_name, action_class)
         node2 = action_name.to_s.underscore
         if node2.to_sym.in?(ACTION_VERB_MAP.keys)
-          node2 = node2.to_sym.in?(REST_ID_ACTIONS) ? '{id}' : ''
+          node2 = node2.to_sym.in?(REST_ID_ACTIONS) ? "{id}" : ""
         else
           id_presence = defined?(action_class::ID_PRESENCE) ? action_class::ID_PRESENCE : Request::ActionProcessor::DEFAULT_ID_PRESENCE
           case id_presence
           when :required
-            node2.prepend("{id}:") 
+            node2.prepend("{id}:")
           when :optional
-            node2.prepend("{optional_id}:") 
+            node2.prepend("{optional_id}:")
           when :denied
             # no change
           end

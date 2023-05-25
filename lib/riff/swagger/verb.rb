@@ -2,13 +2,13 @@ module Riff
   module Swagger
     class Verb
       extend Memo
-      
+
       def initialize(tag, action_class, validator_class, context, path, verb, examples)
         @tag = tag
         @action_class = action_class
         @validator_class = validator_class
         @context = context
-        @path = path.sub('/:', '/')
+        @path = path.sub("/:", "/")
         @verb = verb
         @verb_examples = verb_examples(examples)
       end
@@ -17,27 +17,27 @@ module Riff
         {
           tags: [@tag],
           **request_body.to_h,
-          responses: responses,
+          responses: responses
         }
       end
 
       private
 
       def verb_examples(examples)
-        path = ('/v1' + @path).to_sym
+        path = ("/v1" + @path).to_sym
         verb = @verb.downcase.to_sym
         examples[path].to_h[verb].to_a.presence
       end
 
       def request_body
         schema = build_schema
-        return if schema.blank? || schema['properties'].blank?
+        return if schema.blank? || schema["properties"].blank?
 
         {
           requestBody: {
             required: true,
             content: {
-              'application/json': {
+              "application/json": {
                 schema: schema,
                 **request_examples.to_h
               }
@@ -48,20 +48,20 @@ module Riff
 
       def responses
         {
-          '200': {
-            description: 'Successful operation'
+          "200": {
+            description: "Successful operation"
           },
-          '401': {
-            description: 'Authentication failure'
+          "401": {
+            description: "Authentication failure"
           },
-          '403': {
-            description: 'Authorization failure'
+          "403": {
+            description: "Authorization failure"
           },
-          '404': {
-            description: 'Resource not found'
+          "404": {
+            description: "Resource not found"
           },
-          '422': {
-            description: 'Invalid parameters'
+          "422": {
+            description: "Invalid parameters"
           }
         }.map do |k, v|
           [k, v.merge(content(k.to_s.to_i))]
@@ -74,7 +74,7 @@ module Riff
 
         {
           content: {
-            'application/json': {
+            "application/json": {
               examples: examples
             }
           }
@@ -93,14 +93,15 @@ module Riff
           body = example[type][:body]
           next unless added.add?(body)
 
-          value = begin
-                    Oj.load(body)
-                  rescue EncodingError
-                    next
-                  end
+          value =
+            begin
+              Oj.load(body)
+            rescue EncodingError
+              next
+            end
 
           next if value.blank?
-          
+
           {
             "Example-#{i += 1}": {
               value: value
@@ -112,7 +113,7 @@ module Riff
       def build_schema
         return unless contract_class
 
-        require 'dry/swagger'
+        require("dry/swagger")
         parser = Dry::Swagger::ContractParser.new
         parser.call(contract_class)
         brush_schema(parser.to_swagger)
@@ -122,34 +123,33 @@ module Riff
       def contract_class
         return unless @validator_class
 
-        @contract_class ||= begin
+        @contract_class ||=
           case @validator_class.superclass.to_s
-          when 'Riff::Validator'
+          when "Riff::Validator"
             @validator_class
-          when 'Riff::DynamicValidator'
+          when "Riff::DynamicValidator"
             @validator_class.new.klass(@context)
           else
-            raise "Validator superclass must be one of Riff::Validator or Riff::DynamicValidator, but it is #{@validator_class.superclass}"
+            raise("Validator superclass must be one of Riff::Validator or Riff::DynamicValidator, but it is #{@validator_class.superclass}")
           end
-        end
       end
 
       def brush_schema(schema)
         schema = schema.deep_stringify_keys
         schema.deep_merge!(schema) do |k, v|
           if k.to_sym == :type && v.is_a?(Symbol)
-            v.to_s 
+            v.to_s
           else
             v
           end
         end
-        schema.delete('required') if schema['required'].blank?
+        schema.delete("required") if schema["required"].blank?
         schema
       end
 
       def request_examples
         examples = find_examples(nil, :request)
-        {examples: examples} if examples.present?
+        { examples: examples } if examples.present?
       end
     end
   end

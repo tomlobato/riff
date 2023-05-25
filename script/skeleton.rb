@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
-require 'fileutils'
-require 'active_support'
-require 'active_support/all'
+require "fileutils"
+require "active_support"
+require "active_support/all"
 
 class Skeleton
   def initialize(resources)
@@ -87,7 +87,7 @@ class Skeleton
                 required(:param1).value(:string)
                 optional(:param2).value(:integer)
               end
-      
+
               rule(:param2) do
                 key.failure('must be greater than 0') if value&.negative?
               end

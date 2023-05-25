@@ -3,9 +3,9 @@
 module Riff
   module Request
     class Parse
-      ACTION_MAP = { 
-        with_id: { 'GET' => "show", 'DELETE' => "delete", 'PATCH' => "update" },
-        without_id: { 'GET' => "index", 'POST' => "create" }
+      ACTION_MAP = {
+        with_id: { "GET" => "show", "DELETE" => "delete", "PATCH" => "update" },
+        without_id: { "GET" => "index", "POST" => "create" }
       }.freeze
 
       private_constant :ACTION_MAP
@@ -24,7 +24,7 @@ module Riff
       def call
         validate_path!
         context = Context.new(basic_context.merge(extra_context))
-        custom_context(context).to_h.each{ |k, v| context.set(k, v) }
+        custom_context(context).to_h.each { |k, v| context.set(k, v) }
         context
       end
 
@@ -47,7 +47,7 @@ module Riff
       def parse_node2
         node = @node2.to_s.presence
         return unless node
-        return node.split(":", 2).map(&:presence) if node.index(':')
+        return node.split(":", 2).map(&:presence) if node.index(":")
 
         case no_colon_mode
         when :id

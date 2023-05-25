@@ -32,13 +32,13 @@ module Riff
       end
 
       def info_log(msg)
-        Application['logger'].info(msg)
+        Application["logger"].info(msg)
       end
 
       def methods
-        action_custom_auth_methods || 
-          resource_custom_auth_methods || 
-          Conf.get(:custom_auth_method) || 
+        action_custom_auth_methods ||
+          resource_custom_auth_methods ||
+          Conf.get(:custom_auth_method) ||
           [Riff::Auth::DefaultMethod::RequestAuth]
       end
 
@@ -46,7 +46,7 @@ module Riff
         settings = @context.get(:settings)
         [settings.class.auth_method].flatten if settings && settings.class.respond_to?(:auth_method)
       end
-      
+
       def action_custom_auth_methods
         action_class = @context.get(:action_class)
         [action_class.auth_method].flatten if action_class.respond_to?(:auth_method)

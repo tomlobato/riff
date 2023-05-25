@@ -18,7 +18,7 @@ module Riff
       end
 
       def run
-        raise_authorization_error!("Class #{class_nodes.join('::')} must be implemented") unless @authorizer_class
+        raise_authorization_error!("Class #{class_nodes.join("::")} must be implemented") unless @authorizer_class
 
         handle_result(check_permission)
       end
@@ -26,7 +26,9 @@ module Riff
       def check_permission
         instance = @authorizer_class.new(@context, user)
         method = "#{@context.action}?".to_sym
-        raise_authorization_error!("Method #{method} must be implemented in #{@authorizer_class}") unless instance.respond_to?(method)
+        unless instance.respond_to?(method)
+          raise_authorization_error!("Method #{method} must be implemented in #{@authorizer_class}")
+        end
 
         instance.__send__(method)
       end

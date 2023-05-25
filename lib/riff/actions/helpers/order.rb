@@ -26,17 +26,24 @@ module Riff
           name, direction = field.split(":", 2)
           name = name.to_sym
           validate_field!(name, direction)
-          if name.to_s.include?('.')
-            tbl, col = name.to_s.split('.')
-            name = Sequel[tbl.to_sym][col.to_sym] 
+          if name.to_s.include?(".")
+            tbl, col = name.to_s.split(".")
+            name = Sequel[tbl.to_sym][col.to_sym]
           end
           name = Sequel.desc(name) if direction.to_s.downcase == "desc"
           name
         end
 
         def validate_field!(name, direction)
-          raise_invalid_params!(name) unless @model_class.columns.include?(name) || @allow_extra_fields.to_a.map(&:to_sym).include?(name)
-          raise_invalid_params!("#{name}:#{direction}") if direction.present? && !direction.to_s.downcase.in?(%w[desc asc])
+          unless @model_class.columns.include?(name) || @allow_extra_fields.to_a.map(&:to_sym).include?(name)
+            raise_invalid_params!(name)
+          end
+          raise_invalid_params!("#{name}:#{direction}") if direction.present? && !direction.to_s.downcase.in?(
+            %w[
+              desc
+              asc
+            ]
+          )
         end
 
         def raise_invalid_params!(name)

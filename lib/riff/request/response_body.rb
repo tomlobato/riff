@@ -40,12 +40,12 @@ module Riff
           if success?
             { data: raw }
           else
-            { msg: { text: raw, type: 'error' } }
+            { msg: { text: raw, type: "error" } }
           end
         when Array, Hash
           raw
         when NilClass
-          ''
+          ""
         else
           raise(Riff::Exceptions::InvalidResponseBody, "Unhandled body class '#{raw.class}'")
         end

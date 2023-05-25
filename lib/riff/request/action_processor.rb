@@ -4,7 +4,7 @@ module Riff
   module Request
     class ActionProcessor
       extend Memo
-      
+
       ID_PRESENCE_VALUES = %i[required denied optional].freeze
       DEFAULT_ID_PRESENCE = :denied
 
@@ -22,7 +22,7 @@ module Riff
       def call_chain
         setup
         raise_action_not_found! unless action_available? && @action_class
-        
+
         Chain.new(@context).call
       rescue StandardError => e
         Util.log_error(e) unless e.is_a?(Riff::Exceptions::RiffError)
@@ -39,13 +39,19 @@ module Riff
       end
 
       def validate_custom_method_id_presence!
-        raise(Riff::Exceptions::InternalServerError, "Constant WITH_ID must be: #{ID_PRESENCE_VALUES.join(', ')}.") unless id_presence.in?(ID_PRESENCE_VALUES)
+        unless id_presence.in?(ID_PRESENCE_VALUES)
+          raise(Riff::Exceptions::InternalServerError, "Constant WITH_ID must be: #{ID_PRESENCE_VALUES.join(", ")}.")
+        end
 
         case id_presence
         when :required
-          Riff::Exceptions::InvalidParameters.raise!(field_errors: { id: 'id in the url path is required' }) unless @context.id          
+          unless @context.id
+            Riff::Exceptions::InvalidParameters.raise!(field_errors: { id: "id in the url path is required" })
+          end
         when :denied
-          Riff::Exceptions::InvalidParameters.raise!(field_errors: { id: 'This custom method must not have an id in the url path' }) if @context.id
+          if @context.id
+            Riff::Exceptions::InvalidParameters.raise!(field_errors: { id: "This custom method must not have an id in the url path" })
+          end
         when :optional
           # do nothing
         end
@@ -92,7 +98,10 @@ module Riff
 
       def custom_method_available?
         return unless custom_action_class
-        raise_action_not_found!(details: "Custom method exists but with different http verb") if custom_method_verb_mismatch?
+
+        if custom_method_verb_mismatch?
+          raise_action_not_found!(details: "Custom method exists but with different http verb")
+        end
 
         true
       end

@@ -36,9 +36,9 @@ module Riff
 
       def serialize(raw)
         case @response["Content-Type"]
-        when 'application/json'
+        when "application/json"
           raw.presence&.to_json
-        when 'application/xml', 'text/xml'
+        when "application/xml", "text/xml"
           raw.presence&.to_xml
         else
           raw

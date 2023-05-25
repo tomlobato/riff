@@ -4,11 +4,7 @@ module Riff
   module Actions
     module Helpers
       class SuccessBody
-        KEYS = {
-          body: :data,
-          meta: :meta,
-          extra: :extra
-        }.freeze
+        KEYS = { body: :data, meta: :meta, extra: :extra }.freeze
 
         def initialize(body, msg, icon, meta, extra)
           @body = body
@@ -19,13 +15,13 @@ module Riff
         end
 
         def call
-          ret = KEYS.map do |k, output_k| 
-                  v = instance_variable_get("@#{k}")
-                  [output_k, v] if v.present? 
-                end.compact.to_h
+          ret = KEYS.map do |k, output_k|
+            v = instance_variable_get("@#{k}")
+            [output_k, v] if v.present?
+          end.compact.to_h
 
           if @msg.present?
-            ret[:msg] = msg_body 
+            ret[:msg] = msg_body
             ret[:msg][:icon_left] = Icon.new(@icon, true).call if @icon.present?
           end
 
@@ -37,7 +33,7 @@ module Riff
         def msg_body
           case @msg
           when String
-            { text: @msg, type: 'success' }
+            { text: @msg, type: "success" }
           when Hash
             @msg
           else

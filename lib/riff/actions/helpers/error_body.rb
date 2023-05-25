@@ -12,9 +12,9 @@ module Riff
         def call
           case @msg
           when NilClass
-            ''
+            ""
           when String
-            { msg: { text: @msg, type: 'error', **icon.to_h } }
+            { msg: { text: @msg, type: "error", **icon.to_h } }
           when Hash
             { msg: @msg }
           else
@@ -25,7 +25,7 @@ module Riff
         private
 
         def icon
-          ({icon_left: Icon.new(@icon, false).call}) if @icon
+          { icon_left: Icon.new(@icon, false).call } if @icon
         end
       end
     end

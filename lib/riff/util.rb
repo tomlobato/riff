@@ -10,6 +10,7 @@ module Riff
       Object.const_get(name)
     rescue NameError
       raise if reraise
+
       nil
     end
 
@@ -18,12 +19,12 @@ module Riff
     end
 
     def error_desc(error)
-      "#{error.class}: #{error.message}" #unless ENV["RACK_ENV"] == "test"
+      "#{error.class}: #{error.message}" # unless ENV["RACK_ENV"] == "test"
     end
 
     def record_errors(rec_errors)
       errors = {}
-      rec_errors.each{|k, v| errors[k] = v.uniq }
+      rec_errors.each { |k, v| errors[k] = v.uniq }
       errors
     end
 

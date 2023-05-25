@@ -20,7 +20,11 @@ module Riff
           private
 
           def message
-            { user_id: @user.id, auth_token: @user.user_token.authentication_token, inpersonator_id: @user.inpersonator_id }
+            {
+              user_id: @user.id,
+              auth_token: @user.user_token.authentication_token,
+              inpersonator_id: @user.inpersonator_id
+            }
           end
 
           def purpose

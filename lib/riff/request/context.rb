@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# TODO implement lazy properties
+# TODO: implement lazy properties
 
 module Riff
   module Request
