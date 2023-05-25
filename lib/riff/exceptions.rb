@@ -125,5 +125,8 @@ module Riff
 
     class InvalidContentType < Error500
     end
+
+    class ActionExecutionError < Error500
+    end
   end
 end

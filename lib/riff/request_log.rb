@@ -22,7 +22,7 @@ module Riff
     end
 
     def write_log
-      File.write(@request_log_path, requests.to_yaml)
+      File.write(@test_request_log_path, requests.to_yaml)
     end
 
     def collect(req, resp)
@@ -40,17 +40,17 @@ module Riff
     private
 
     def setup
-      @request_log_path = Conf.get(:request_log_path)
-      raise(StandardError, path_not_set_error_msg) unless @request_log_path
-      raise(StandardError, path_not_found_error_msg) unless File.exist?(@request_log_path)
+      @test_request_log_path = Conf.get(:test_request_log_path)
+      raise(StandardError, path_not_set_error_msg) unless @test_request_log_path
+      raise(StandardError, path_not_found_error_msg) unless File.exist?(@test_request_log_path)
     end
 
     def path_not_set_error_msg
-      "Riff request log path not set. Use Conf.set(:request_log_path, '...')."
+      "Riff request log path not set. Use Conf.set(:test_request_log_path, '...')."
     end
 
     def path_not_found_error_msg
-      "File '#{@request_log_path}' not found"
+      "File '#{@test_request_log_path}' not found"
     end
 
     def normalized_path(req)

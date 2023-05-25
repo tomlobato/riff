@@ -19,7 +19,8 @@ module Riff
         type: String,
         view_type: String,
         view_options: Hash,
-        fields: Hash
+        fields: Hash,
+        icon_left: Hash,
       }.freeze
 
       VIEW_OPTIONS_KEYS = {
@@ -38,6 +39,7 @@ module Riff
       end
 
       def call
+        # pp @body
         Riff::HashValidator.new(@body, ROOT_KEYS).call!
         if (msg = @body[:msg])
           Riff::HashValidator.new(msg, MSG_KEYS).call! if msg

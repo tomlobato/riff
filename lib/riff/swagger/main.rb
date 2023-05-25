@@ -19,19 +19,19 @@ module Riff
       private
 
       def load_examples
-        request_log_path = Conf.get(:request_log_path)
-        raise(StandardError, path_not_set_error_msg) unless request_log_path.present?
-        raise(StandardError, path_not_found_error_msg(request_log_path)) unless File.exist?(request_log_path)
+        test_request_log_path = Conf.get(:test_request_log_path)
+        raise(StandardError, path_not_set_error_msg) unless test_request_log_path.present?
+        raise(StandardError, path_not_found_error_msg(test_request_log_path)) unless File.exist?(test_request_log_path)
 
-        YAML.load(File.read(Conf.get(:request_log_path)))
+        YAML.load(File.read(Conf.get(:test_request_log_path)))
       end
   
       def path_not_set_error_msg
-        "Riff request log path not set. Use Conf.set(:request_log_path, '...')."
+        "Riff request log path not set. Use Conf.set(:test_request_log_path, '...')."
       end
 
-      def path_not_found_error_msg(request_log_path)
-        "File #{request_log_path} not found"
+      def path_not_found_error_msg(test_request_log_path)
+        "File #{test_request_log_path} not found"
       end
 
       def paths

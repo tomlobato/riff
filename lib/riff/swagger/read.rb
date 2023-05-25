@@ -17,6 +17,7 @@ module Riff
         @res_mod.constants.each do |model_name|
           handle_model(model_name)
         end
+        # puts "@paths.keys.size=#{@paths.keys.size}"
         sort(@paths)
       end
 

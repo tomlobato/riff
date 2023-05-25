@@ -16,52 +16,8 @@ module Riff
           Request::Result.new(nil, headers: { "Location" => location }, status: status)
         end
 
-        # def json(body, raw: false)
-        #   body[:data] = body unless raw || body.is_a?(String)
-        #   Request::Result.new(body, content_type: "application/json")
-        # end
-
-        # def xml(body, raw: false)
-        #   body[:data] = body unless raw || body.is_a?(String)
-        #   Request::Result.new(body, content_type: "application/xml")
-        # end
-
-        # def html(body)
-        #   Request::Result.new(body, content_type: "text/html")
-        # end
-
-        # def text(body)
-        #   Request::Result.new(body, content_type: "text/plain")
-        # end
-
-        # def success(body = nil, data = {})
-        #   if body.present?
-        #     body = { data: body } 
-        #   else
-        #     body = {}
-        #   end
-
-        #   if data[:msg].present?
-        #     if data[:msg].is_a?(String)
-        #       body[:msg] = { text: data[:msg], type: "success" } 
-        #     else
-        #       body[:msg] = data[:msg]
-        #     end
-        #   end
-
-        #   body[:meta] = data[:meta] if data[:meta].present?
-
-        #   extra_keys = data.keys - %i[msg meta]
-        #   body[:extra] = data.slice(*extra_keys) if extra_keys.present?
-
-        #   Request::Result.new(body)
-        # end
-
-        # def error(body)
-        #   Request::Result.new(body, status: 500)
-        # end
-
-        def result(body = nil, content_type: nil, headers: nil, status: nil)
+        def result(body = nil, body_mode: nil, content_type: nil, headers: nil, status: nil)
+          body = { data: body } unless body_mode == :raw
           Request::Result.new(body, content_type: content_type, headers: headers, status: status)
         end
 
@@ -93,8 +49,8 @@ module Riff
         # success({...}, msg: 'it worked') -> { data: {...}, msg: { text: 'it worked' }, success: true }
         # success({msg: { text: 'it worked, nut...', type: 'warning'}}) -> { msg: { text: 'it worked, nut...', type: 'warning' }, success: true }
   
-        def success(body = nil, msg: nil, meta: nil, extra: nil, body_mode: nil, status: 200)
-          body = build_success_body(body, msg, meta, extra) unless body_mode == :raw
+        def success(body = nil, body_mode: nil, msg: nil, icon: false, meta: nil, extra: nil, status: 200)
+          body = SuccessBody.new(body, msg, icon, meta, extra).call unless body_mode == :raw
           Riff::Request::Result.new(body, status: status)
         end
 
@@ -115,45 +71,57 @@ module Riff
         # error('ops, it didn`t work') -> { msg: { text: 'ops, it didn`t work' }, success: false }
         # error({...}) -> { msg: {...}, success: false }
   
-        def error(msg = nil, status: 422)
-          Riff::Request::Result.new(build_error_body(msg), status: status)
-        end
-
-        private
-
-        def build_success_body(body, msg, meta, extra)
-          ret = {}
-          ret[:data] = body if body.present?
-          ret[:msg] = build_success_msg_body(msg) if msg.present?
-          ret[:meta] = meta if meta.present?
-          ret[:extra] = extra if extra.present?
-          ret
-        end
-
-        def build_success_msg_body(msg)
-          case msg
-          when String
-            { text: msg, type: 'success' }
-          when Hash
-            msg
-          else
-            raise(Riff::Exceptions::InvalidResponseBody, "Unhandled body class '#{msg.class}'")
-          end
-        end
-
-        def build_error_body(msg)
-          case msg
-          when NilClass
-            ''
-          when String
-            { msg: { text: msg, type: 'error' } }
-          when Hash
-            { msg: msg }
-          else
-            raise(Riff::Exceptions::InvalidResponseBody, "Unhandled body class '#{msg.class}'")
-          end
+        def error(body = nil, icon: false, body_mode: nil, status: 422)
+          body = ErrorBody.new(body, icon).call unless body_mode == :raw
+          Riff::Request::Result.new(body, status: status)
         end
       end
     end
   end
 end
+
+# def json(body, raw: false)
+#   body[:data] = body unless raw || body.is_a?(String)
+#   Request::Result.new(body, content_type: "application/json")
+# end
+
+# def xml(body, raw: false)
+#   body[:data] = body unless raw || body.is_a?(String)
+#   Request::Result.new(body, content_type: "application/xml")
+# end
+
+# def html(body)
+#   Request::Result.new(body, content_type: "text/html")
+# end
+
+# def text(body)
+#   Request::Result.new(body, content_type: "text/plain")
+# end
+
+# def success(body = nil, data = {})
+#   if body.present?
+#     body = { data: body } 
+#   else
+#     body = {}
+#   end
+
+#   if data[:msg].present?
+#     if data[:msg].is_a?(String)
+#       body[:msg] = { text: data[:msg], type: "success" } 
+#     else
+#       body[:msg] = data[:msg]
+#     end
+#   end
+
+#   body[:meta] = data[:meta] if data[:meta].present?
+
+#   extra_keys = data.keys - %i[msg meta]
+#   body[:extra] = data.slice(*extra_keys) if extra_keys.present?
+
+#   Request::Result.new(body)
+# end
+
+# def error(body)
+#   Request::Result.new(body, status: 500)
+# end
+

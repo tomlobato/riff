@@ -4,6 +4,7 @@ module Riff
   module Request
     class ActionProcessor
       extend Memo
+      
       ID_PRESENCE_VALUES = %i[required denied optional].freeze
       DEFAULT_ID_PRESENCE = :denied
 
