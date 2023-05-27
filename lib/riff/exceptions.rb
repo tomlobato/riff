@@ -5,7 +5,7 @@ module Riff
     class RiffError < StandardError
       JSON = false
 
-      attr_accessor :display_msg, :field_errors, :raw_msg
+      attr_accessor :display_msg, :field_errors, :raw_msg, :icon
 
       # Creates a RiffError instance.
 
@@ -15,16 +15,17 @@ module Riff
       # field_errors: hash, errors by field, shown to user on invalid form submits.
       # raw_msg: hash, raw error message sent to frontend. If set, no other parameters are used.
 
-      def self.create(message = nil, display_msg: nil, field_errors: nil, raw_msg: nil)
+      def self.create(message = nil, display_msg: nil, icon: nil, field_errors: nil, raw_msg: nil)
         new(message).tap do |e|
           e.display_msg = display_msg
+          e.icon = icon
           e.field_errors = field_errors
           e.raw_msg = raw_msg
         end
       end
 
-      def self.raise!(message = nil, display_msg: nil, field_errors: nil, raw_msg: nil)
-        raise(create(message, display_msg: display_msg, field_errors: field_errors, raw_msg: raw_msg))
+      def self.raise!(message = nil, display_msg: nil, icon: nil, field_errors: nil, raw_msg: nil)
+        raise(create(message, display_msg: display_msg, icon: icon, field_errors: field_errors, raw_msg: raw_msg))
       end
 
       def message_from_class_name
@@ -119,7 +120,7 @@ module Riff
     class InvalidContentType < Error500
     end
 
-    class ActionExecutionError < Error500
+    class RescuedActionError < Error500
     end
   end
 end

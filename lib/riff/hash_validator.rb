@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Riff
+  # TODO convert all uses of this class to a dry-validation-contract
   class HashValidator
     def initialize(param, valid_key_map)
       @param = param

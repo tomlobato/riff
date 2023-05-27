@@ -14,7 +14,7 @@ module Riff
           when NilClass
             ""
           when String
-            { msg: { text: @msg, type: "error", **icon.to_h } }
+            { msg: { text: @msg, type: "error", icon: icon }.compact }
           when Hash
             { msg: @msg }
           else
@@ -25,7 +25,7 @@ module Riff
         private
 
         def icon
-          { icon_left: Icon.new(@icon, false).call } if @icon
+          Icon.new(@icon, false).call if @icon
         end
       end
     end

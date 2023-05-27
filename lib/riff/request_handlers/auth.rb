@@ -32,7 +32,7 @@ module Riff
       end
 
       def info_log(msg)
-        Application["logger"].info(msg)
+        Conf.get(:logger).info(msg)
       end
 
       def methods

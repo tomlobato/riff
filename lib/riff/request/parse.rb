@@ -49,7 +49,7 @@ module Riff
         return unless node
         return node.split(":", 2).map(&:presence) if node.index(":")
 
-        case no_colon_mode
+        case Conf.get(:no_colon_mode)
         when :id
           [node, nil]
         when :custom_method
@@ -61,12 +61,8 @@ module Riff
         when :id_if_digits_or_uuid
           node.match?(Constants::ONLY_DIGITS) || node.match?(Constants::UUID) ? [node, nil] : [nil, node]
         else
-          raise(StandardError, "Unknown no_colon_mode: #{no_colon_mode}")
+          raise(StandardError, "Unknown no_colon_mode: #{Conf.get(:no_colon_mode)}")
         end
-      end
-
-      def no_colon_mode
-        Conf.get(:no_colon_mode) || :id_if_digits_or_uuid
       end
 
       def basic_context
@@ -108,20 +104,11 @@ module Riff
       end
 
       def model_less?
-        mlr = Riff::Conf.get(:model_less_resources)
-        mlr && mlr.include?(@resource.to_sym)
+        Riff::Conf.get(:model_less_resources).include?(@resource.to_sym)
       end
 
       def find_resource(node1)
-        return node1.singularize unless resource_remap
-
-        (resource_remap[node1] || node1).singularize
-      end
-
-      def resource_remap
-        return @resource_remap if defined?(@resource_remap)
-
-        @resource_remap = Riff::Conf.get(:resource_remap)&.transform_keys(&:to_s)&.transform_values(&:to_s)
+        Riff::Conf.get(:resource_remap)[node1] || node1.singularize
       end
 
       def find_action

@@ -23,6 +23,10 @@ module Riff
         # may implement
       end
 
+      def error_icon
+        # may implement
+      end
+
       private
 
       def model_class

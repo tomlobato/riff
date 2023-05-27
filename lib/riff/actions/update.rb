@@ -14,7 +14,7 @@ module Riff
         after(rec)
         Request::Result.new({ data: response_body(rec) })
       rescue Sequel::ValidationFailed => e
-        raise(Exceptions::DbValidationError, Util.record_errors(rec.errors).to_json)
+        Exceptions::DbValidationError.raise!(field_errors: Util.record_errors(rec.errors))
       end
 
       private

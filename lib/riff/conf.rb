@@ -3,23 +3,31 @@
 module Riff
   class Conf
     include Singleton
-    KEYS = %i[
-      model_less_resources
-      resource_remap
-      user_fields
-      validate_credentials_methods
-      default_display_error_msg
-      custom_context_class
-      default_auth_user_class
-      no_colon_mode
-      oas_root
-      on_auth
-      test_request_log_path
-      resources_base_module
-      user_login_payload_class
-      user_token_fields
-      default_response_icons
-    ]
+
+    SELECT_ALL = Sequel.lit('*').freeze
+
+    KEYS = {
+      custom_context_class: nil,
+      db: nil,
+      default_auth_clause: nil,
+      default_auth_fields: SELECT_ALL,
+      default_auth_user_class: nil,
+      default_display_error_msg: "Error processing request",
+      default_error_icon: nil,
+      default_response_icons: nil,
+      logger: lambda { Logger.new(STDOUT) },
+      model_less_resources: [],
+      no_colon_mode: :id_if_digits_or_uuid,
+      oas_root: nil,
+      on_auth: nil,
+      resource_remap: {},
+      resources_base_module: lambda { Resources },
+      test_request_log_path: nil,
+      user_fields: SELECT_ALL,
+      user_login_payload_class: nil,
+      user_token_fields: SELECT_ALL,
+      validate_credentials_methods: lambda { Riff::Auth::DefaultMethod::Token::ValidateCredentials },
+    }.freeze
 
     def self.set(key, val)
       instance.set(key, val)
@@ -38,13 +46,32 @@ module Riff
     end
 
     def set(key, val)
-      raise("Invalid key: #{key}") unless KEYS.include?(key)
+      raise("Invalid Riff::Conf key: '#{key}'") unless KEYS.keys.include?(key)
 
-      @store[key] = val
+      @store[key] = brush(key, val)
     end
 
     def get(key)
-      @store[key]
+      @store[key] || default_value(key)
+    end
+
+    private
+
+    def default_value(key)
+      return unless (valuer = KEYS[key])
+
+      valuer.respond_to?(:call) ? valuer.call : valuer
+    end
+
+    def brush(key, val)
+      case key
+      when :resource_remap
+        val&.to_h { |k, v| [k, v].map(&:to_s) }
+      when :default_response_icons
+        val&.transform_keys(&:to_sym)
+      else
+        val
+      end
     end
   end
 end

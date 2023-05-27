@@ -32,25 +32,17 @@ module Riff
           end
 
           def user
-            @user ||= user_class.where(id: @message[:user_id]).select(*user_fields).first
+            @user ||= user_class.where(id: @message[:user_id]).select(*Conf.get(:user_fields)).first
           end
 
           def user_class
             Conf.get(:default_auth_user_class)
           end
 
-          def user_fields
-            Conf.get(:user_fields)
-          end
-
           def user_token
-            ::SellerToken.where(authentication_token: @message[:auth_token]).select(*user_token_fields).first
+            ::SellerToken.where(authentication_token: @message[:auth_token]).select(*Conf.get(:user_token_fields)).first
           end
           memo :user_token
-
-          def user_token_fields
-            Conf.get(:user_token_fields)
-          end
         end
       end
     end

@@ -7,7 +7,7 @@ module Riff
         end
 
         def authenticate
-          user = user_class.find(username: params["username"])
+          user = user_class.where(username: params["username"]).where(extra_clause.to_h).select(*Conf.get(:default_auth_fields)).first
           raise(Exceptions::InvalidCredentials) unless user&.authenticate(params["password"])
 
           user
@@ -17,6 +17,10 @@ module Riff
 
         def user_class
           Conf.get(:default_auth_user_class)
+        end
+
+        def extra_clause
+          Conf.get(:default_auth_clause)
         end
       end
     end

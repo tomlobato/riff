@@ -8,7 +8,7 @@ module Riff
 
       def call
         rec = nil
-        Application["database"].transaction do
+        Conf.get(:db).transaction do
           before
           rec = model_class.new(attributes)
           rec.save
@@ -17,7 +17,7 @@ module Riff
         after_commit(rec)
         Request::Result.new({ data: response_body(rec) || rec.values.slice(*fields) })
       rescue Sequel::ValidationFailed => e
-        raise(Exceptions::DbValidationError, Util.record_errors(rec.errors).to_json)
+        Exceptions::DbValidationError.raise!(field_errors: Util.record_errors(rec.errors))
       end
 
       private

@@ -2,6 +2,7 @@
 
 module Riff
   module Request
+    # TODO convert to dry validation contract
     class ResponseBodyValidator
       ROOT_KEYS = {
         success: [TrueClass, FalseClass],
@@ -20,7 +21,7 @@ module Riff
         view_type: String,
         view_options: Hash,
         fields: Hash,
-        icon_left: Hash
+        icon: Hash
       }.freeze
 
       VIEW_OPTIONS_KEYS = {
@@ -39,24 +40,42 @@ module Riff
       end
 
       def call
-        # pp @body
+        validate_root
+        validate_msg
+      end
+
+      private
+
+      def validate_root
         Riff::HashValidator.new(@body, ROOT_KEYS).call!
+      end
+
+      def validate_msg
         return unless (msg = @body[:msg])
 
-        Riff::HashValidator.new(msg, MSG_KEYS).call! if msg
-        if msg[:type] && !msg[:type].in?(MSG_TYPES)
-          raise(ArgumentError, "msg.type must be one of: #{MSG_TYPES.joni(", ")}.")
-        end
-        if msg[:view_type] && !msg[:view_type].in?(MSG_VIEW_TYPES)
-          raise(ArgumentError, "msg.view_type must be one of: #{MSG_VIEW_TYPES.joni(", ")}.")
-        end
+        Riff::HashValidator.new(msg, MSG_KEYS).call!
+        validate_msg_type(msg)
+        validate_msg_view_type(msg)
+        validate_view_options(msg)
+      end
 
+      def validate_msg_type(msg)
+        raise(ArgumentError, "msg.type must be one of: #{MSG_TYPES.joni(", ")}.") if msg[:type] && !msg[:type].in?(MSG_TYPES)
+      end
+
+      def validate_msg_view_type(msg)
+        raise(ArgumentError, "msg.view_type must be one of: #{MSG_VIEW_TYPES.joni(", ")}.") if msg[:view_type] && !msg[:view_type].in?(MSG_VIEW_TYPES)
+      end
+
+      def validate_view_options(msg)
         return unless (view_options = msg[:view_options])
 
         Riff::HashValidator.new(view_options, VIEW_OPTIONS_KEYS).call!
-        return unless view_options[:timeout] && view_options[:timeout] <= 0
+        validate_timeout(view_options)
+      end
 
-        raise(ArgumentError, "msg.view_options.timeout must be greater than 0.")
+      def validate_timeout(view_options)
+        raise(ArgumentError, "msg.view_options.timeout must be equal or greater than 0.") if view_options[:timeout] && view_options[:timeout] < 0
       end
     end
   end

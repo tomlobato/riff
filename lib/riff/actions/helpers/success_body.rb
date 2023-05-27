@@ -22,7 +22,7 @@ module Riff
 
           if @msg.present?
             ret[:msg] = msg_body
-            ret[:msg][:icon_left] = Icon.new(@icon, true).call if @icon.present?
+            ret[:msg][:icon] = Icon.new(@icon, true).call if @icon.present?
           end
 
           ret

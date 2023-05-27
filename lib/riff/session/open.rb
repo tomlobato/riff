@@ -8,9 +8,11 @@ module Riff
         name
         nome
         email
+        mail
         e_email
         username
         user_name
+        login
         role
         role_id
         company_id
@@ -57,7 +59,7 @@ module Riff
       end
 
       def validate_credentials
-        [validate_credentials_methods].flatten.each do |method|
+        [Conf.get(:validate_credentials_methods)].flatten.each do |method|
           instance = method.new(@roda_request)
           next info_log("Request is not authenticable with method #{method}") unless instance.request_is_authenticable?
 
@@ -68,15 +70,7 @@ module Riff
       end
 
       def info_log(msg)
-        Application["logger"].info(msg)
-      end
-
-      def validate_credentials_methods
-        Conf.get(:validate_credentials_methods) || default_validate_credentials_methods
-      end
-
-      def default_validate_credentials_methods
-        Riff::Auth::DefaultMethod::Token::ValidateCredentials
+        Conf.get(:logger).info(msg)
       end
     end
   end

@@ -2,7 +2,6 @@
 
 module Riff
   class HandleError
-    DEFAULT_DISPLAY_ERROR_MSG = "Error processing request"
     DEFAULT_HTTP_STATUS = 500
 
     def initialize(error)
@@ -40,8 +39,24 @@ module Riff
       detail = detail_msg
       detail = nil if detail == display
       {
-        msg: { text: display, detail: detail, type: "error" }.compact
+        msg: { text: display, detail: detail, type: "error", icon: error_icon }.compact
       }
+    end
+
+    def error_icon
+      icon = nil
+      icon = @error.icon if riff_error?
+      icon ||= Conf.get(:default_error_icon)
+      raise(RuntimeError, "icon should be a Symbol or Hash, but it is a #{icon.class}") unless icon.is_a?(Symbol) || icon.is_a?(Hash)
+
+      icon.is_a?(Symbol) ? default_icon(icon) : icon
+    end
+
+    def default_icon(key)
+      raise(RuntimeError, "Conf.default_response_icons not set") unless Conf.get(:default_response_icons)
+      raise(RuntimeError, "Conf.default_response_icons has no key '#{key}'") unless Conf.get(:default_response_icons)[key]
+
+      Conf.get(:default_response_icons)[key]
     end
 
     def detail_msg
@@ -51,10 +66,11 @@ module Riff
     end
 
     def display_msg
-      return @error.display_msg if riff_error? && @error.display_msg
-      return message_from_class_name if riff_error_400?
-
-      Conf.get(:default_display_error_msg) || DEFAULT_DISPLAY_ERROR_MSG
+      if riff_error? 
+        @error.display_msg || message_from_class_name
+      else
+        Conf.get(:default_display_error_msg)
+      end
     end
 
     def message_from_class_name
