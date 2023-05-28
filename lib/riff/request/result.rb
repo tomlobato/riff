@@ -24,7 +24,7 @@ module Riff
           )
         end
 
-        @headers["Content-Type"] = content_type.presence || Conf.get(:default_content_type) || FALLBACK_CONTENT_TYPE
+        @headers["Content-Type"] = content_type.presence || Conf.default_content_type || FALLBACK_CONTENT_TYPE
       end
 
       def header_content_type

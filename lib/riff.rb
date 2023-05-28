@@ -77,6 +77,15 @@ require_relative "riff/http_verbs"
 require_relative "riff/hash_validator"
 
 module Riff
+  class << self
+    attr_accessor :config
+
+    def configure(&block)
+      self.config ||= Conf.instance
+      instance_eval(&block)
+    end
+  end
+
   def self.handle_action(request, response)
     Riff::Request::ActionProcessor.new(request, response).call
   end

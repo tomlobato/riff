@@ -46,17 +46,17 @@ module Riff
     def error_icon
       icon = nil
       icon = @error.icon if riff_error?
-      icon ||= Conf.get(:default_error_icon)
+      icon ||= Conf.default_error_icon
       raise(RuntimeError, "icon should be a Symbol or Hash, but it is a #{icon.class}") unless icon.is_a?(Symbol) || icon.is_a?(Hash)
 
       icon.is_a?(Symbol) ? default_icon(icon) : icon
     end
 
     def default_icon(key)
-      raise(RuntimeError, "Conf.default_response_icons not set") unless Conf.get(:default_response_icons)
-      raise(RuntimeError, "Conf.default_response_icons has no key '#{key}'") unless Conf.get(:default_response_icons)[key]
+      raise(RuntimeError, "Conf.default_response_icons not set") unless Conf.default_response_icons
+      raise(RuntimeError, "Conf.default_response_icons has no key '#{key}'") unless Conf.default_response_icons[key]
 
-      Conf.get(:default_response_icons)[key]
+      Conf.default_response_icons[key]
     end
 
     def detail_msg
@@ -69,7 +69,7 @@ module Riff
       if riff_error? 
         @error.display_msg || message_from_class_name
       else
-        Conf.get(:default_display_error_msg)
+        Conf.default_display_error_msg
       end
     end
 

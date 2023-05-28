@@ -83,7 +83,7 @@ module Riff
       end
 
       def custom_action
-        [Conf.get(:resources_base_module), @context.model_name, :Actions, @context.action_class_name]
+        [Conf.resources_base_module, @context.model_name, :Actions, @context.action_class_name]
       end
 
       def default_action
@@ -119,7 +119,7 @@ module Riff
       end
 
       def enabler_class_path
-        [Conf.get(:resources_base_module), @context.model_name, :Enable]
+        [Conf.resources_base_module, @context.model_name, :Enable]
       end
 
       def enabler
@@ -127,7 +127,7 @@ module Riff
       end
 
       def settings_class_path
-        [Conf.get(:resources_base_module), @context.model_name, :Settings]
+        [Conf.resources_base_module, @context.model_name, :Settings]
       end
 
       def settings

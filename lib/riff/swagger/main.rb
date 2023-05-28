@@ -11,7 +11,7 @@ module Riff
 
       def generate
         {
-          **Conf.get(:oas_root).to_h,
+          **Conf.oas_root.to_h,
           paths: paths
         }
       end
@@ -19,11 +19,11 @@ module Riff
       private
 
       def load_examples
-        test_request_log_path = Conf.get(:test_request_log_path)
+        test_request_log_path = Conf.test_request_log_path
         raise(StandardError, path_not_set_error_msg) unless test_request_log_path.present?
         raise(StandardError, path_not_found_error_msg(test_request_log_path)) unless File.exist?(test_request_log_path)
 
-        YAML.load(File.read(Conf.get(:test_request_log_path)))
+        YAML.load(File.read(Conf.test_request_log_path))
       end
 
       def path_not_set_error_msg
@@ -54,7 +54,7 @@ module Riff
 
       def context
         ctx = Riff::Request::Context.new(id: 123)
-        user_class = Conf.get(:default_auth_user_class)
+        user_class = Conf.default_auth_user_class
         user = user_class.last
         unless user
           company = Company.new(nome_fantasia: "Company")

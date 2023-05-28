@@ -31,7 +31,7 @@ module Riff
       private
 
       def custom_context(context)
-        return unless (custom_context_class = Conf.get(:custom_context_class))
+        return unless (custom_context_class = Conf.custom_context_class)
 
         custom_context_class.new(context).call
       end
@@ -49,7 +49,7 @@ module Riff
         return unless node
         return node.split(":", 2).map(&:presence) if node.index(":")
 
-        case Conf.get(:no_colon_mode)
+        case Conf.no_colon_mode
         when :id
           [node, nil]
         when :custom_method
@@ -61,7 +61,7 @@ module Riff
         when :id_if_digits_or_uuid
           node.match?(Constants::ONLY_DIGITS) || node.match?(Constants::UUID) ? [node, nil] : [nil, node]
         else
-          raise(StandardError, "Unknown no_colon_mode: #{Conf.get(:no_colon_mode)}")
+          raise(StandardError, "Unknown no_colon_mode: #{Conf.no_colon_mode}")
         end
       end
 
@@ -104,11 +104,11 @@ module Riff
       end
 
       def model_less?
-        Riff::Conf.get(:model_less_resources).include?(@resource.to_sym)
+        Riff::Conf.model_less_resources.include?(@resource.to_sym)
       end
 
       def find_resource(node1)
-        Riff::Conf.get(:resource_remap)[node1.to_sym]&.to_s || node1.singularize
+        Riff::Conf.resource_remap[node1.to_sym]&.to_s || node1.singularize
       end
 
       def find_action

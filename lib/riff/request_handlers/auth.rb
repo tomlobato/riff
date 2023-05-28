@@ -15,7 +15,7 @@ module Riff
       end
 
       def auth_enabled?
-        Conf.get(:default_auth_user_class)
+        Conf.default_auth_user_class
       end
 
       def authenticate
@@ -32,13 +32,13 @@ module Riff
       end
 
       def info_log(msg)
-        Conf.get(:logger).info(msg)
+        Conf.logger.info(msg)
       end
 
       def methods
         action_custom_auth_methods ||
           resource_custom_auth_methods ||
-          Conf.get(:custom_auth_method) ||
+          Conf.custom_auth_method ||
           [Riff::Auth::DefaultMethod::RequestAuth]
       end
 
@@ -59,7 +59,7 @@ module Riff
       end
 
       def on_auth_handlers
-        [Conf.get(:on_auth)].flatten.compact
+        [Conf.on_auth].flatten.compact
       end
     end
   end

@@ -29,30 +29,24 @@ module Riff
       validate_credentials_methods: lambda { Riff::Auth::DefaultMethod::Token::ValidateCredentials },
     }.freeze
 
-    def self.set(key, val)
-      instance.set(key, val)
-    end
+    KEYS.each do |key, val|
+      class_eval <<-ACC, __FILE__, __LINE__ + 1
+        def #{key}
+          @#{key} || default_value(:#{key})
+        end
 
-    def self.configure(conf_map)
-      conf_map.each { |k, v| set(k, v) }
-    end
+        def #{key}=(val)
+          @#{key} = brush(:#{key}, val)
+        end
 
-    def self.get(key)
-      instance.get(key)
-    end
+        def self.#{key}
+          instance.#{key}
+        end
 
-    def initialize
-      @store = {}
-    end
-
-    def set(key, val)
-      raise("Invalid Riff::Conf key: '#{key}'") unless KEYS.keys.include?(key)
-
-      @store[key] = brush(key, val)
-    end
-
-    def get(key)
-      @store[key] || default_value(key)
+        def self.#{key}=(val)
+          instance.#{key} = val
+        end
+      ACC
     end
 
     private

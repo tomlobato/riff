@@ -18,7 +18,7 @@ module Riff
         private
 
         def default_icon
-          return unless (default_response_icons = Conf.get(:default_response_icons))
+          return unless (default_response_icons = Conf.default_response_icons)
 
           default_response_icons[@success ? :success : :error]
         end

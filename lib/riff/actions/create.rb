@@ -8,7 +8,7 @@ module Riff
 
       def call
         rec = nil
-        Conf.get(:db).transaction do
+        Conf.db.transaction do
           before
           rec = model_class.new(attributes)
           rec.save

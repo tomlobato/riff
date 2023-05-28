@@ -14,7 +14,7 @@ module Riff
       end
 
       def class_nodes
-        [Conf.get(:resources_base_module), model_name, :Authorize]
+        [Conf.resources_base_module, model_name, :Authorize]
       end
 
       def run

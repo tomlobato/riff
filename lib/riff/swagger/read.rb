@@ -7,9 +7,9 @@ module Riff
       REST_ID_ACTIONS = %i[show update delete].freeze
 
       def initialize
-        @res_mod = Conf.get(:resources_base_module)
-        @res_remap = Riff::Conf.get(:resource_remap).invert
-        @model_less_res = Riff::Conf.get(:model_less_resources)
+        @res_mod = Conf.resources_base_module
+        @res_remap = Riff::Conf.resource_remap.invert
+        @model_less_res = Riff::Conf.model_less_resources
         @paths = {}
       end
 

@@ -50,7 +50,7 @@ module Riff
       end
 
       def user_payload(user)
-        custom_payload_class = Conf.get(:user_login_payload_class)
+        custom_payload_class = Conf.user_login_payload_class
         if custom_payload_class
           custom_payload_class.new(user).call
         else
@@ -59,7 +59,7 @@ module Riff
       end
 
       def validate_credentials
-        [Conf.get(:validate_credentials_methods)].flatten.each do |method|
+        [Conf.validate_credentials_methods].flatten.each do |method|
           instance = method.new(@roda_request)
           next info_log("Request is not authenticable with method #{method}") unless instance.request_is_authenticable?
 
@@ -70,7 +70,7 @@ module Riff
       end
 
       def info_log(msg)
-        Conf.get(:logger).info(msg)
+        Conf.logger.info(msg)
       end
     end
   end

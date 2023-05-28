@@ -47,12 +47,12 @@ module Riff
       end
 
       def paginate?
-        paginate = Conf.get(:default_paginate)
+        paginate = Conf.default_paginate
         paginate.nil? || paginate
       end
 
       def per_page
-        Conf.get(:default_per_page) || Constants::DEFAULT_PER_PAGE
+        Conf.default_per_page || Constants::DEFAULT_PER_PAGE
       end
 
       def order

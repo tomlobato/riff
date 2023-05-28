@@ -37,7 +37,7 @@ module Riff
     private
 
     def setup
-      @test_request_log_path = Conf.get(:test_request_log_path)
+      @test_request_log_path = Conf.test_request_log_path
       raise(StandardError, path_not_set_error_msg) unless @test_request_log_path
     end
 
