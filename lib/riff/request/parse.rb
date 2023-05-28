@@ -108,7 +108,7 @@ module Riff
       end
 
       def find_resource(node1)
-        Riff::Conf.get(:resource_remap)[node1] || node1.singularize
+        Riff::Conf.get(:resource_remap)[node1.to_sym]&.to_s || node1.singularize
       end
 
       def find_action

@@ -65,8 +65,6 @@ module Riff
 
     def brush(key, val)
       case key
-      when :resource_remap
-        val&.to_h { |k, v| [k, v].map(&:to_s) }
       when :default_response_icons
         val&.transform_keys(&:to_sym)
       else
