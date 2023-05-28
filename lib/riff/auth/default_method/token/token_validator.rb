@@ -8,9 +8,7 @@ module Riff
           extend Memo
 
           def initialize(authorization_token, purpose)
-            # puts "TV authorization_token: '#{authorization_token}' purpose: '#{purpose}'"
             @message = decode(authorization_token, purpose)
-            # puts "TV @message: '#{@message}'"
           end
 
           def call

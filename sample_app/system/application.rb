@@ -6,7 +6,6 @@ require 'zeitwerk'
 
 # {Application} is a container that we use it to register dependencies we need to call.
 class Application < Dry::System::Container
-  # Provide environment inferrerr.
   use :env, inferrer: -> { ENV.fetch('RACK_ENV', 'development') }
 
   configure do |_config|

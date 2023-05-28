@@ -3,24 +3,33 @@ module Riff
     module DefaultMethod
       class SigninAuth < SigninAuthMethod
         def request_is_authenticable?
-          params["username"].present? && params["password"].present?
+          param_username.present? && param_password.present?
         end
 
         def authenticate
-          user = user_class.where(username: params["username"]).where(extra_clause.to_h).select(*Conf.default_auth_fields).first
-          raise(Exceptions::InvalidCredentials) unless user&.authenticate(params["password"])
+          user = find_user
+          raise(Exceptions::InvalidCredentials) unless user&.authenticate(param_password)
 
+          Conf.on_user&.new(user, :sign_in)&.call if user
           user
         end
 
         private
 
-        def user_class
+        def find_user
           Conf.default_auth_user_class
+            .where(Conf.field_username.to_sym => param_username)
+            .where(Conf.default_auth_clause.to_h)
+            .select(*Conf.default_auth_fields)
+            .first
         end
 
-        def extra_clause
-          Conf.default_auth_clause
+        def param_username
+          params[Conf.param_username.to_s]
+        end
+
+        def param_password
+          params[Conf.param_password.to_s]
         end
       end
     end

@@ -9,8 +9,10 @@ module Riff
         return unless auth_enabled?
 
         user = authenticate
-        @context.set(:user, user) if user
-        on_auth(user)
+        if user
+          @context.set(:user, user) 
+          Conf.on_user&.new(user, :request)&.call
+        end
         nil
       end
 
@@ -50,16 +52,6 @@ module Riff
       def action_custom_auth_methods
         action_class = @context.get(:action_class)
         [action_class.auth_method].flatten if action_class.respond_to?(:auth_method)
-      end
-
-      def on_auth(user)
-        on_auth_handlers.each do |handler|
-          handler.new(user).call
-        end
-      end
-
-      def on_auth_handlers
-        [Conf.on_auth].flatten.compact
       end
     end
   end

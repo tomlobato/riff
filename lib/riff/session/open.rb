@@ -6,7 +6,6 @@ module Riff
       DEFAULT_USER_PAYLOAD_FIELDS = %i[
         id
         name
-        nome
         email
         mail
         e_email
@@ -25,8 +24,6 @@ module Riff
         lastname
         last_name
         is_admin
-        is_administrator
-        is_administrador
       ].freeze
 
       def initialize(roda_request)

@@ -18,11 +18,14 @@ module Riff
       default_error_icon: nil,
       default_per_page: 20,
       default_response_icons: nil,
+      field_username: :username,
       logger: lambda { Logger.new(STDOUT) },
       model_less_resources: [],
       no_colon_mode: :id_if_digits_or_uuid,
       oas_root: nil,
-      on_auth: nil,
+      on_user: nil,
+      param_username: :username,
+      param_password: :password,
       resource_remap: {},
       resources_base_module: lambda { Resources },
       test_request_log_path: nil,
@@ -33,7 +36,7 @@ module Riff
     }.freeze
 
     KEYS.each do |key, val|
-      class_eval <<-ACC, __FILE__, __LINE__ + 1
+      class_eval <<-ACCESSORS, __FILE__, __LINE__ + 1
         def #{key}
           @#{key} || default_value(:#{key})
         end
@@ -49,7 +52,7 @@ module Riff
         def self.#{key}=(val)
           instance.#{key} = val
         end
-      ACC
+      ACCESSORS
     end
 
     private
@@ -57,7 +60,7 @@ module Riff
     def default_value(key)
       return unless (valuer = KEYS[key])
 
-      valuer.respond_to?(:call) ? valuer.call : valuer
+      valuer.is_a?(Proc) ? valuer.call : valuer
     end
 
     def brush(key, val)
