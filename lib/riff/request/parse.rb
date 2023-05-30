@@ -18,10 +18,11 @@ module Riff
         @url = request.url
         @remote_ip = remote_ip
         setup
-        # pp self
       end
 
       def call
+        return unless @node1
+
         validate_path!
         context = Context.new(basic_context.merge(extra_context))
         custom_context(context).to_h.each { |k, v| context.set(k, v) }
@@ -38,6 +39,8 @@ module Riff
 
       def setup
         @node1, @node2, @node3 = @path_nodes = path_nodes
+        return unless @node1
+
         @resource = find_resource(@node1)
         @model_less = model_less?
         @id, @custom_method = parse_node2

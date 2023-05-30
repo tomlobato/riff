@@ -11,7 +11,7 @@ module Riff
         user = authenticate
         if user
           @context.set(:user, user) 
-          Conf.on_user&.new(user, :request)&.call
+          Conf.on_user&.new(user, :request, @context)&.call
         end
         nil
       end

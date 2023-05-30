@@ -21,17 +21,24 @@ module Riff
 
       def call_chain
         setup
+        return Result.new(nil, status: 404) unless @context
+
         raise_action_not_found! unless action_available? && @action_class
 
         Chain.new(@context).call
       rescue StandardError => e
-        Util.log_error(e) unless e.is_a?(Riff::Exceptions::RiffError)
+        unless e.is_a?(Riff::Exceptions::RiffError)
+          Util.log_error(e) 
+          Sentry.capture_exception(e) if ENV['RACK_ENV'] == 'production' && defined?(Sentry)
+        end
         desc, status = HandleError.new(e).call
         Result.new(desc, status: status)
       end
 
       def setup
         @context = context
+        return unless @context
+
         @enabler = enabler
         @context.set(:action_class, @action_class = action_class)
         validate_custom_method_id_presence! if @context.is_custom_method
