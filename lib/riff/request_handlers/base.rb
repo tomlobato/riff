@@ -4,7 +4,7 @@ module Riff
   module RequestHandlers
     class Base
       extend Forwardable
-      def_delegators :@context, :model_name, :action_class_name, :action
+      def_delegators :@context, :model_name, :module_name, :action_class_name, :action
 
       def initialize(next_handler, context)
         @next_handler = next_handler

@@ -14,7 +14,7 @@ module Riff
       end
 
       def class_nodes
-        [Conf.resources_base_module, model_name, :Validators, @action_validator]
+        [Conf.resources_base_module, module_name, :Validators, @action_validator]
       end
 
       def run

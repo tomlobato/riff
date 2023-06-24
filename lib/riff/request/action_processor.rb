@@ -42,7 +42,6 @@ module Riff
         @enabler = enabler
         @context.set(:action_class, @action_class = action_class)
         validate_custom_method_id_presence! if @context.is_custom_method
-        @context.set(:settings, @settings = settings)
       end
 
       def validate_custom_method_id_presence!
@@ -90,7 +89,7 @@ module Riff
       end
 
       def custom_action
-        [Conf.resources_base_module, @context.model_name, :Actions, @context.action_class_name]
+        [Conf.resources_base_module, @context.module_name, :Actions, @context.action_class_name]
       end
 
       def default_action
@@ -126,19 +125,11 @@ module Riff
       end
 
       def enabler_class_path
-        [Conf.resources_base_module, @context.model_name, :Enable]
+        [Conf.resources_base_module, @context.module_name, :Enable]
       end
 
       def enabler
         Util.const_get(enabler_class_path, anchor: true)&.new || Enable.new
-      end
-
-      def settings_class_path
-        [Conf.resources_base_module, @context.model_name, :Settings]
-      end
-
-      def settings
-        Util.const_get(settings_class_path, anchor: true)&.new || Settings.new
       end
     end
   end

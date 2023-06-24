@@ -6,6 +6,8 @@ module Riff
   module Request
     class Context
       attr_accessor :resource,
+                    :settings,
+                    :module_name,
                     :id,
                     :action,
                     :params,

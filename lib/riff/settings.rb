@@ -2,6 +2,12 @@
 
 module Riff
   class Settings
+    # Model name
+
+    def model
+      nil
+    end
+
     # Select fields
 
     def default_fields

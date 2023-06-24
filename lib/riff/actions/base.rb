@@ -30,7 +30,7 @@ module Riff
       private
 
       def model_class
-        @context.model_name.constantize
+        @context.model_class
       end
 
       def scope
@@ -38,7 +38,7 @@ module Riff
       end
 
       def settings
-        @settings ||= @context.get(:settings)
+        @settings ||= @context.settings
       end
     end
   end

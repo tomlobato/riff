@@ -31,6 +31,30 @@ module Riff
 
       private
 
+      def module_name
+        @module_name ||= @node1.camelize
+      end
+
+      def settings_class_path
+        [Conf.resources_base_module, module_name, :Settings]
+      end
+
+      def settings
+        @settings ||= (Util.const_get(settings_class_path, anchor: true)&.new || Settings.new)
+      end
+
+      def model_name
+        @model_name ||= (settings.model&.to_s || default_model_name) unless @model_less
+      end
+
+      def default_model_name
+        @node1.singularize.classify
+      end
+
+      def model_class
+        Util.const_get("::#{model_name}") unless @model_less
+      end
+
       def custom_context(context)
         return unless (custom_context_class = Conf.custom_context_class)
 
@@ -41,7 +65,7 @@ module Riff
         @node1, @node2, @node3 = @path_nodes = path_nodes
         return unless @node1
 
-        @resource = find_resource(@node1)
+        @resource = find_resource
         @model_less = model_less?
         @id, @custom_method = parse_node2
         @action = find_action
@@ -81,9 +105,11 @@ module Riff
 
       def extra_context
         {
+          settings: settings,
+          module_name: module_name,
           resource: @resource,
           id: @id,
-          model_name: @resource.classify,
+          model_name: model_name,
           model_less: @model_less,
           model_class: model_class,
           action: @action,
@@ -102,16 +128,12 @@ module Riff
         @custom_method ? @action.camelize : @action.classify
       end
 
-      def model_class
-        Util.const_get("::#{@resource.classify}") unless @model_less
-      end
-
       def model_less?
         Riff::Conf.model_less_resources.include?(@resource.to_sym)
       end
 
-      def find_resource(node1)
-        Riff::Conf.resource_remap[node1.to_sym]&.to_s || node1.singularize
+      def find_resource
+        Riff::Conf.resource_remap[@node1.to_sym]&.to_s || @node1
       end
 
       def find_action

@@ -45,7 +45,7 @@ module Riff
       end
 
       def resource_custom_auth_methods
-        settings = @context.get(:settings)
+        settings = @context.settings
         [settings.class.auth_method].flatten if settings && settings.class.respond_to?(:auth_method)
       end
 
