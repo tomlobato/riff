@@ -53,7 +53,8 @@ module Riff
       end
 
       def context
-        ctx = Riff::Request::Context.new(id: 123)
+        ctx = OpenStruct.new
+        ctx.id = 123
         user_class = Conf.default_auth_user_class
         user = user_class.last
         unless user
@@ -67,8 +68,9 @@ module Riff
             company_id: company.id
           )
         end
-        ctx.set(:user, user)
-        ctx.set(:app_device, "android")
+        ctx.user = user
+        ctx.custom = OpenStruct.new
+        ctx.custom.app_device = "android"
         ctx
       end
     end

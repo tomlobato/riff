@@ -3,11 +3,6 @@
 module Riff
   module Request
     class ActionProcessor
-      extend Memo
-
-      ID_PRESENCE_VALUES = %i[required denied optional].freeze
-      DEFAULT_ID_PRESENCE = :denied
-
       def initialize(request, response)
         @request = request
         @response = response
@@ -20,116 +15,20 @@ module Riff
       private
 
       def call_chain
-        setup
-        return Result.new(nil, status: 404) unless @context
-
-        raise_action_not_found! unless action_available? && @action_class
-
-        Chain.new(@context).call
+        context = Context.new(@request)
+        Validate.new(context).call
+        Chain.new(context).call
       rescue StandardError => e
-        unless e.is_a?(Riff::Exceptions::RiffError)
-          Util.log_error(e) 
-          Sentry.capture_exception(e) if ENV['RACK_ENV'] == 'production' && defined?(Sentry)
-        end
-        desc, status = HandleError.new(e).call
+        desc, status = handle_error(e)
         Result.new(desc, status: status)
       end
 
-      def setup
-        @context = context
-        return unless @context
-
-        @enabler = enabler
-        @context.set(:action_class, @action_class = action_class)
-        validate_custom_method_id_presence! if @context.is_custom_method
-      end
-
-      def validate_custom_method_id_presence!
-        unless id_presence.in?(ID_PRESENCE_VALUES)
-          raise(Riff::Exceptions::InternalServerError, "Constant WITH_ID must be: #{ID_PRESENCE_VALUES.join(", ")}.")
+      def handle_error(error)
+        unless error.is_a?(Riff::Exceptions::RiffError)
+          Util.log_error(error) 
+          Sentry.capture_exception(error) if ENV['RACK_ENV'] == 'production' && defined?(Sentry)
         end
-
-        case id_presence
-        when :required
-          unless @context.id
-            Riff::Exceptions::InvalidParameters.raise!(field_errors: { id: "id in the url path is required" })
-          end
-        when :denied
-          if @context.id
-            Riff::Exceptions::InvalidParameters.raise!(field_errors: { id: "This custom method must not have an id in the url path" })
-          end
-        when :optional
-          # do nothing
-        end
-      end
-
-      def id_presence
-        return @id_presence if defined?(@id_presence)
-
-        @id_presence = "#{@action_class}::ID_PRESENCE".constantize
-      rescue NameError
-        @id_presence = DEFAULT_ID_PRESENCE
-      end
-
-      def context
-        Parse.new(@request).call
-      end
-
-      def action_class
-        custom_action_class || Util.const_get(default_action)
-      end
-
-      def custom_action_class
-        Util.const_get(custom_action, anchor: true)
-      end
-      memo :custom_action_class
-
-      def raise_action_not_found!(details: nil)
-        raise(Riff::Exceptions::ActionNotFound.create(@context.path, @context.request_method, details: details))
-      end
-
-      def custom_action
-        [Conf.resources_base_module, @context.module_name, :Actions, @context.action_class_name]
-      end
-
-      def default_action
-        [:Riff, :Actions, @context.action_class_name]
-      end
-
-      def action_available?
-        return custom_method_available? if @context.is_custom_method
-
-        !@enabler || @enabler.__send__("#{@context.action}?")
-      end
-
-      def custom_method_available?
-        return unless custom_action_class
-
-        if custom_method_verb_mismatch?
-          raise_action_not_found!(details: "Custom method exists but with different http verb")
-        end
-
-        true
-      end
-
-      def custom_method_verb_mismatch?
-        custom_action_verb != @context.request_method
-      end
-
-      def custom_action_verb
-        return @custom_action_verb if defined?(@custom_action_verb)
-
-        @custom_action_verb = "#{custom_action_class}::VERB".constantize
-      rescue NameError
-        @custom_action_verb = Riff::HttpVerbs::POST
-      end
-
-      def enabler_class_path
-        [Conf.resources_base_module, @context.module_name, :Enable]
-      end
-
-      def enabler
-        Util.const_get(enabler_class_path, anchor: true)&.new || Enable.new
+        HandleError.new(error).call
       end
     end
   end

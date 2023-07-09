@@ -22,7 +22,7 @@ module Riff
       end
 
       def action_class
-        @context.get(:action_class)
+        @context.action_class
       end
     end
   end

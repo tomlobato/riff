@@ -22,7 +22,7 @@ module Riff
 
         result = Validate.new(
           class_nodes,
-          @context.params,
+          @context.raw_params,
           allow_empty_params: allow_empty_params,
           context: @context,
           use_fallback: true
@@ -39,7 +39,7 @@ module Riff
       end
 
       def check_excess_params!(result)
-        excess_params = @context.params.keys - result.keys
+        excess_params = @context.raw_params.keys - result.keys
         raise(Riff::Exceptions::InvalidParameters, { excess_params: excess_params }.to_json) unless excess_params.empty?
       end
     end

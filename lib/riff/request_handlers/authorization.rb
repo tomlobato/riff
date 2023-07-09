@@ -40,7 +40,7 @@ module Riff
         when false, nil
           raise_authorization_error!
         when Hash
-          @context.set(:scope, result.symbolize_keys)
+          @context.scope = result.symbolize_keys
           nil
         else
           raise(invalid_authorization_result(result))
@@ -52,7 +52,7 @@ module Riff
       end
 
       def user
-        @context.get(:user)
+        @context.user
       end
 
       def invalid_authorization_result(result)

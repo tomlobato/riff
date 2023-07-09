@@ -10,7 +10,7 @@ module Riff
 
         user = authenticate
         if user
-          @context.set(:user, user) 
+          @context.user = user 
           Conf.on_user&.new(user, :request, @context)&.call
         end
         nil
@@ -50,7 +50,7 @@ module Riff
       end
 
       def action_custom_auth_methods
-        action_class = @context.get(:action_class)
+        action_class = @context.action_class
         [action_class.auth_method].flatten if action_class.respond_to?(:auth_method)
       end
     end

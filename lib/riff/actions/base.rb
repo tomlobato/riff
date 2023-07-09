@@ -10,7 +10,7 @@ module Riff
 
       def initialize(context)
         @context = context
-        @user = @context.get(:user)
+        @user = @context.user
       end
 
       # :nocov:
@@ -34,7 +34,7 @@ module Riff
       end
 
       def scope
-        @scope ||= @context.get(:scope)
+        @scope ||= @context.scope
       end
 
       def settings

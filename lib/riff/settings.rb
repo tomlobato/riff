@@ -2,7 +2,11 @@
 
 module Riff
   class Settings
-    # Model name
+    # Model
+
+    def model_less
+      false
+    end
 
     def model
       nil

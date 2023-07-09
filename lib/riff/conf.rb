@@ -16,6 +16,7 @@ module Riff
       default_content_type: "application/json",
       default_display_error_msg: "Error processing request",
       default_error_icon: nil,
+      default_paginate: true,
       default_per_page: 20,
       default_response_icons: nil,
       field_username: :username,

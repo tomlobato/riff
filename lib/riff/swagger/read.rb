@@ -9,7 +9,6 @@ module Riff
       def initialize
         @res_mod = Conf.resources_base_module
         @res_remap = Riff::Conf.resource_remap.invert
-        @model_less_res = Riff::Conf.model_less_resources
         @paths = {}
       end
 
@@ -77,7 +76,6 @@ module Riff
 
       def find_node1(model_name)
         node1 = model_name.to_s.underscore
-        node1 = node1.pluralize unless @model_less_res.include?(node1.to_sym)
         node1 = node1.to_sym
         node1 = @res_remap[node1] if @res_remap[node1]
         node1.to_s
@@ -99,7 +97,7 @@ module Riff
         if node2.to_sym.in?(ACTION_VERB_MAP.keys)
           node2 = node2.to_sym.in?(REST_ID_ACTIONS) ? "{id}" : ""
         else
-          id_presence = defined?(action_class::ID_PRESENCE) ? action_class::ID_PRESENCE : Request::ActionProcessor::DEFAULT_ID_PRESENCE
+          id_presence = defined?(action_class::ID_PRESENCE) ? action_class::ID_PRESENCE : :denied
           case id_presence
           when :required
             node2.prepend("{id}:")
