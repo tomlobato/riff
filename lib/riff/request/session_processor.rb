@@ -3,7 +3,7 @@
 module Riff
   module Request
     class SessionProcessor
-      ACTIONS = { login: "login", logout: "logout", refresh: "refresh" }
+      ACTIONS = { login: "login", logout: "logout", refresh: "refresh", check: "check" }
 
       def initialize(request, response, type)
         @request = request
@@ -33,6 +33,8 @@ module Riff
           Session::Close.new(@request.headers).call
         when ACTIONS[:refresh]
           Session::Refresh.new(@request.headers).call
+        when ACTIONS[:check]
+          Request::Result.new({})
         else
           raise(invalid_request_path)
         end
