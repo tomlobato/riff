@@ -42,6 +42,9 @@ module Riff
         when Hash
           @context.scope = result.symbolize_keys
           nil
+        when Sequel::SQL::PlaceholderLiteralString, Sequel::LiteralString
+          @context.scope = result
+          nil
         else
           raise(invalid_authorization_result(result))
         end

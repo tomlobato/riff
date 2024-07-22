@@ -15,15 +15,40 @@ module Riff
 
       def query
         offset, limit = pagination
-        model_class.select(*select).where(filters).offset(offset).limit(limit).order(*order)
+        q_result = model_class.select(*select).offset(offset).limit(limit).order(*order)
+        apply_filters(q_result)
       end
 
-      def filters
-        request_filters.merge(enforced_filters).merge(extra_filters.to_h)
+      def default_filters
+        [
+          request_filters,
+          enforced_filters,
+          extra_filters
+        ].reject(&:blank?)
+      end
+
+      def apply_filters(q_result)
+        hash_filters = {}
+        clauses = []
+        default_filters.flatten.compact.each do |filter|
+          case filter
+          when Hash
+            hash_filters.merge!(filter)
+          when Sequel::LiteralString, Sequel::SQL::PlaceholderLiteralString
+            clauses << filter
+          when String
+            clauses << Sequel.lit(filter)
+          else
+            raise "Invalid filter type: #{filter.class}. It must be a hash, a Sequel literal or a valid Sequel literal string."
+          end
+        end
+        clauses.unshift(hash_filters) unless hash_filters.empty?
+        clauses.each { |f| q_result = q_result.where(f) }
+        q_result        
       end
 
       def enforced_filters
-        scope.to_h
+        scope
       end
 
       def request_filters
