@@ -14,6 +14,14 @@ module Riff
       end
 
       def query
+        q = model_class.select(*select)
+
+        q = q.join(*join) if join
+
+        f_hash, f_sequel = [filters].compact.flatten(1)
+        q = q.where(f_hash) if f_hash.present?
+        f_sequel.each { |f| q = q.where(f) } if f_sequel.present?
+
         offset, limit = pagination
         q_result = model_class.select(*select).offset(offset).limit(limit).order(*order)
         apply_filters(q_result)
@@ -44,7 +52,7 @@ module Riff
         end
         clauses.unshift(hash_filters) unless hash_filters.empty?
         clauses.each { |f| q_result = q_result.where(f) }
-        q_result        
+        q_result
       end
 
       def enforced_filters
@@ -80,11 +88,15 @@ module Riff
         Conf.default_per_page || Constants::DEFAULT_PER_PAGE
       end
 
+      def default_order
+        # May implement
+      end
+
       def order
         Helpers::Order.new(
-          @context.params[:_order],
+          @context.params[:_order].presence || default_order,
           @context.model_class,
-          allow_extra_fields: order_allow_extra_fields
+          allow_extra_fields: (order_allow_extra_fields.to_a << default_order).compact
         ).order
       end
 

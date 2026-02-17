@@ -99,6 +99,7 @@ module Riff
   end
 
   def self.handle_session(request, response, type)
+    # puts "1 Session action: '#{type}' #{type.class}"
     Riff::Request::SessionProcessor.new(request, response, type).call
   end
 end
