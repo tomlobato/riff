@@ -47,7 +47,7 @@ module Riff
 
     def invalid_value_keys_error_detail(invalid_value_keys)
       invalid_value_keys.map do |key|
-        "value for key #{key} is a #{@param[key].class} but should be: #{::Util::Array.smart_join(valid_value_classes(key))}"
+        "value for key '#{key}' in '#{@param}' is a #{@param[key].class} but should be: #{::Util::Array.smart_join(valid_value_classes(key))}"
       end.join("; ")
     end
   end

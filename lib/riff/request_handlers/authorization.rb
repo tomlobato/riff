@@ -42,6 +42,9 @@ module Riff
         when Hash
           @context.scope = result.symbolize_keys
           nil
+        when Sequel::SQL::PlaceholderLiteralString
+          @context.scope = result
+          nil
         else
           raise(invalid_authorization_result(result))
         end
@@ -56,7 +59,7 @@ module Riff
       end
 
       def invalid_authorization_result(result)
-        msg = "Authorization result must be one of true, false, nil or a hash. We`ve got a '#{result.class}'."
+        msg = "Authorization result must be one of true, false, nil, Sequel.lit(...) or a hash. We`ve got a '#{result.class}'."
         Exceptions::InvalidAuthorizationResult.new(msg)
       end
     end

@@ -14,16 +14,39 @@ module Riff
       end
 
       def query
+        q = model_class.select(*select)
+
+        q = q.join(*join) if join
+
+        f_hash, f_sequel = [filters].compact.flatten(1)
+        q = q.where(f_hash) if f_hash.present?
+        f_sequel.each { |f| q = q.where(f) } if f_sequel.present?
+
         offset, limit = pagination
-        model_class.select(*select).where(filters).offset(offset).limit(limit).order(*order)
+        q = q.offset(offset).limit(limit) if offset && limit
+
+        q = q.order(*[order].flatten(1))
+
+        q
+      end
+
+      def join
+        # may implement
       end
 
       def filters
-        request_filters.merge(enforced_filters).merge(extra_filters.to_h)
+        all =[
+          request_filters,
+          enforced_filters,
+          extra_filters,
+        ]
+        hash_filters = all.compact.select { |f| f.is_a?(Hash) }.reduce(:merge)
+        sequel_literal_filters = all.compact.select { |f| f.is_a?(Sequel::SQL::PlaceholderLiteralString) }
+        [hash_filters, sequel_literal_filters]
       end
 
       def enforced_filters
-        scope.to_h
+        scope
       end
 
       def request_filters
@@ -55,11 +78,15 @@ module Riff
         Conf.default_per_page || Constants::DEFAULT_PER_PAGE
       end
 
+      def default_order
+        # May implement
+      end
+
       def order
         Helpers::Order.new(
-          @context.params[:_order],
+          @context.params[:_order].presence || default_order,
           @context.model_class,
-          allow_extra_fields: order_allow_extra_fields
+          allow_extra_fields: (order_allow_extra_fields.to_a << default_order).compact
         ).order
       end
 

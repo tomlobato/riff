@@ -64,7 +64,7 @@ module Riff
             email: "asd@asd.com",
             username: "user",
             password: "123456",
-            confirmation_password: "123456",
+            # confirmation_password: "123456",
             company_id: company.id
           )
         end
