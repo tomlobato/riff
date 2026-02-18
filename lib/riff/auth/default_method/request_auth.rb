@@ -15,7 +15,7 @@ module Riff
         private
 
         def purpose
-          @context.url.include?("refresh_token") ? :refresh_token : :access_token
+          :access_token
         end
 
         def authorization_token

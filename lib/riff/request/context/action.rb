@@ -15,7 +15,6 @@ module Riff
           @action ||= (custom_method || action_map[request_method])
         end
 
-        # TODO: check need if camelize or classify if
         def action_class_name
           @action_class_name ||= action.__send__(custom_method ? :camelize : :classify)
         end

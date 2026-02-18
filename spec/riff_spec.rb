@@ -6,6 +6,6 @@ RSpec.describe(Riff) do
   end
 
   it "does something useful" do
-    expect(false).to(eq(true))
+    expect(Riff::VERSION).not_to(be_nil)
   end
 end

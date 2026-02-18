@@ -13,13 +13,13 @@ module Riff
 
           def decode(message:, purpose:)
             verifier.verify(message, purpose: purpose)
-          rescue ActiveSupport::MessageVerifier::InvalidSignature
-            # puts "InvalidSignature"
+          rescue ActiveSupport::MessageVerifier::InvalidSignature => e
+            Conf.logger.warn("MessageSigner: invalid signature — #{e.message}")
             nil
           end
 
           def verifier
-            ActiveSupport::MessageVerifier.new(ENV.fetch("SECRET_KEY_BASE", nil), digest: "SHA512")
+            ActiveSupport::MessageVerifier.new(ENV.fetch("SECRET_KEY_BASE"), digest: "SHA512")
           end
         end
       end

@@ -5,22 +5,22 @@ module Riff
     module DefaultMethod
       module Token
         class CreateTokens
-          ACCCESS_TOKEN_EXPIRES_IN = 60
-          REFRESH_TOKEN_EXPIRES_IN = 3600 * 24 * 30 * 6
-
           def initialize(user)
             @user = user
           end
 
           def call
+            access_ttl = Conf.access_token_ttl
+            refresh_ttl = Conf.refresh_token_ttl
+
             {
               access_token: {
-                token: CreateToken.new(@user, :access, Time.now + ACCCESS_TOKEN_EXPIRES_IN).call,
-                expires_in: ACCCESS_TOKEN_EXPIRES_IN
+                token: CreateToken.new(@user, :access, Time.now + access_ttl).call,
+                expires_in: access_ttl
               },
               refresh_token: {
-                token: CreateToken.new(@user, :refresh, Time.now + REFRESH_TOKEN_EXPIRES_IN).call,
-                expires_in: REFRESH_TOKEN_EXPIRES_IN
+                token: CreateToken.new(@user, :refresh, Time.now + refresh_ttl).call,
+                expires_in: refresh_ttl
               }
             }
           end

@@ -4,7 +4,7 @@ module Riff
   class RequestLog
     include Singleton
 
-    HEADER_FIELDS = %w[CONTENT_TYPE HTTP_COOKIE HTTP_X_APP_DEVICE HTTP_AUTHORIZATION].freeze
+    HEADER_FIELDS = %w[CONTENT_TYPE HTTP_COOKIE HTTP_X_APP_DEVICE].freeze
 
     attr_accessor :on, :requests
 

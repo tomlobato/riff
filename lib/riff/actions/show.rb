@@ -6,7 +6,6 @@ module Riff
       include Helpers::Record
 
       def call
-        # puts "body=#{body}"
         Request::Result.new({ data: body })
       end
 

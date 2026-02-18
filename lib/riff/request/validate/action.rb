@@ -30,7 +30,7 @@ module Riff
           return unless context.custom_action_class
   
           if custom_method_verb_mismatch?
-            raise_action_not_found!(details: "Custom method exists but with different http verb")
+            raise(Riff::Exceptions::ActionNotFound, "Custom method exists but with different http verb")
           end
   
           true

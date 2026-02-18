@@ -24,8 +24,7 @@ module Riff
           class_nodes,
           @context.raw_params,
           allow_empty_params: allow_empty_params,
-          context: @context,
-          use_fallback: true
+          context: @context
         ).call
         if result
           check_excess_params!(result)

@@ -33,7 +33,8 @@ module Riff
         end
 
         def limit
-          read(:_limit) || @settings[:per_page]
+          value = read(:_limit) || @settings[:per_page]
+          [value, Conf.max_per_page].compact.min
         end
 
         def read(key)
@@ -47,7 +48,7 @@ module Riff
         end
 
         def raise_invalid_pagination!(key)
-          Exceptions::InvalidParameters.raise!(field_errors: { key => "unknown key" })
+          Exceptions::InvalidParameters.raise!(field_errors: { key => @params[key] })
         end
       end
     end

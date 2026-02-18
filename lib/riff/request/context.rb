@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# TODO: implement lazy properties
-
 module Riff
   module Request
     class Context

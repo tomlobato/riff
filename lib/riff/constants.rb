@@ -2,8 +2,7 @@
 
 module Riff
   module Constants
-    ONLY_DIGITS = /^\d+$/.freeze
+    ONLY_DIGITS = /\A\d+\z/.freeze
     UUID = /\A[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\z/i.freeze
-    DEFAULT_PER_PAGE = 10
   end
 end

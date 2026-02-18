@@ -15,16 +15,14 @@ module Riff
 
       def query
         q = model_class.select(*select)
-
         q = q.join(*join) if join
-
-        f_hash, f_sequel = [filters].compact.flatten(1)
-        q = q.where(f_hash) if f_hash.present?
-        f_sequel.each { |f| q = q.where(f) } if f_sequel.present?
-
         offset, limit = pagination
-        q_result = model_class.select(*select).offset(offset).limit(limit).order(*order)
-        apply_filters(q_result)
+        q = q.offset(offset).limit(limit).order(*order)
+        apply_filters(q)
+      end
+
+      def join
+        # may override — e.g. [:other_table, { foreign_key: :id }]
       end
 
       def default_filters
@@ -85,7 +83,7 @@ module Riff
       end
 
       def per_page
-        Conf.default_per_page || Constants::DEFAULT_PER_PAGE
+        Conf.default_per_page
       end
 
       def default_order

@@ -21,7 +21,7 @@ module Riff
       end
 
       def authenticate
-        methods.each do |method|
+        auth_methods.each do |method|
           instance = method.new(@context)
           next info_log("Request is not authenticable with method #{method}") unless instance.request_is_authenticable?
 
@@ -37,7 +37,7 @@ module Riff
         Conf.logger.info(msg)
       end
 
-      def methods
+      def auth_methods
         action_custom_auth_methods ||
           resource_custom_auth_methods ||
           Conf.custom_auth_method ||
@@ -46,12 +46,18 @@ module Riff
 
       def resource_custom_auth_methods
         settings = @context.settings
-        [settings.class.auth_method].flatten if settings && settings.class.respond_to?(:auth_method)
+        return unless settings && settings.class.respond_to?(:auth_method)
+
+        methods = [settings.class.auth_method].flatten.compact
+        methods.presence
       end
 
       def action_custom_auth_methods
         action_class = @context.action_class
-        [action_class.auth_method].flatten if action_class.respond_to?(:auth_method)
+        return unless action_class.respond_to?(:auth_method)
+
+        methods = [action_class.auth_method].flatten.compact
+        methods.presence
       end
     end
   end

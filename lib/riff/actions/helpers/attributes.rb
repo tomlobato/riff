@@ -19,11 +19,11 @@ module Riff
           params.slice(*scope.keys).each do |key, param_value|
             next if param_value.blank?
             # @context.scope is generated in authorization handler,
-            # while validation/coercing wans`t run yet.
+            # while validation/coercing wasn't run yet.
             # @context.params here have the validated/coerced values.
-            # How to compare both if both may be differente even if are valid?
+            # How to compare both if both may be different even if are valid?
             # By now its handled with .to_s, but some other solution must be found
-            # to handle this comparation accordingly
+            # to handle this comparison accordingly
             next if param_value.to_s == scope[key].to_s
 
             invalid_params[key] = param_value

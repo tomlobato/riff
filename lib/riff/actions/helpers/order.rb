@@ -27,7 +27,7 @@ module Riff
           name = name.to_sym
           validate_field!(name, direction)
           if name.to_s.include?(".")
-            tbl, col = name.to_s.split(".")
+            tbl, col = name.to_s.split(".", 2)
             name = Sequel[tbl.to_sym][col.to_sym]
           end
           name = Sequel.desc(name) if direction.to_s.downcase == "desc"

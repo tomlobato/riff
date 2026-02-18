@@ -81,6 +81,7 @@ require_relative "riff/dynamic_validator"
 require_relative "riff/fallback_validator"
 require_relative "riff/exceptions"
 require_relative "riff/handle_error"
+require_relative "riff/error_handler"
 require_relative "riff/http_verbs"
 require_relative "riff/hash_validator"
 
@@ -99,7 +100,6 @@ module Riff
   end
 
   def self.handle_session(request, response, type)
-    # puts "1 Session action: '#{type}' #{type.class}"
     Riff::Request::SessionProcessor.new(request, response, type).call
   end
 end

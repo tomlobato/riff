@@ -9,7 +9,9 @@ module Riff
         end
 
         def model_class
-          Util.const_get("::#{model_name}") unless settings.model_less
+          return if settings.model_less
+
+          @model_class ||= Util.const_get("::#{model_name}")
         end
 
         private

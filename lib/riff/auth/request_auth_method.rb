@@ -9,11 +9,11 @@ module Riff
       end
 
       def request_is_authenticable?
-        raise("must implement!")
+        raise(NotImplementedError, "#{self.class}#request_is_authenticable? must be implemented")
       end
 
       def authenticate
-        raise("must implement!")
+        raise(NotImplementedError, "#{self.class}#authenticate must be implemented")
       end
 
       private

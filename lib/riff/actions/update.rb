@@ -13,7 +13,7 @@ module Riff
         rec.update(attributes)
         after(rec)
         Request::Result.new({ data: response_body(rec) })
-      rescue Sequel::ValidationFailed => e
+      rescue Sequel::ValidationFailed
         Exceptions::DbValidationError.raise!(field_errors: Util.record_errors(rec.errors))
       end
 
@@ -21,14 +21,6 @@ module Riff
 
       def before
         # may implement
-      end
-
-      def response_body(rec)
-        if rec.values.keys.sort == fields.sort
-          rec.values.slice(*fields)
-        else
-          @context.model_class.where(id: rec.id).select(*fields).first.values
-        end
       end
     end
   end

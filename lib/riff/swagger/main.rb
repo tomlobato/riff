@@ -23,7 +23,7 @@ module Riff
         raise(StandardError, path_not_set_error_msg) unless test_request_log_path.present?
         raise(StandardError, path_not_found_error_msg(test_request_log_path)) unless File.exist?(test_request_log_path)
 
-        YAML.load(File.read(Conf.test_request_log_path))
+        YAML.safe_load(File.read(Conf.test_request_log_path), permitted_classes: [Symbol])
       end
 
       def path_not_set_error_msg
@@ -40,38 +40,31 @@ module Riff
         end.to_h
       end
 
-      def verbs(path, verb)
-        verb.map do |verb, data|
+      def verbs(path, verb_hash)
+        verb_hash.map do |verb, data|
           {
             verb.downcase => build_verb(path, verb, data)
           }
-        end.inject(&:merge)
+        end.inject({}, :merge)
       end
 
       def build_verb(path, verb, data)
         Verb.new(data[:tag], data[:action_class], data[:validator_class], @context, path, verb, @examples).call
       end
 
+      SwaggerContext = Struct.new(:id, :user, :custom, keyword_init: true)
+      SwaggerCustom = Struct.new(:app_device, keyword_init: true)
+
       def context
-        ctx = OpenStruct.new
-        ctx.id = 123
         user_class = Conf.default_auth_user_class
         user = user_class.last
-        unless user
-          company = Company.new(nome_fantasia: "Company")
-          user = user_class.new(
-            name: "User",
-            email: "asd@asd.com",
-            username: "user",
-            password: "123456",
-            # confirmation_password: "123456",
-            company_id: company.id
-          )
-        end
-        ctx.user = user
-        ctx.custom = OpenStruct.new
-        ctx.custom.app_device = "android"
-        ctx
+        raise("No #{user_class} record found — seed the database before generating swagger docs") unless user
+
+        SwaggerContext.new(
+          id: 123,
+          user: user,
+          custom: SwaggerCustom.new(app_device: "android")
+        )
       end
     end
   end

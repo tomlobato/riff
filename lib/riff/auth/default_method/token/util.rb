@@ -5,11 +5,14 @@ module Riff
     module DefaultMethod
       module Token
         class Util
+          MAX_TOKEN_ATTEMPTS = 10
+
           def self.generate_authentication_token
-            loop do
+            MAX_TOKEN_ATTEMPTS.times do
               t = SecureRandom.hex(40)
-              break t if ::SellerToken.where(authentication_token: t).blank?
+              return t if Conf.token_class.where(authentication_token: t).blank?
             end
+            raise(Exceptions::InternalServerError, "Failed to generate unique token after #{MAX_TOKEN_ATTEMPTS} attempts")
           end
         end
       end

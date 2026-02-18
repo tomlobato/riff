@@ -47,6 +47,8 @@ module Riff
       icon = nil
       icon = @error.icon if riff_error?
       icon ||= Conf.default_error_icon
+      return nil unless icon
+
       raise(RuntimeError, "icon should be a Symbol or Hash, but it is a #{icon.class}") unless icon.is_a?(Symbol) || icon.is_a?(Hash)
 
       icon.is_a?(Symbol) ? default_icon(icon) : icon
@@ -60,7 +62,7 @@ module Riff
     end
 
     def detail_msg
-      return if ENV["RACK_ENV"] == "production"
+      return unless Conf.show_error_detail
       return @error.message if @error.message != @error.class.name
       return message_from_class_name if riff_error_400?
     end

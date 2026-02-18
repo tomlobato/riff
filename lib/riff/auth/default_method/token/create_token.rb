@@ -13,7 +13,6 @@ module Riff
           end
 
           def call
-            # puts "message: #{message}\nexpires_at: #{@expires_at}\npurpose: #{purpose}"
             MessageSigner.encode(data: message, expires_at: @expires_at, purpose: purpose)
           end
 
@@ -32,7 +31,7 @@ module Riff
           end
 
           def create_user_token
-            ::SellerToken.new(
+            Conf.token_class.new(
               user_id: @user.id,
               inpersonator_id: @user.inpersonator_id,
               authentication_token: Util.generate_authentication_token,

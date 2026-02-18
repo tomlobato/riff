@@ -11,7 +11,7 @@ module Riff
         @headers = headers
         @status = status
         select_content_type(content_type)
-        @body = brush_body(body)
+        @body = prepare_body(body)
       end
 
       private
@@ -31,10 +31,12 @@ module Riff
         @headers["Content-Type"]
       end
 
-      def brush_body(body)
+      def prepare_body(body)
         return "" unless body
 
-        body.keys.each { |k| body.delete(k) if body[k].blank? } if body.is_a?(Hash)
+        if body.is_a?(Hash)
+          body = body.reject { |_k, v| v.blank? && v != false }
+        end
         body.merge(success: success?)
       end
 

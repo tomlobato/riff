@@ -56,7 +56,7 @@ module Riff
       end
 
       def validate_credentials
-        [Conf.validate_credentials_methods].flatten.each do |method|
+        [Conf.validate_credentials_methods].flatten.compact.each do |method|
           instance = method.new(@roda_request)
           next info_log("Request is not authenticable with method #{method}") unless instance.request_is_authenticable?
 

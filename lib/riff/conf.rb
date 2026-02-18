@@ -19,9 +19,10 @@ module Riff
       default_paginate: true,
       default_per_page: 20,
       default_response_icons: nil,
+      error_reporter: nil,
       field_username: :username,
       logger: lambda { Logger.new(STDOUT) },
-      model_less_resources: [],
+      max_per_page: 200,
       no_colon_mode: :id_if_digits_or_uuid,
       oas_root: nil,
       on_user: nil,
@@ -29,6 +30,10 @@ module Riff
       param_password: :password,
       resource_remap: {},
       resources_base_module: lambda { Resources },
+      show_error_detail: true,
+      access_token_ttl: 60,
+      refresh_token_ttl: 3600 * 24 * 90,
+      token_class: nil,
       test_request_log_path: nil,
       user_fields: SELECT_ALL,
       user_login_payload_class: nil,
@@ -43,7 +48,7 @@ module Riff
         end
 
         def #{key}=(val)
-          @#{key} = brush(:#{key}, val)
+          @#{key} = normalize_value(:#{key}, val)
         end
 
         def self.#{key}
@@ -60,11 +65,14 @@ module Riff
 
     def default_value(key)
       return unless (valuer = KEYS[key])
+      return valuer unless valuer.is_a?(Proc)
 
-      valuer.is_a?(Proc) ? valuer.call : valuer
+      result = valuer.call
+      instance_variable_set(:"@#{key}", result)
+      result
     end
 
-    def brush(key, val)
+    def normalize_value(key, val)
       case key
       when :default_response_icons
         val&.transform_keys(&:to_sym)

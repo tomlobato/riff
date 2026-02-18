@@ -2,7 +2,6 @@
 
 module Riff
   module Request
-    # TODO convert to dry validation contract
     class ResponseBodyValidator
       ROOT_KEYS = {
         success: [TrueClass, FalseClass],
@@ -60,11 +59,11 @@ module Riff
       end
 
       def validate_msg_type(msg)
-        raise(ArgumentError, "msg.type must be one of: #{MSG_TYPES.joni(", ")}.") if msg[:type] && !msg[:type].in?(MSG_TYPES)
+        raise(ArgumentError, "msg.type must be one of: #{MSG_TYPES.join(", ")}.") if msg[:type] && !msg[:type].in?(MSG_TYPES)
       end
 
       def validate_msg_view_type(msg)
-        raise(ArgumentError, "msg.view_type must be one of: #{MSG_VIEW_TYPES.joni(", ")}.") if msg[:view_type] && !msg[:view_type].in?(MSG_VIEW_TYPES)
+        raise(ArgumentError, "msg.view_type must be one of: #{MSG_VIEW_TYPES.join(", ")}.") if msg[:view_type] && !msg[:view_type].in?(MSG_VIEW_TYPES)
       end
 
       def validate_view_options(msg)

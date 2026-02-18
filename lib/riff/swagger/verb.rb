@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 module Riff
   module Swagger
     class Verb
-      extend Memo
 
       def initialize(tag, action_class, validator_class, context, path, verb, examples)
         @tag = tag
@@ -107,18 +108,21 @@ module Riff
               value: value
             }
           }
-        end.inject(&:merge)
+        end.inject({}, :merge)
       end
 
       def build_schema
-        return unless contract_class
+        return @build_schema if defined?(@build_schema)
 
-        require("dry/swagger")
-        parser = Dry::Swagger::ContractParser.new
-        parser.call(contract_class)
-        brush_schema(parser.to_swagger)
+        @build_schema = begin
+          return unless contract_class
+
+          require("dry/swagger")
+          parser = Dry::Swagger::ContractParser.new
+          parser.call(contract_class)
+          normalize_schema(parser.to_swagger)
+        end
       end
-      memo :build_schema
 
       def contract_class
         return unless @validator_class
@@ -134,7 +138,7 @@ module Riff
           end
       end
 
-      def brush_schema(schema)
+      def normalize_schema(schema)
         schema = schema.deep_stringify_keys
         schema.deep_merge!(schema) do |k, v|
           if k.to_sym == :type && v.is_a?(Symbol)

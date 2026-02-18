@@ -25,10 +25,9 @@ module Riff
         end
 
         def remote_ip
-          @remote_ip ||= RemoteIp.new(headers).call
+          @remote_ip ||= Riff::Request::RemoteIp.new(headers).call
         end
 
-        # TODO validate
         def request_method
           @request_method ||= Util.const_get(:Riff, :HttpVerbs, request.request_method.upcase.to_sym)
         end

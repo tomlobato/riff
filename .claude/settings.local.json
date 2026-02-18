@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bundle exec rspec:*)",
+      "Bash(RACK_ENV=test bundle exec rspec:*)",
+      "Bash(ruby:*)",
+      "Bash(find:*)",
+      "Bash(bundle install:*)"
+    ]
+  }
+}

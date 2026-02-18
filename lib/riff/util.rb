@@ -19,22 +19,18 @@ module Riff
     end
 
     def error_desc(error)
-      "#{error.class}: #{error.message}" # unless ENV["RACK_ENV"] == "test"
+      "#{error.class}: #{error.message}"
     end
 
     def record_errors(rec_errors)
       errors = {}
-      rec_errors.each { |k, v| errors[k] = v.uniq }
+      rec_errors&.each { |k, v| errors[k] = v.uniq }
       errors
     end
 
-    # def id?(str)
-    #   str =~ Constants::ONLY_DIGITS || str =~ Constants::UUID
-    # end
-
     def log_error(error)
-      warn(error_desc(error))
-      warn(error.backtrace.to_a.join("\n"))
+      Conf.logger.error(error_desc(error))
+      Conf.logger.error(error.backtrace.to_a.join("\n"))
     end
   end
 end

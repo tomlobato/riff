@@ -15,24 +15,12 @@ module Riff
           after(rec)
         end
         after_commit(rec)
-        Request::Result.new({ data: response_body(rec) || rec.values.slice(*fields) })
-      rescue Sequel::ValidationFailed => e
-        Exceptions::DbValidationError.raise!(field_errors: Util.record_errors(rec.errors))
+        Request::Result.new({ data: response_body(rec) })
+      rescue Sequel::ValidationFailed
+        Exceptions::DbValidationError.raise!(field_errors: Util.record_errors(rec&.errors))
       end
 
       private
-
-      def fields
-        settings.show_fields || model_class.columns
-      end
-
-      def response_body(rec)
-        @context.model_class.where(id: rec.id).select(*fields).first.values if rec.values.keys.sort != fields.sort
-      end
-
-      def after(rec)
-        # may implement
-      end
 
       def after_commit(rec)
         # may implement

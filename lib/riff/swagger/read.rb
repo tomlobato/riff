@@ -16,17 +16,13 @@ module Riff
         @res_mod.constants.each do |model_name|
           handle_model(model_name)
         end
-        # puts "@paths.keys.size=#{@paths.keys.size}"
         sort(@paths)
       end
 
       private
 
       def sort(paths)
-        paths.sort.to_h.each do |_path, verbs|
-          verbs.sort.to_h.each do |verb, data|
-          end
-        end
+        paths.sort.to_h.transform_values { |verbs| verbs.sort.to_h }
       end
 
       def handle_model(model_name)
@@ -34,6 +30,8 @@ module Riff
         actions_mod.constants.each do |action_name|
           handle_action(model_name, action_name)
         end
+      rescue NameError
+        nil
       end
 
       def handle_action(model_name, action_name)

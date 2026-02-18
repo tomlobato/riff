@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module Riff
-  # TODO convert all uses of this class to a dry-validation-contract
   class HashValidator
     def initialize(param, valid_key_map)
       @param = param
@@ -22,8 +21,6 @@ module Riff
 
     def find_invalid_value_keys
       @param.filter_map do |key, val|
-        # TODO: handle blank? of booleans
-        # TODO give option to deny blank values
         key unless val.blank? || val.class.in?(valid_value_classes(key))
       end
     end
@@ -47,7 +44,7 @@ module Riff
 
     def invalid_value_keys_error_detail(invalid_value_keys)
       invalid_value_keys.map do |key|
-        "value for key '#{key}' in '#{@param}' is a #{@param[key].class} but should be: #{::Util::Array.smart_join(valid_value_classes(key))}"
+        "value for key '#{key}' in '#{@param}' is a #{@param[key].class} but should be: #{valid_value_classes(key).join(", ")}"
       end.join("; ")
     end
   end
