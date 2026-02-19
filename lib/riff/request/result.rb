@@ -35,7 +35,7 @@ module Riff
         return "" unless body
 
         if body.is_a?(Hash)
-          body = body.reject { |_k, v| v.blank? && v != false }
+          body = body.reject { |_k, v| v.blank? && v != false && !v.is_a?(Array) }
         end
         body.merge(success: success?)
       end
