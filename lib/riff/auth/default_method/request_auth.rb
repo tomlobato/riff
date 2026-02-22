@@ -19,7 +19,7 @@ module Riff
         end
 
         def authorization_token
-          @headers["Authorization"]
+          @headers["Authorization"]&.sub(/\ABearer /i, "")
         end
       end
     end

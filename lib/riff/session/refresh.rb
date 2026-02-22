@@ -17,7 +17,9 @@ module Riff
       private
 
       def user
-        @user ||= ::Riff::Auth::DefaultMethod::Token::TokenValidator.new(@headers["Authorization"], :refresh_token).call
+        @user ||= ::Riff::Auth::DefaultMethod::Token::TokenValidator.new(
+          @headers["Authorization"]&.sub(/\ABearer /i, ""), :refresh_token
+        ).call
       end
 
       def body

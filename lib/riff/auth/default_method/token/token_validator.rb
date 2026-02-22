@@ -20,7 +20,7 @@ module Riff
           private
 
           def decode(authorization_token, purpose)
-            MessageSigner.decode(message: authorization_token, purpose: purpose)
+            JwtSigner.decode(message: authorization_token, purpose: purpose)
           end
 
           def valid?

@@ -13,7 +13,7 @@ module Riff
           end
 
           def call
-            MessageSigner.encode(data: message, expires_at: @expires_at, purpose: purpose)
+            JwtSigner.encode(data: message, expires_at: @expires_at, purpose: purpose)
           end
 
           private
