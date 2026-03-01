@@ -121,6 +121,11 @@ module Riff
           parser = Dry::Swagger::ContractParser.new
           parser.call(contract_class)
           normalize_schema(parser.to_swagger)
+        rescue Dry::Swagger::Errors::MissingHashSchemaError, StandardError => e
+          raise unless e.message.include?("Could not generate documentation for field")
+
+          warn("Swagger: skipping schema for #{@path} #{@verb} — #{e.message.lines.first.strip}")
+          nil
         end
       end
 
