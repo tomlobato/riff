@@ -31,13 +31,17 @@ module Resources
       ####
       # Configure fields
 
+      def model
+        ::Post
+      end
+
       def index_fields
         %i[id body user_id company_id]
       end
 
-      # def show_fields
-      #   %i[id body user_id]
-      # end
+      def show_fields
+        %i[id body user_id]
+      end
     end
   end
 end

@@ -14,6 +14,7 @@ end
 
 require_relative 'application'
 
+require 'i18n'
 require 'dry-validation'
 require 'pry'
 require 'securerandom'

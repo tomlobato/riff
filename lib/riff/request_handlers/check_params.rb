@@ -20,15 +20,20 @@ module Riff
       def run
         return unless @action_validator
 
-        result = Validate.new(
+        validator = Validate.new(
           class_nodes,
           @context.raw_params,
           allow_empty_params: allow_empty_params,
           context: @context
-        ).call
+        )
+        result = validator.call
         if result
-          check_excess_params!(result)
-          @context.params = result
+          if fallback_passthrough?(validator)
+            @context.params = @context.raw_params.merge(result)
+          else
+            check_excess_params!(result)
+            @context.params = result
+          end
         end
         nil
       end
@@ -40,6 +45,10 @@ module Riff
       def check_excess_params!(result)
         excess_params = @context.raw_params.keys - result.keys
         raise(Riff::Exceptions::InvalidParameters, { excess_params: excess_params }.to_json) unless excess_params.empty?
+      end
+
+      def fallback_passthrough?(validator)
+        Conf.allow_excess_params_on_fallback && validator.used_fallback
       end
     end
   end

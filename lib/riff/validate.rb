@@ -10,6 +10,8 @@ module Riff
       @validator_class = validator_class
     end
 
+    attr_reader :used_fallback
+
     def call
       return unless @validator_class
 
@@ -25,6 +27,7 @@ module Riff
 
     def validator_class
       klass = Util.const_get(@class_nodes, anchor: true)
+      @used_fallback = klass.nil?
       klass ||= Riff::FallbackValidator
 
       case klass.superclass.to_s

@@ -64,6 +64,9 @@ gem 'sidekiq'
 # Efficient and thread-safe code loader for Ruby.
 gem 'zeitwerk'
 
+# JSON Web Token implementation for Ruby.
+gem 'jwt'
+
 # Riff - Ruby instantaneous resfull api framework
 gem 'riff', path: '../', require: false
 

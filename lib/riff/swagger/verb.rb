@@ -4,19 +4,37 @@ module Riff
   module Swagger
     class Verb
 
-      def initialize(tag, action_class, validator_class, context, path, verb, examples)
-        @tag = tag
-        @action_class = action_class
+      SEQUEL_TYPE_MAP = {
+        integer:  { "type" => "integer" },
+        bignum:   { "type" => "integer" },
+        string:   { "type" => "string" },
+        text:     { "type" => "string" },
+        boolean:  { "type" => "boolean" },
+        datetime: { "type" => "string", "format" => "date-time" },
+        date:     { "type" => "string", "format" => "date" },
+        float:    { "type" => "number" },
+        decimal:  { "type" => "number" },
+        blob:     { "type" => "string" }
+      }.freeze
+
+      def initialize(tag, action_class, validator_class, context, path, verb, examples,
+                     settings_class: nil, action_name: nil, base_path: "v1")
+        @tag             = tag
+        @action_class    = action_class
         @validator_class = validator_class
-        @context = context
-        @path = path.sub("/:", "/")
-        @verb = verb
-        @verb_examples = verb_examples(examples)
+        @context         = context
+        @path            = path.sub("/:", "/")
+        @verb            = verb
+        @base_path       = base_path
+        @verb_examples   = verb_examples(examples)
+        @settings_class  = settings_class
+        @action_name     = action_name
       end
 
       def call
         {
           tags: [@tag],
+          **query_params_spec.to_h,
           **request_body.to_h,
           responses: responses
         }
@@ -25,9 +43,34 @@ module Riff
       private
 
       def verb_examples(examples)
-        path = ("/v1" + @path).to_sym
+        path = ("/#{@base_path}" + @path).to_sym
         verb = @verb.downcase.to_sym
         examples[path].to_h[verb].to_a.presence
+      end
+
+      # --- Query parameters (GET index only) ---
+
+      def query_params_spec
+        return unless @verb == "GET" && @action_name == :index && @settings_class
+
+        fields = @settings_class.index_fields
+        return unless fields
+
+        db_schema = model_db_schema
+        params    = fields.map { |f| field_param(f, db_schema) }
+        params << pagination_param("_page")
+        params << pagination_param("_limit")
+        { parameters: params }
+      end
+
+      def field_param(field, db_schema)
+        col       = db_schema[field]
+        type_info = SEQUEL_TYPE_MAP[col&.dig(:type)] || { "type" => "string" }
+        { name: field.to_s, in: "query", required: false, schema: type_info }
+      end
+
+      def pagination_param(name)
+        { name: name, in: "query", required: false, schema: { "type" => "integer" } }
       end
 
       def request_body
@@ -48,25 +91,78 @@ module Riff
       end
 
       def responses
-        {
-          "200": {
-            description: "Successful operation"
-          },
-          "401": {
-            description: "Authentication failure"
-          },
-          "403": {
-            description: "Authorization failure"
-          },
-          "404": {
-            description: "Resource not found"
-          },
-          "422": {
-            description: "Invalid parameters"
-          }
-        }.map do |k, v|
-          [k, v.merge(content(k.to_s.to_i))]
+        base = {
+          "200": { description: "Successful operation", **response_200_content.to_h },
+          "401": { description: "Authentication failure" },
+          "403": { description: "Authorization failure" },
+          "404": { description: "Resource not found" },
+          "422": { description: "Invalid parameters" }
+        }
+        base.map do |k, v|
+          # Skip content() for 200 — response_200_content already handles schema + examples
+          extras = k == :"200" ? {} : content(k.to_s.to_i)
+          [k, v.merge(extras)]
         end.to_h
+      end
+
+      def response_200_content
+        schema   = build_response_schema
+        examples = find_examples(200, :response)
+
+        parts = {}
+        parts[:schema]   = schema   if schema
+        parts[:examples] = examples if examples.present?
+        return if parts.empty?
+
+        { content: { "application/json": parts } }
+      end
+
+      def build_response_schema
+        return unless @settings_class
+
+        fields = case @action_name
+                 when :index then @settings_class.index_fields
+                 when :show  then @settings_class.show_fields
+                 end
+        return unless fields
+        return unless @settings_class.model
+
+        db_schema   = model_db_schema
+        item_schema = item_schema_from_fields(fields, db_schema)
+
+        if @action_name == :index
+          {
+            "type"       => "object",
+            "properties" => {
+              "success" => { "type" => "boolean" },
+              "total"   => { "type" => "integer" },
+              "data"    => { "type" => "array", "items" => item_schema }
+            }
+          }
+        else
+          {
+            "type"       => "object",
+            "properties" => {
+              "success" => { "type" => "boolean" },
+              "data"    => item_schema
+            }
+          }
+        end
+      end
+
+      def item_schema_from_fields(fields, db_schema)
+        properties = fields.to_h do |field|
+          col       = db_schema[field]
+          type_info = SEQUEL_TYPE_MAP[col&.dig(:type)] || { "type" => "string" }
+          [field.to_s, type_info]
+        end
+        { "type" => "object", "properties" => properties }
+      end
+
+      def model_db_schema
+        @model_db_schema ||= @settings_class.model&.db_schema || {}
+      rescue StandardError
+        {}
       end
 
       def content(code)

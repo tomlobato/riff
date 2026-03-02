@@ -31,6 +31,7 @@ module Riff
       resource_remap: {},
       resources_base_module: lambda { Resources },
       show_error_detail: true,
+      allow_excess_params_on_fallback: false,
       access_token_ttl: 60,
       refresh_token_ttl: 3600 * 24 * 90,
       token_class: nil,
@@ -40,6 +41,14 @@ module Riff
       user_token_fields: SELECT_ALL,
       validate_credentials_methods: lambda { Riff::Auth::DefaultMethod::Token::ValidateCredentials },
     }.freeze
+
+    def self.configure(options = {})
+      options.each { |key, val| instance.public_send(:"#{key}=", val) }
+    end
+
+    def self.set(key, val)
+      instance.public_send(:"#{key}=", val)
+    end
 
     KEYS.each do |key, val|
       class_eval <<-ACCESSORS, __FILE__, __LINE__ + 1

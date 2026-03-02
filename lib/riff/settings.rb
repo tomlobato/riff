@@ -26,4 +26,6 @@ module Riff
       default_fields
     end
   end
+
+  BaseResourceSettings = Settings
 end

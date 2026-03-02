@@ -49,7 +49,13 @@ module Riff
       end
 
       def build_verb(path, verb, data)
-        Verb.new(data[:tag], data[:action_class], data[:validator_class], @context, path, verb, @examples).call
+        Verb.new(
+          data[:tag], data[:action_class], data[:validator_class],
+          @context, path, verb, @examples,
+          settings_class: data[:settings_class],
+          action_name:    data[:action_name],
+          base_path:      @base_path
+        ).call
       end
 
       SwaggerContext = Struct.new(:id, :user, :custom, keyword_init: true)
