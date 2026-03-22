@@ -44,6 +44,7 @@ require_relative "riff/auth/default_method/token/util"
 require_relative "riff/session/open"
 require_relative "riff/session/close"
 require_relative "riff/session/refresh"
+require_relative "riff/session/check"
 
 require_relative "riff/swagger/main"
 require_relative "riff/swagger/read"

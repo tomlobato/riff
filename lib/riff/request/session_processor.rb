@@ -33,7 +33,7 @@ module Riff
         when ACTIONS[:refresh]
           Session::Refresh.new(@request.headers).call
         when ACTIONS[:check]
-          Request::Result.new({})
+          Session::Check.new(@request.headers).call
         else
           raise(invalid_request_path)
         end
