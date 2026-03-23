@@ -10,7 +10,7 @@ module Riff
       def call
         raise(Exceptions::AuthFailure) unless user
 
-        Request::Result.new({ data: { user: user_payload } })
+        Request::Result.new({ data: build_data })
       end
 
       private
@@ -21,12 +21,15 @@ module Riff
         ).call
       end
 
-      def user_payload
+      def build_data
         custom_payload_class = Conf.user_login_payload_class
         if custom_payload_class
-          custom_payload_class.new(user).call
+          instance = custom_payload_class.new(user)
+          data = { user: instance.call }
+          data.merge!(instance.session_check_data(@headers)) if instance.respond_to?(:session_check_data)
+          data
         else
-          user.values.slice(*Open::DEFAULT_USER_PAYLOAD_FIELDS)
+          { user: user.values.slice(*Open::DEFAULT_USER_PAYLOAD_FIELDS) }
         end
       end
     end
