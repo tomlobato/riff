@@ -58,7 +58,24 @@ module Riff
       end
 
       def request_filters
-        @context.params.reject { |k, _| k.to_s.index("_") == 0 }
+        raw = @context.params.reject { |k, _| k.to_s.index("_") == 0 }
+        coerce_bool_filters(raw)
+      end
+
+      def coerce_bool_filters(hash)
+        schema = model_class.respond_to?(:db_schema) ? model_class.db_schema : {}
+        hash.each_with_object({}) do |(k, v), out|
+          col = schema[k.to_sym] || schema[k.to_s.to_sym]
+          if col && col[:type] == :boolean && v.is_a?(String)
+            out[k] = case v.downcase
+                     when 'true', '1'  then true
+                     when 'false', '0' then false
+                     else v
+                     end
+          else
+            out[k] = v
+          end
+        end
       end
 
       def extra_filters
