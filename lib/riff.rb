@@ -10,6 +10,7 @@ require_relative "riff/request_handlers/authorization"
 require_relative "riff/request_handlers/action"
 require_relative "riff/request_handlers/check_params"
 
+require_relative "riff/actions/helpers/common"
 require_relative "riff/actions/helpers/record"
 require_relative "riff/actions/helpers/attributes"
 require_relative "riff/actions/helpers/pagination"

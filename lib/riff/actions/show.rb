@@ -4,21 +4,21 @@ module Riff
   module Actions
     class Show < Base
       include Helpers::Record
+      include Helpers::Common
 
       def call
-        # puts "body=#{body}"
         Request::Result.new({ data: body })
       end
 
       private
 
       def body
-        rec = record(fields)
+        rec = record
         rec&.values&.merge(extra_fields(rec).to_h)
       end
 
-      def fields
-        settings.show_fields
+      def select
+        parse_fields(settings.show_fields) || model_class.columns
       end
 
       def extra_fields(rec)

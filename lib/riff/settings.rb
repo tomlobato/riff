@@ -12,6 +12,12 @@ module Riff
       nil
     end
 
+    # Params check
+
+    def check_params?
+      true
+    end
+
     # Select fields
 
     def default_fields

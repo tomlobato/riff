@@ -36,5 +36,18 @@ module Riff
       warn(error_desc(error))
       warn(error.backtrace.to_a.join("\n"))
     end
+
+    def fields_from_map(field_map)
+      field_map.map do |table, columns|
+        columns.map do |column|
+          if column.is_a?(Hash)
+            col_name, col_alias = column.first.to_a
+            Sequel[table][col_name].as(col_alias)
+          else
+            Sequel[table][column]
+          end
+        end
+      end.flatten
+    end
   end
 end

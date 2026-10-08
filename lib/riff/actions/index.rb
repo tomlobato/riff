@@ -3,6 +3,8 @@
 module Riff
   module Actions
     class Index < Base
+      include Helpers::Common
+      
       def call
         Request::Result.new({ data: body })
       end
@@ -15,11 +17,27 @@ module Riff
 
       def query
         offset, limit = pagination
-        model_class.select(*select).where(filters).offset(offset).limit(limit).order(*order)
+        q_result = model_class.select(*select).offset(offset).limit(limit).order(*order)
+        apply_filters(q_result)
       end
 
       def filters
         request_filters.merge(enforced_filters).merge(extra_filters.to_h)
+      end
+
+      def apply_filters(q_result)
+        f = filters
+        return q_result if f.blank?
+
+        case f
+        when Array
+          f.each { |f_item| q_result = q_result.where(f_item) }
+        when Hash
+          q_result = q_result.where(f)
+        else
+          raise "Invalid filters type: #{f.class}. It must be a hash or an array of valid Sequel clauses."
+        end
+        q_result
       end
 
       def enforced_filters
@@ -68,7 +86,7 @@ module Riff
       end
 
       def select
-        settings.index_fields || model_class.columns
+        parse_fields(settings.index_fields) || model_class.columns
       end
     end
   end

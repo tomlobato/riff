@@ -6,22 +6,20 @@ module Riff
       module Record
         private
 
-        def record(fields = nil)
+        def record
           fields ||= model_class.columns
-          record = query(fields)
-          record_not_found! unless record
+          rec = query.first
+          record_not_found! unless rec
 
-          record
+          rec
         end
 
-        def query(fields)
-          q = model_class.where(id: @context.id, **scope.to_h).where(extra_filters.to_h).select(*fields)
-          tap_query(q)
-          q.first
+        def query
+          model_class.where(pk_field => @context.id, **scope.to_h).where(extra_filters.to_h).select(*select)
         end
 
-        def tap_query(_query)
-          # may implement
+        def pk_field
+          Sequel[model_class.table_name][model_class.primary_key]
         end
 
         def extra_filters

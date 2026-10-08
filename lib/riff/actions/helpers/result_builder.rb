@@ -30,6 +30,10 @@ module Riff
           body = ErrorBody.new(body, icon).call unless body_mode == :raw
           Riff::Request::Result.new(body, status: status)
         end
+
+        def html(body)
+          Riff::Request::Result.new(body, headers: { 'Content-Type' => 'text/html' })
+        end
       end
     end
   end

@@ -17,24 +17,21 @@ module Riff
       private
 
       def select_content_type(content_type)
-        if content_type.present? && header_content_type.present?
+        if content_type.present? && @headers.to_h["Content-Type"].present? && content_type != @headers["Content-Type"]
           raise(
             Riff::Exceptions::ContentTypeAlreadySet,
-            "Content-Type already set to '#{header_content_type}' in headers parameter."
+            "Content-Type already set to '#{@headers.to_h["Content-Type"]}' in headers parameter."
           )
         end
 
-        @headers["Content-Type"] = content_type.presence || Conf.default_content_type || FALLBACK_CONTENT_TYPE
-      end
-
-      def header_content_type
-        @headers["Content-Type"]
+        (@headers ||= {})["Content-Type"] ||= content_type.presence || Conf.default_content_type || FALLBACK_CONTENT_TYPE
       end
 
       def brush_body(body)
+        return body if @headers["Content-Type"].in?(%w[text/html text/plain])
         return "" unless body
 
-        body.keys.each { |k| body.delete(k) if body[k].blank? } if body.is_a?(Hash)
+        # body.keys.each { |k| body.delete(k) if body[k].blank? } if body.is_a?(Hash)
         body.merge(success: success?)
       end
 

@@ -5,10 +5,6 @@ module Riff
     class CheckParams < Base
       private
 
-      def setup
-        @action_validator = action_validator
-      end
-
       def action_validator
         @context.action.camelize.to_sym
       end
@@ -18,6 +14,9 @@ module Riff
       end
 
       def run
+        return unless @context.settings.check_params?
+
+        @action_validator = action_validator
         return unless @action_validator
 
         result = Validate.new(
