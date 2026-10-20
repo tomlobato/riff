@@ -60,6 +60,7 @@ Date: 2026-02-08
 
 - `lib/riff/actions/helpers/pagination.rb:35-37` — `_limit` param accepts any integer. `?_limit=999999999` fetches the entire table. Trivial DoS and data exfiltration vector.
 - Fix: add a `max_per_page` config to `Conf` and clamp `_limit`.
+- Status: done (`Conf.max_per_page`). `_limit` is the only page-size param; `_per_page` is refused with 422 (`Helpers::Pagination::REFUSED_PARAMS`).
 
 ### 12. `YAML.load` without `safe_load`
 
