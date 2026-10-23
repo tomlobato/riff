@@ -21,6 +21,10 @@ RSpec.describe(Riff::Actions::Helpers::Pagination) do
     expect { offset_limit({ _per_page: "5" }) }.to raise_error(Riff::Exceptions::InvalidParameters)
   end
 
+  it "returns every row where the action does not paginate" do
+    expect(offset_limit({}, paginate: false)).to eq([nil, nil])
+  end
+
   it "refuses _limit where the action does not paginate" do
     expect { offset_limit({ _limit: "5" }, paginate: false) }.to raise_error(Riff::Exceptions::InvalidParameters)
   end

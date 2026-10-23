@@ -37,9 +37,13 @@ module Riff
           value
         end
 
+        # An action that does not paginate returns every row: the default page
+        # size applies only where pagination is on.
         def limit
-          value = read(:_limit) || @settings[:per_page]
-          [value, Conf.max_per_page].compact.min
+          value = read(:_limit)
+          return unless value || @settings[:paginate]
+
+          [value || @settings[:per_page], Conf.max_per_page].compact.min
         end
 
         def read(key)
